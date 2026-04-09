@@ -61,6 +61,13 @@ android {
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
+            all {
+                it.testLogging {
+                    events("passed", "skipped", "failed")
+                    showStandardStreams = false
+                    exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.SHORT
+                }
+            }
         }
     }
 }
