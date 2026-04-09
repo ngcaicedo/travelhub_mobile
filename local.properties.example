@@ -1,0 +1,20 @@
+# Copy this file to `local.properties` and fill in the values for your environment.
+# `local.properties` is gitignored — do NOT commit real URLs/credentials.
+#
+# These two properties feed BuildConfig.SECURITY_API_BASE / BuildConfig.USERS_API_BASE
+# in app/build.gradle.kts. They MUST end with a trailing slash because Retrofit
+# concatenates them with relative endpoint paths.
+#
+# Defaults (when this file is absent) point at the Android emulator's loopback
+# alias for the host machine: http://10.0.2.2:8000/
+#
+# Examples:
+#   - Local FastAPI on the host machine, accessed from the emulator:
+#       TRAVELHUB_SECURITY_API_BASE=http://10.0.2.2:8000/
+#       TRAVELHUB_USERS_API_BASE=http://10.0.2.2:8001/
+#   - A deployed staging environment:
+#       TRAVELHUB_SECURITY_API_BASE=https://security.staging.travelhub.example.com/
+#       TRAVELHUB_USERS_API_BASE=https://users.staging.travelhub.example.com/
+
+TRAVELHUB_SECURITY_API_BASE=http://10.0.2.2:8001/
+TRAVELHUB_USERS_API_BASE=http://10.0.2.2:8000/
