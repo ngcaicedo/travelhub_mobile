@@ -7,6 +7,11 @@
     <string name="common_change_language">Change language</string>
     <string name="common_coming_soon">Coming soon</string>
 
+    <!-- placeholder home -->
+    <string name="home_placeholder_title">Welcome!</string>
+    <string name="home_placeholder_subtitle">Signed in as %1$s</string>
+    <string name="home_placeholder_logout">Sign out</string>
+
     <!-- auth: hero -->
     <string name="auth_brand_tagline">PREMIUM TRAVEL</string>
 
@@ -49,6 +54,12 @@
     <string name="auth_register_have_account">Already have an account?</string>
     <string name="auth_register_sign_in">Sign in</string>
     <string name="auth_register_success">Account created — check your email</string>
+    <string name="auth_register_full_name_required">Name is required</string>
+    <string name="auth_register_hotel_name_required">Hotel name is required</string>
+    <string name="auth_register_phone_invalid">Invalid phone number</string>
+    <string name="auth_register_password_weak">Password must be at least 8 characters and contain uppercase, number and symbol</string>
+    <string name="auth_register_terms_required">You must accept the terms and conditions</string>
+    <string name="auth_register_default_error">Unable to create the account</string>
 
     <!-- auth: verify otp -->
     <string name="auth_verify_otp_title">Verify your email</string>

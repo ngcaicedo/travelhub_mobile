@@ -7,6 +7,11 @@
     <string name="common_change_language">Cambiar idioma</string>
     <string name="common_coming_soon">Próximamente</string>
 
+    <!-- placeholder home -->
+    <string name="home_placeholder_title">¡Bienvenido!</string>
+    <string name="home_placeholder_subtitle">Sesión iniciada como %1$s</string>
+    <string name="home_placeholder_logout">Cerrar sesión</string>
+
     <!-- auth: hero -->
     <string name="auth_brand_tagline">VIAJES PREMIUM</string>
 
@@ -49,6 +54,12 @@
     <string name="auth_register_have_account">¿Ya tienes una cuenta?</string>
     <string name="auth_register_sign_in">Inicia sesión</string>
     <string name="auth_register_success">Cuenta creada — verifica tu correo</string>
+    <string name="auth_register_full_name_required">El nombre es obligatorio</string>
+    <string name="auth_register_hotel_name_required">El nombre del hotel es obligatorio</string>
+    <string name="auth_register_phone_invalid">Número de teléfono inválido</string>
+    <string name="auth_register_password_weak">La contraseña debe tener al menos 8 caracteres, mayúscula, número y símbolo</string>
+    <string name="auth_register_terms_required">Debes aceptar los términos y condiciones</string>
+    <string name="auth_register_default_error">No fue posible crear la cuenta</string>
 
     <!-- auth: verify otp -->
     <string name="auth_verify_otp_title">Verifica tu correo</string>

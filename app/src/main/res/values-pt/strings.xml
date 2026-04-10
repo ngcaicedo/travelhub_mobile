@@ -7,6 +7,11 @@
     <string name="common_change_language">Mudar idioma</string>
     <string name="common_coming_soon">Em breve</string>
 
+    <!-- placeholder home -->
+    <string name="home_placeholder_title">Bem-vindo!</string>
+    <string name="home_placeholder_subtitle">Conectado como %1$s</string>
+    <string name="home_placeholder_logout">Sair</string>
+
     <!-- auth: hero -->
     <string name="auth_brand_tagline">VIAGENS PREMIUM</string>
 
@@ -49,6 +54,12 @@
     <string name="auth_register_have_account">Já tem uma conta?</string>
     <string name="auth_register_sign_in">Entrar</string>
     <string name="auth_register_success">Conta criada — verifique seu e-mail</string>
+    <string name="auth_register_full_name_required">O nome é obrigatório</string>
+    <string name="auth_register_hotel_name_required">O nome do hotel é obrigatório</string>
+    <string name="auth_register_phone_invalid">Número de telefone inválido</string>
+    <string name="auth_register_password_weak">A senha deve ter pelo menos 8 caracteres, maiúscula, número e símbolo</string>
+    <string name="auth_register_terms_required">Você deve aceitar os termos e condições</string>
+    <string name="auth_register_default_error">Não foi possível criar a conta</string>
 
     <!-- auth: verify otp -->
     <string name="auth_verify_otp_title">Verifique seu e-mail</string>
