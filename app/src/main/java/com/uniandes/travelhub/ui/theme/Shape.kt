@@ -11,3 +11,5 @@ val TravelhubShapes = Shapes(
     large      = RoundedCornerShape(12.dp),
     extraLarge = RoundedCornerShape(16.dp),
 )
+
+val TravelhubPillShape = RoundedCornerShape(24.dp)
