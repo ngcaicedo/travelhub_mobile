@@ -1,6 +1,7 @@
 package com.uniandes.travelhub.viewmodels
 
 import app.cash.turbine.test
+import com.uniandes.travelhub.R
 import com.uniandes.travelhub.models.UserRole
 import com.uniandes.travelhub.models.auth.RegisterRequest
 import com.uniandes.travelhub.models.auth.UserResponse
@@ -74,7 +75,7 @@ class RegisterViewModelTest {
         viewModel.onSubmit()
 
         assertEquals(
-            RegisterUiState.Error("El nombre es obligatorio"),
+            RegisterUiState.Error(ErrorMessage.Resource(R.string.auth_register_full_name_required)),
             viewModel.uiState.value
         )
         coVerify(exactly = 0) { repository.register(any()) }
@@ -88,7 +89,7 @@ class RegisterViewModelTest {
         viewModel.onSubmit()
 
         assertEquals(
-            RegisterUiState.Error("El nombre del hotel es obligatorio"),
+            RegisterUiState.Error(ErrorMessage.Resource(R.string.auth_register_hotel_name_required)),
             viewModel.uiState.value
         )
         coVerify(exactly = 0) { repository.register(any()) }
@@ -101,9 +102,10 @@ class RegisterViewModelTest {
 
         viewModel.onSubmit()
 
-        assertTrue(viewModel.uiState.value is RegisterUiState.Error)
-        val msg = (viewModel.uiState.value as RegisterUiState.Error).message
-        assertTrue(msg.contains("contraseña"))
+        assertEquals(
+            RegisterUiState.Error(ErrorMessage.Resource(R.string.auth_register_password_weak)),
+            viewModel.uiState.value
+        )
         coVerify(exactly = 0) { repository.register(any()) }
     }
 
@@ -115,7 +117,7 @@ class RegisterViewModelTest {
         viewModel.onSubmit()
 
         assertEquals(
-            RegisterUiState.Error("Debes aceptar los términos y condiciones"),
+            RegisterUiState.Error(ErrorMessage.Resource(R.string.auth_register_terms_required)),
             viewModel.uiState.value
         )
         coVerify(exactly = 0) { repository.register(any()) }
@@ -191,7 +193,10 @@ class RegisterViewModelTest {
 
         val state = viewModel.uiState.value
         assertTrue(state is RegisterUiState.Error)
-        assertEquals("El correo ya está registrado", (state as RegisterUiState.Error).message)
+        assertEquals(
+            ErrorMessage.Plain("El correo ya está registrado"),
+            (state as RegisterUiState.Error).message
+        )
     }
 
     @Test

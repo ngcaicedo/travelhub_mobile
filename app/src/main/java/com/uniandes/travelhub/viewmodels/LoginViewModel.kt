@@ -3,6 +3,7 @@ package com.uniandes.travelhub.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.uniandes.travelhub.R
 import com.uniandes.travelhub.repositories.AuthRepository
 import com.uniandes.travelhub.utils.AuthValidators
 import kotlinx.coroutines.channels.Channel
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
 sealed interface LoginUiState {
     data object Idle : LoginUiState
     data object Loading : LoginUiState
-    data class Error(val message: String) : LoginUiState
+    data class Error(val message: ErrorMessage) : LoginUiState
 }
 
 sealed interface LoginEvent {
@@ -53,11 +54,15 @@ class LoginViewModel(
         val passwordValue = _password.value
 
         if (!AuthValidators.isValidEmail(emailValue)) {
-            _uiState.value = LoginUiState.Error("Correo electrónico inválido")
+            _uiState.value = LoginUiState.Error(
+                ErrorMessage.Resource(R.string.auth_login_email_invalid)
+            )
             return
         }
         if (passwordValue.isBlank()) {
-            _uiState.value = LoginUiState.Error("La contraseña es obligatoria")
+            _uiState.value = LoginUiState.Error(
+                ErrorMessage.Resource(R.string.auth_login_password_required)
+            )
             return
         }
 
@@ -70,7 +75,8 @@ class LoginViewModel(
                 },
                 onFailure = { throwable ->
                     _uiState.value = LoginUiState.Error(
-                        throwable.message ?: "No fue posible iniciar sesión"
+                        throwable.message?.let { ErrorMessage.Plain(it) }
+                            ?: ErrorMessage.Resource(R.string.auth_login_default_error)
                     )
                 }
             )

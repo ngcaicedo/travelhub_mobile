@@ -6,6 +6,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import com.uniandes.travelhub.ui.theme.TravelhubTheme
+import com.uniandes.travelhub.viewmodels.ErrorMessage
 import com.uniandes.travelhub.viewmodels.VerifyOtpUiState
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -57,7 +58,7 @@ class VerifyOtpScreenContentTest {
 
     @Test
     fun `error state shows backend message in banner`() {
-        setContent(uiState = VerifyOtpUiState.Error("El código debe tener 6 dígitos"))
+        setContent(uiState = VerifyOtpUiState.Error(ErrorMessage.Plain("El código debe tener 6 dígitos")))
 
         composeRule.onNodeWithText("El código debe tener 6 dígitos").assertExists()
     }

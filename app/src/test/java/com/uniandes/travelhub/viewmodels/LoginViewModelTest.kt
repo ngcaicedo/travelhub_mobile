@@ -1,6 +1,7 @@
 package com.uniandes.travelhub.viewmodels
 
 import app.cash.turbine.test
+import com.uniandes.travelhub.R
 import com.uniandes.travelhub.repositories.AuthException
 import com.uniandes.travelhub.repositories.AuthRepository
 import com.uniandes.travelhub.testing.MainDispatcherRule
@@ -48,7 +49,10 @@ class LoginViewModelTest {
 
         val state = viewModel.uiState.value
         assertTrue(state is LoginUiState.Error)
-        assertEquals("Correo electrónico inválido", (state as LoginUiState.Error).message)
+        assertEquals(
+            ErrorMessage.Resource(R.string.auth_login_email_invalid),
+            (state as LoginUiState.Error).message
+        )
         coVerify(exactly = 0) { repository.login(any(), any()) }
     }
 
@@ -116,7 +120,10 @@ class LoginViewModelTest {
 
         val state = viewModel.uiState.value
         assertTrue(state is LoginUiState.Error)
-        assertEquals("Credenciales inválidas", (state as LoginUiState.Error).message)
+        assertEquals(
+            ErrorMessage.Plain("Credenciales inválidas"),
+            (state as LoginUiState.Error).message
+        )
     }
 
     @Test

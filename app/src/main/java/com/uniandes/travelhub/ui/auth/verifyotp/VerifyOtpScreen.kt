@@ -33,6 +33,8 @@ import com.uniandes.travelhub.ui.auth.components.ErrorBanner
 import com.uniandes.travelhub.ui.auth.components.LanguageSwitcher
 import com.uniandes.travelhub.ui.auth.components.TravelHubPrimaryButton
 import com.uniandes.travelhub.ui.auth.components.TravelHubTextField
+import com.uniandes.travelhub.ui.auth.components.asString
+import com.uniandes.travelhub.viewmodels.ErrorMessage
 import com.uniandes.travelhub.ui.theme.Slate400
 import com.uniandes.travelhub.ui.theme.Slate500
 import com.uniandes.travelhub.ui.theme.TravelhubTheme
@@ -161,7 +163,7 @@ fun VerifyOtpScreenContent(
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.md),
             ) {
                 if (uiState is VerifyOtpUiState.Error) {
-                    ErrorBanner(message = uiState.message)
+                    ErrorBanner(message = uiState.message.asString())
                 }
 
                 TravelHubTextField(
@@ -246,7 +248,7 @@ private fun VerifyOtpScreenLoadingPreview() {
 private fun VerifyOtpScreenErrorPreview() {
     TravelhubTheme {
         VerifyOtpScreenContent(
-            uiState = VerifyOtpUiState.Error("El código debe tener 6 dígitos"),
+            uiState = VerifyOtpUiState.Error(ErrorMessage.Plain("El código debe tener 6 dígitos")),
             email = "ada@example.com",
             otpCode = "123",
             currentLocale = "es",

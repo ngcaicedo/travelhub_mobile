@@ -3,6 +3,7 @@ package com.uniandes.travelhub.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.uniandes.travelhub.R
 import com.uniandes.travelhub.models.UserRole
 import com.uniandes.travelhub.repositories.AuthRepository
 import com.uniandes.travelhub.utils.AuthValidators
@@ -16,7 +17,7 @@ import kotlinx.coroutines.launch
 sealed interface VerifyOtpUiState {
     data object Idle : VerifyOtpUiState
     data object Loading : VerifyOtpUiState
-    data class Error(val message: String) : VerifyOtpUiState
+    data class Error(val message: ErrorMessage) : VerifyOtpUiState
 }
 
 sealed interface VerifyOtpEvent {
@@ -45,7 +46,9 @@ class VerifyOtpViewModel(
     fun onSubmit() {
         val code = _otpCode.value
         if (!AuthValidators.isValidOtp(code)) {
-            _uiState.value = VerifyOtpUiState.Error("El código debe tener 6 dígitos")
+            _uiState.value = VerifyOtpUiState.Error(
+                ErrorMessage.Resource(R.string.auth_verify_otp_invalid)
+            )
             return
         }
 
@@ -58,7 +61,8 @@ class VerifyOtpViewModel(
                 },
                 onFailure = { throwable ->
                     _uiState.value = VerifyOtpUiState.Error(
-                        throwable.message ?: "No fue posible verificar el código"
+                        throwable.message?.let { ErrorMessage.Plain(it) }
+                            ?: ErrorMessage.Resource(R.string.auth_verify_otp_default_error)
                     )
                 }
             )

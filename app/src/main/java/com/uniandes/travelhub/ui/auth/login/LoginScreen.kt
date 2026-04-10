@@ -52,6 +52,8 @@ import com.uniandes.travelhub.ui.auth.components.ErrorBanner
 import com.uniandes.travelhub.ui.auth.components.LanguageSwitcher
 import com.uniandes.travelhub.ui.auth.components.TravelHubPrimaryButton
 import com.uniandes.travelhub.ui.auth.components.TravelHubTextField
+import com.uniandes.travelhub.ui.auth.components.asString
+import com.uniandes.travelhub.viewmodels.ErrorMessage
 import com.uniandes.travelhub.ui.theme.Slate400
 import com.uniandes.travelhub.ui.theme.Slate500
 import com.uniandes.travelhub.ui.theme.TravelhubTheme
@@ -183,7 +185,7 @@ fun LoginScreenContent(
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.md),
             ) {
                 if (uiState is LoginUiState.Error) {
-                    ErrorBanner(message = uiState.message)
+                    ErrorBanner(message = uiState.message.asString())
                 }
 
                 TravelHubTextField(
@@ -346,7 +348,7 @@ private fun LoginScreenLoadingPreview() {
 private fun LoginScreenErrorPreview() {
     TravelhubTheme {
         LoginScreenContent(
-            uiState = LoginUiState.Error("Credenciales inválidas"),
+            uiState = LoginUiState.Error(ErrorMessage.Plain("Credenciales inválidas")),
             email = "ada@example.com",
             password = "wrong",
             currentLocale = "es",

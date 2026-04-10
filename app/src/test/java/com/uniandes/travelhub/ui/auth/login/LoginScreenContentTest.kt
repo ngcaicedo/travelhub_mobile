@@ -6,6 +6,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import com.uniandes.travelhub.ui.theme.TravelhubTheme
+import com.uniandes.travelhub.viewmodels.ErrorMessage
 import com.uniandes.travelhub.viewmodels.LoginUiState
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -58,7 +59,7 @@ class LoginScreenContentTest {
 
     @Test
     fun `error state shows backend message in banner`() {
-        setContent(uiState = LoginUiState.Error("Credenciales inválidas"))
+        setContent(uiState = LoginUiState.Error(ErrorMessage.Plain("Credenciales inválidas")))
 
         composeRule.onNodeWithText("Credenciales inválidas").assertExists()
     }

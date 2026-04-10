@@ -3,6 +3,7 @@ package com.uniandes.travelhub.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.uniandes.travelhub.R
 import com.uniandes.travelhub.models.UserRole
 import com.uniandes.travelhub.models.auth.RegisterRequest
 import com.uniandes.travelhub.repositories.AuthRepository
@@ -17,7 +18,7 @@ import kotlinx.coroutines.launch
 sealed interface RegisterUiState {
     data object Idle : RegisterUiState
     data object Loading : RegisterUiState
-    data class Error(val message: String) : RegisterUiState
+    data class Error(val message: ErrorMessage) : RegisterUiState
 }
 
 sealed interface RegisterEvent {
@@ -86,24 +87,33 @@ class RegisterViewModel(
                 },
                 onFailure = { throwable ->
                     _uiState.value = RegisterUiState.Error(
-                        throwable.message ?: "No fue posible crear la cuenta"
+                        throwable.message?.let { ErrorMessage.Plain(it) }
+                            ?: ErrorMessage.Resource(R.string.auth_register_default_error)
                     )
                 }
             )
         }
     }
 
-    private fun validate(state: RegisterFormState): String? {
-        if (state.fullName.isBlank()) return "El nombre es obligatorio"
+    private fun validate(state: RegisterFormState): ErrorMessage? {
+        if (state.fullName.isBlank()) {
+            return ErrorMessage.Resource(R.string.auth_register_full_name_required)
+        }
         if (state.role == UserRole.HOTEL_PARTNER && state.hotelName.isBlank()) {
-            return "El nombre del hotel es obligatorio"
+            return ErrorMessage.Resource(R.string.auth_register_hotel_name_required)
         }
-        if (!AuthValidators.isValidEmail(state.email)) return "Correo electrónico inválido"
-        if (!AuthValidators.isValidPhone(state.phone)) return "Número de teléfono inválido"
+        if (!AuthValidators.isValidEmail(state.email)) {
+            return ErrorMessage.Resource(R.string.auth_login_email_invalid)
+        }
+        if (!AuthValidators.isValidPhone(state.phone)) {
+            return ErrorMessage.Resource(R.string.auth_register_phone_invalid)
+        }
         if (!AuthValidators.isStrongEnough(state.password)) {
-            return "La contraseña debe tener al menos 8 caracteres, mayúscula, número y símbolo"
+            return ErrorMessage.Resource(R.string.auth_register_password_weak)
         }
-        if (!state.agreedToTerms) return "Debes aceptar los términos y condiciones"
+        if (!state.agreedToTerms) {
+            return ErrorMessage.Resource(R.string.auth_register_terms_required)
+        }
         return null
     }
 

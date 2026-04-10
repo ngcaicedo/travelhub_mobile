@@ -1,6 +1,7 @@
 package com.uniandes.travelhub.viewmodels
 
 import app.cash.turbine.test
+import com.uniandes.travelhub.R
 import com.uniandes.travelhub.models.UserRole
 import com.uniandes.travelhub.repositories.AuthException
 import com.uniandes.travelhub.repositories.AuthRepository
@@ -53,7 +54,10 @@ class VerifyOtpViewModelTest {
 
         val state = viewModel.uiState.value
         assertTrue(state is VerifyOtpUiState.Error)
-        assertEquals("El código debe tener 6 dígitos", (state as VerifyOtpUiState.Error).message)
+        assertEquals(
+            ErrorMessage.Resource(R.string.auth_verify_otp_invalid),
+            (state as VerifyOtpUiState.Error).message
+        )
         coVerify(exactly = 0) { repository.verifyOtp(any(), any()) }
     }
 
@@ -102,7 +106,10 @@ class VerifyOtpViewModelTest {
 
         val state = viewModel.uiState.value
         assertTrue(state is VerifyOtpUiState.Error)
-        assertEquals("Código incorrecto", (state as VerifyOtpUiState.Error).message)
+        assertEquals(
+            ErrorMessage.Plain("Código incorrecto"),
+            (state as VerifyOtpUiState.Error).message
+        )
     }
 
     @Test
