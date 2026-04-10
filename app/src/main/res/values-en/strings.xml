@@ -27,6 +27,29 @@
     <string name="auth_login_password_required">Password is required</string>
     <string name="auth_login_default_error">Unable to sign in</string>
 
+    <!-- auth: register -->
+    <string name="auth_register_title">Create your account</string>
+    <string name="auth_register_subtitle">Join TravelHub</string>
+    <string name="auth_register_tab_traveler">Traveler</string>
+    <string name="auth_register_tab_host">Host</string>
+    <string name="auth_register_full_name">Full name</string>
+    <string name="auth_register_full_name_placeholder">Your name</string>
+    <string name="auth_register_contact_name">Contact name</string>
+    <string name="auth_register_contact_name_placeholder">Your name</string>
+    <string name="auth_register_hotel_name">Hotel name</string>
+    <string name="auth_register_hotel_name_placeholder">Plaza Hotel</string>
+    <string name="auth_register_email">Email</string>
+    <string name="auth_register_email_placeholder">your@email.com</string>
+    <string name="auth_register_phone">Phone</string>
+    <string name="auth_register_phone_placeholder">+1 555 000 0000</string>
+    <string name="auth_register_password">Password</string>
+    <string name="auth_register_password_placeholder">••••••••</string>
+    <string name="auth_register_terms">I accept the terms and conditions</string>
+    <string name="auth_register_submit">Create account</string>
+    <string name="auth_register_have_account">Already have an account?</string>
+    <string name="auth_register_sign_in">Sign in</string>
+    <string name="auth_register_success">Account created — check your email</string>
+
     <!-- auth: verify otp -->
     <string name="auth_verify_otp_title">Verify your email</string>
     <string name="auth_verify_otp_subtitle">Enter the 6-digit code sent to %1$s</string>
