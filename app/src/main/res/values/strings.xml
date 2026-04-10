@@ -1,3 +1,35 @@
 <resources>
-    <string name="app_name">Travelhub</string>
+    <string name="app_name">TravelHub</string>
+
+    <!-- common -->
+    <string name="common_close">Cerrar</string>
+    <string name="common_unexpected_error">Ocurrió un error inesperado</string>
+    <string name="common_change_language">Cambiar idioma</string>
+    <string name="common_coming_soon">Próximamente</string>
+
+    <!-- auth: hero -->
+    <string name="auth_brand_tagline">VIAJES PREMIUM</string>
+
+    <!-- auth: login -->
+    <string name="auth_login_title">Bienvenido</string>
+    <string name="auth_login_subtitle">Tu próxima aventura comienza aquí</string>
+    <string name="auth_login_email">Correo electrónico</string>
+    <string name="auth_login_email_placeholder">ejemplo@correo.com</string>
+    <string name="auth_login_password">Contraseña</string>
+    <string name="auth_login_password_placeholder">••••••••</string>
+    <string name="auth_login_show_password">Mostrar contraseña</string>
+    <string name="auth_login_hide_password">Ocultar contraseña</string>
+    <string name="auth_login_forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="auth_login_submit">Iniciar sesión</string>
+    <string name="auth_login_no_account">¿No tienes una cuenta?</string>
+    <string name="auth_login_create_account">Regístrate ahora</string>
+    <string name="auth_login_email_invalid">Correo electrónico inválido</string>
+    <string name="auth_login_password_required">La contraseña es obligatoria</string>
+    <string name="auth_login_default_error">No fue posible iniciar sesión</string>
+
+    <!-- auth: password strength -->
+    <string name="auth_password_strength_weak">Débil</string>
+    <string name="auth_password_strength_medium">Media</string>
+    <string name="auth_password_strength_strong">Fuerte</string>
+    <string name="auth_password_strength_very_strong">Muy fuerte</string>
 </resources>

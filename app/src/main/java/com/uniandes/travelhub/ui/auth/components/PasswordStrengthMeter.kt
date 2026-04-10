@@ -14,8 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.uniandes.travelhub.R
 import com.uniandes.travelhub.utils.PasswordStrength
 import com.uniandes.travelhub.utils.PasswordTier
 import com.uniandes.travelhub.ui.theme.Slate200
@@ -44,10 +46,10 @@ fun PasswordStrengthMeter(
     }
     val label = when (tier) {
         PasswordTier.NONE -> ""
-        PasswordTier.WEAK -> "Débil"
-        PasswordTier.MEDIUM -> "Media"
-        PasswordTier.STRONG -> "Fuerte"
-        PasswordTier.VERY_STRONG -> "Muy fuerte"
+        PasswordTier.WEAK -> stringResource(R.string.auth_password_strength_weak)
+        PasswordTier.MEDIUM -> stringResource(R.string.auth_password_strength_medium)
+        PasswordTier.STRONG -> stringResource(R.string.auth_password_strength_strong)
+        PasswordTier.VERY_STRONG -> stringResource(R.string.auth_password_strength_very_strong)
     }
 
     Column(modifier = modifier.fillMaxWidth()) {

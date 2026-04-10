@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">TravelHub</string>
+
+    <!-- common -->
+    <string name="common_close">Close</string>
+    <string name="common_unexpected_error">An unexpected error occurred</string>
+    <string name="common_change_language">Change language</string>
+    <string name="common_coming_soon">Coming soon</string>
+
+    <!-- auth: hero -->
+    <string name="auth_brand_tagline">PREMIUM TRAVEL</string>
+
+    <!-- auth: login -->
+    <string name="auth_login_title">Welcome</string>
+    <string name="auth_login_subtitle">Your next adventure begins here</string>
+    <string name="auth_login_email">Email</string>
+    <string name="auth_login_email_placeholder">your@email.com</string>
+    <string name="auth_login_password">Password</string>
+    <string name="auth_login_password_placeholder">••••••••</string>
+    <string name="auth_login_show_password">Show password</string>
+    <string name="auth_login_hide_password">Hide password</string>
+    <string name="auth_login_forgot_password">Forgot your password?</string>
+    <string name="auth_login_submit">Sign in</string>
+    <string name="auth_login_no_account">Don\'t have an account?</string>
+    <string name="auth_login_create_account">Sign up now</string>
+    <string name="auth_login_email_invalid">Invalid email address</string>
+    <string name="auth_login_password_required">Password is required</string>
+    <string name="auth_login_default_error">Unable to sign in</string>
+
+    <!-- auth: password strength -->
+    <string name="auth_password_strength_weak">Weak</string>
+    <string name="auth_password_strength_medium">Medium</string>
+    <string name="auth_password_strength_strong">Strong</string>
+    <string name="auth_password_strength_very_strong">Very strong</string>
+</resources>

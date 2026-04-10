@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">TravelHub</string>
+
+    <!-- common -->
+    <string name="common_close">Fechar</string>
+    <string name="common_unexpected_error">Ocorreu um erro inesperado</string>
+    <string name="common_change_language">Mudar idioma</string>
+    <string name="common_coming_soon">Em breve</string>
+
+    <!-- auth: hero -->
+    <string name="auth_brand_tagline">VIAGENS PREMIUM</string>
+
+    <!-- auth: login -->
+    <string name="auth_login_title">Bem-vindo</string>
+    <string name="auth_login_subtitle">Sua próxima aventura começa aqui</string>
+    <string name="auth_login_email">E-mail</string>
+    <string name="auth_login_email_placeholder">seu@email.com</string>
+    <string name="auth_login_password">Senha</string>
+    <string name="auth_login_password_placeholder">••••••••</string>
+    <string name="auth_login_show_password">Mostrar senha</string>
+    <string name="auth_login_hide_password">Ocultar senha</string>
+    <string name="auth_login_forgot_password">Esqueceu sua senha?</string>
+    <string name="auth_login_submit">Entrar</string>
+    <string name="auth_login_no_account">Não tem uma conta?</string>
+    <string name="auth_login_create_account">Cadastre-se agora</string>
+    <string name="auth_login_email_invalid">E-mail inválido</string>
+    <string name="auth_login_password_required">A senha é obrigatória</string>
+    <string name="auth_login_default_error">Não foi possível entrar</string>
+
+    <!-- auth: password strength -->
+    <string name="auth_password_strength_weak">Fraca</string>
+    <string name="auth_password_strength_medium">Média</string>
+    <string name="auth_password_strength_strong">Forte</string>
+    <string name="auth_password_strength_very_strong">Muito forte</string>
+</resources>
