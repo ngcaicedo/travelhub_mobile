@@ -27,6 +27,16 @@
     <string name="auth_login_password_required">A senha é obrigatória</string>
     <string name="auth_login_default_error">Não foi possível entrar</string>
 
+    <!-- auth: verify otp -->
+    <string name="auth_verify_otp_title">Verifique seu e-mail</string>
+    <string name="auth_verify_otp_subtitle">Digite o código de 6 dígitos enviado para %1$s</string>
+    <string name="auth_verify_otp_code_label">Código de verificação</string>
+    <string name="auth_verify_otp_code_placeholder">123456</string>
+    <string name="auth_verify_otp_submit">Verificar</string>
+    <string name="auth_verify_otp_back_to_login">Voltar ao login</string>
+    <string name="auth_verify_otp_invalid">O código deve ter 6 dígitos</string>
+    <string name="auth_verify_otp_default_error">Não foi possível verificar o código</string>
+
     <!-- auth: password strength -->
     <string name="auth_password_strength_weak">Fraca</string>
     <string name="auth_password_strength_medium">Média</string>
