@@ -16,7 +16,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.uniandes.travelhub.R
 import com.uniandes.travelhub.ui.theme.TravelhubTheme
 
 data class LanguageOption(
@@ -43,7 +45,7 @@ fun LanguageSwitcher(
         IconButton(onClick = { expanded = true }) {
             Icon(
                 imageVector = Icons.Filled.Language,
-                contentDescription = "Cambiar idioma",
+                contentDescription = stringResource(R.string.common_change_language),
                 tint = MaterialTheme.colorScheme.onSurface,
             )
         }
