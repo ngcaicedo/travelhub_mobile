@@ -1,3 +1,79 @@
 <resources>
-    <string name="app_name">Travelhub</string>
+    <string name="app_name">TravelHub</string>
+
+    <!-- common -->
+    <string name="common_close">Cerrar</string>
+    <string name="common_unexpected_error">Ocurrió un error inesperado</string>
+    <string name="common_change_language">Cambiar idioma</string>
+    <string name="common_coming_soon">Próximamente</string>
+
+    <!-- placeholder home -->
+    <string name="home_placeholder_title">¡Bienvenido!</string>
+    <string name="home_placeholder_subtitle">Sesión iniciada como %1$s</string>
+    <string name="home_placeholder_logout">Cerrar sesión</string>
+
+    <!-- auth: hero -->
+    <string name="auth_brand_tagline">VIAJES PREMIUM</string>
+
+    <!-- auth: login -->
+    <string name="auth_login_title">Bienvenido</string>
+    <string name="auth_login_subtitle">Tu próxima aventura comienza aquí</string>
+    <string name="auth_login_email">Correo electrónico</string>
+    <string name="auth_login_email_placeholder">ejemplo@correo.com</string>
+    <string name="auth_login_password">Contraseña</string>
+    <string name="auth_login_password_placeholder">••••••••</string>
+    <string name="auth_login_show_password">Mostrar contraseña</string>
+    <string name="auth_login_hide_password">Ocultar contraseña</string>
+    <string name="auth_login_forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="auth_login_submit">Iniciar sesión</string>
+    <string name="auth_login_no_account">¿No tienes una cuenta?</string>
+    <string name="auth_login_create_account">Regístrate ahora</string>
+    <string name="auth_login_email_invalid">Correo electrónico inválido</string>
+    <string name="auth_login_password_required">La contraseña es obligatoria</string>
+    <string name="auth_login_default_error">No fue posible iniciar sesión</string>
+
+    <!-- auth: register -->
+    <string name="auth_register_title">Crea tu cuenta</string>
+    <string name="auth_register_subtitle">Únete a TravelHub</string>
+    <string name="auth_register_tab_traveler">Viajero</string>
+    <string name="auth_register_tab_host">Anfitrión</string>
+    <string name="auth_register_full_name">Nombre completo</string>
+    <string name="auth_register_full_name_placeholder">Tu nombre</string>
+    <string name="auth_register_contact_name">Nombre de contacto</string>
+    <string name="auth_register_contact_name_placeholder">Tu nombre</string>
+    <string name="auth_register_hotel_name">Nombre del hotel</string>
+    <string name="auth_register_hotel_name_placeholder">Hotel Plaza</string>
+    <string name="auth_register_email">Correo electrónico</string>
+    <string name="auth_register_email_placeholder">ejemplo@correo.com</string>
+    <string name="auth_register_phone">Teléfono</string>
+    <string name="auth_register_phone_placeholder">+57 300 000 0000</string>
+    <string name="auth_register_password">Contraseña</string>
+    <string name="auth_register_password_placeholder">••••••••</string>
+    <string name="auth_register_terms">Acepto los términos y condiciones</string>
+    <string name="auth_register_submit">Crear cuenta</string>
+    <string name="auth_register_have_account">¿Ya tienes una cuenta?</string>
+    <string name="auth_register_sign_in">Inicia sesión</string>
+    <string name="auth_register_success">Cuenta creada — verifica tu correo</string>
+    <string name="auth_register_full_name_required">El nombre es obligatorio</string>
+    <string name="auth_register_hotel_name_required">El nombre del hotel es obligatorio</string>
+    <string name="auth_register_phone_invalid">Número de teléfono inválido</string>
+    <string name="auth_register_password_weak">La contraseña debe tener al menos 8 caracteres, mayúscula, número y símbolo</string>
+    <string name="auth_register_terms_required">Debes aceptar los términos y condiciones</string>
+    <string name="auth_register_default_error">No fue posible crear la cuenta</string>
+
+    <!-- auth: verify otp -->
+    <string name="auth_verify_otp_title">Verifica tu correo</string>
+    <string name="auth_verify_otp_subtitle">Ingresa el código de 6 dígitos enviado a %1$s</string>
+    <string name="auth_verify_otp_code_label">Código de verificación</string>
+    <string name="auth_verify_otp_code_placeholder">123456</string>
+    <string name="auth_verify_otp_submit">Verificar</string>
+    <string name="auth_verify_otp_back_to_login">Volver al inicio de sesión</string>
+    <string name="auth_verify_otp_invalid">El código debe tener 6 dígitos</string>
+    <string name="auth_verify_otp_default_error">No fue posible verificar el código</string>
+
+    <!-- auth: password strength -->
+    <string name="auth_password_strength_weak">Débil</string>
+    <string name="auth_password_strength_medium">Media</string>
+    <string name="auth_password_strength_strong">Fuerte</string>
+    <string name="auth_password_strength_very_strong">Muy fuerte</string>
 </resources>
