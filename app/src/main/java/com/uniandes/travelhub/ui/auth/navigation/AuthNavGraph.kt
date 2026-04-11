@@ -9,11 +9,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.uniandes.travelhub.repositories.AuthRepository
+import com.uniandes.travelhub.repositories.PropertiesRepository
 import com.uniandes.travelhub.ui.auth.home.PlaceholderHomeScreen
 import com.uniandes.travelhub.ui.auth.login.LoginScreen
 import com.uniandes.travelhub.ui.auth.register.RegisterScreen
 import com.uniandes.travelhub.ui.auth.verifyotp.VerifyOtpScreen
+import com.uniandes.travelhub.ui.properties.PropertyListScreen
 import com.uniandes.travelhub.viewmodels.LoginViewModel
+import com.uniandes.travelhub.viewmodels.PropertiesViewModel
 import com.uniandes.travelhub.viewmodels.RegisterViewModel
 import com.uniandes.travelhub.viewmodels.VerifyOtpViewModel
 
@@ -24,6 +27,7 @@ import com.uniandes.travelhub.viewmodels.VerifyOtpViewModel
 @Composable
 fun AuthNavGraph(
     repository: AuthRepository,
+    propertiesRepository: PropertiesRepository,
     currentLocale: String,
     onLocaleChange: (String) -> Unit,
     navController: NavHostController = rememberNavController(),
@@ -96,13 +100,14 @@ fun AuthNavGraph(
         }
 
         composable(AuthRoute.PlaceholderHome.route) {
-            PlaceholderHomeScreen(
-                repository = repository,
-                onLoggedOut = {
-                    navController.navigate(AuthRoute.Login.route) {
-                        popUpTo(AuthRoute.PlaceholderHome.route) { inclusive = true }
-                    }
-                },
+            val propertiesViewModel: PropertiesViewModel = viewModel(
+                factory = PropertiesViewModel.Factory(propertiesRepository)
+            )
+            PropertyListScreen(
+                viewModel = propertiesViewModel,
+                onPropertyClick = { propertyId ->
+                    // To be implemented: navController.navigate(AuthRoute.PropertyDetail.build(propertyId))
+                }
             )
         }
     }
