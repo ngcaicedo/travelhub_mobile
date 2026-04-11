@@ -15,10 +15,12 @@ import com.uniandes.travelhub.ui.theme.TravelhubTheme
 class MainActivity : AppCompatActivity() {
 
     private val repository: AuthRepository by lazy {
+        val tokenStore = AuthTokenStore.getInstance(applicationContext)
+        RetrofitFactory.init(tokenStore)
         AuthRepository(
             securityApi = RetrofitFactory.securityApi,
             usersApi = RetrofitFactory.usersApi,
-            tokenStore = AuthTokenStore.getInstance(applicationContext),
+            tokenStore = tokenStore,
         )
     }
 

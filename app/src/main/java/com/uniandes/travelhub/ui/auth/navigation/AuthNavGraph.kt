@@ -1,6 +1,9 @@
 package com.uniandes.travelhub.ui.auth.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -8,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.uniandes.travelhub.models.UserRole
 import com.uniandes.travelhub.repositories.AuthRepository
 import com.uniandes.travelhub.ui.auth.home.PlaceholderHomeScreen
 import com.uniandes.travelhub.ui.auth.login.LoginScreen
@@ -28,6 +32,8 @@ fun AuthNavGraph(
     onLocaleChange: (String) -> Unit,
     navController: NavHostController = rememberNavController(),
 ) {
+    val userRole by repository.observeRole().collectAsState(initial = null)
+
     NavHost(
         navController = navController,
         startDestination = AuthRoute.Login.route,
@@ -36,6 +42,21 @@ fun AuthNavGraph(
             val viewModel: LoginViewModel = viewModel(
                 factory = LoginViewModel.Factory(repository)
             )
+            
+            // If the user is already logged in, navigate to their home based on role
+            LaunchedEffect(userRole) {
+                userRole?.let { role ->
+                    val destination = when (role) {
+                        UserRole.TRAVELER -> AuthRoute.TravelerHome.route
+                        UserRole.HOTEL_PARTNER -> AuthRoute.PartnerHome.route
+                        UserRole.ADMIN -> AuthRoute.AdminHome.route
+                    }
+                    navController.navigate(destination) {
+                        popUpTo(AuthRoute.Login.route) { inclusive = true }
+                    }
+                }
+            }
+
             LoginScreen(
                 viewModel = viewModel,
                 onNavigateToOtp = { email ->
@@ -80,9 +101,7 @@ fun AuthNavGraph(
                 viewModel = viewModel,
                 email = email,
                 onNavigateToHome = {
-                    navController.navigate(AuthRoute.PlaceholderHome.route) {
-                        popUpTo(AuthRoute.Login.route) { inclusive = true }
-                    }
+                    // Handled by role observation in the next screen or globally
                 },
                 onNavigateBackToLogin = {
                     navController.popBackStack(
@@ -95,12 +114,37 @@ fun AuthNavGraph(
             )
         }
 
-        composable(AuthRoute.PlaceholderHome.route) {
+        composable(AuthRoute.TravelerHome.route) {
             PlaceholderHomeScreen(
                 repository = repository,
+                title = "Traveler Dashboard",
                 onLoggedOut = {
                     navController.navigate(AuthRoute.Login.route) {
-                        popUpTo(AuthRoute.PlaceholderHome.route) { inclusive = true }
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+            )
+        }
+
+        composable(AuthRoute.PartnerHome.route) {
+            PlaceholderHomeScreen(
+                repository = repository,
+                title = "Hotel Partner Dashboard",
+                onLoggedOut = {
+                    navController.navigate(AuthRoute.Login.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+            )
+        }
+
+        composable(AuthRoute.AdminHome.route) {
+            PlaceholderHomeScreen(
+                repository = repository,
+                title = "Admin Dashboard",
+                onLoggedOut = {
+                    navController.navigate(AuthRoute.Login.route) {
+                        popUpTo(0) { inclusive = true }
                     }
                 },
             )

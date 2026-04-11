@@ -18,6 +18,8 @@ sealed class AuthRoute(val route: String) {
         fun build(email: String): String = "verify_otp/$email"
     }
 
-    /** Temporary destination shown after a successful OTP verification. */
-    data object PlaceholderHome : AuthRoute("home")
+    /** Final destinations based on the user's role. */
+    data object TravelerHome : AuthRoute("traveler_home")
+    data object PartnerHome : AuthRoute("partner_home")
+    data object AdminHome : AuthRoute("admin_home")
 }

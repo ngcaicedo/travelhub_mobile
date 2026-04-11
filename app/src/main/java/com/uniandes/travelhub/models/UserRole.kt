@@ -8,5 +8,8 @@ enum class UserRole {
     TRAVELER,
 
     @Json(name = "hotel_partner")
-    HOTEL_PARTNER
+    HOTEL_PARTNER,
+
+    @Json(name = "admin")
+    ADMIN
 }
