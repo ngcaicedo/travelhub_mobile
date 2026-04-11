@@ -14,7 +14,10 @@ import com.uniandes.travelhub.ui.auth.home.PlaceholderHomeScreen
 import com.uniandes.travelhub.ui.auth.login.LoginScreen
 import com.uniandes.travelhub.ui.auth.register.RegisterScreen
 import com.uniandes.travelhub.ui.auth.verifyotp.VerifyOtpScreen
+import com.uniandes.travelhub.viewmodels.PropertyDetailViewModel
+import com.uniandes.travelhub.ui.properties.PropertyDetailScreen
 import com.uniandes.travelhub.ui.properties.PropertyListScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uniandes.travelhub.viewmodels.LoginViewModel
 import com.uniandes.travelhub.viewmodels.PropertiesViewModel
 import com.uniandes.travelhub.viewmodels.RegisterViewModel
@@ -106,8 +109,24 @@ fun AuthNavGraph(
             PropertyListScreen(
                 viewModel = propertiesViewModel,
                 onPropertyClick = { propertyId ->
-                    // To be implemented: navController.navigate(AuthRoute.PropertyDetail.build(propertyId))
+                    navController.navigate(AuthRoute.PropertyDetail.build(propertyId))
                 }
+            )
+        }
+
+        composable(
+            route = AuthRoute.PropertyDetail.route,
+            arguments = listOf(navArgument(AuthRoute.PropertyDetail.ARG_ID) {
+                type = NavType.StringType
+            })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString(AuthRoute.PropertyDetail.ARG_ID).orEmpty()
+            val detailViewModel: PropertyDetailViewModel = viewModel(
+                factory = PropertyDetailViewModel.Factory(propertiesRepository, id)
+            )
+            PropertyDetailScreen(
+                viewModel = detailViewModel,
+                onBackClick = { navController.popBackStack() }
             )
         }
     }

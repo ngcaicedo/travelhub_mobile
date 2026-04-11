@@ -22,7 +22,7 @@ val usersApiBase: String = localProperties.getProperty(
 )
 val propertiesApiBase: String = localProperties.getProperty(
     "TRAVELHUB_PROPERTIES_API_BASE",
-    "http://10.0.2.2:8002/"
+    "http://10.0.2.2:8005/"
 )
 
 android {
