@@ -32,6 +32,8 @@ object RetrofitFactory {
 
     val usersApi: UsersApi by lazy { build(BuildConfig.USERS_API_BASE) }
 
+    val propertiesApi: PropertiesApi by lazy { build(BuildConfig.PROPERTIES_API_BASE) }
+
     private inline fun <reified T> build(baseUrl: String): T =
         Retrofit.Builder()
             .baseUrl(baseUrl)

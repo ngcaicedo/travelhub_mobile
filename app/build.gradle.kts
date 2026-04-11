@@ -20,6 +20,10 @@ val usersApiBase: String = localProperties.getProperty(
     "TRAVELHUB_USERS_API_BASE",
     "http://10.0.2.2:8000/"
 )
+val propertiesApiBase: String = localProperties.getProperty(
+    "TRAVELHUB_PROPERTIES_API_BASE",
+    "http://10.0.2.2:8002/"
+)
 
 android {
     namespace = "com.uniandes.travelhub"
@@ -36,6 +40,7 @@ android {
 
         buildConfigField("String", "SECURITY_API_BASE", "\"$securityApiBase\"")
         buildConfigField("String", "USERS_API_BASE", "\"$usersApiBase\"")
+        buildConfigField("String", "PROPERTIES_API_BASE", "\"$propertiesApiBase\"")
     }
 
     buildTypes {
