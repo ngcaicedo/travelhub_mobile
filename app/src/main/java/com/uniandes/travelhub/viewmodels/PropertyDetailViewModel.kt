@@ -3,6 +3,7 @@ package com.uniandes.travelhub.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.uniandes.travelhub.R
 import com.uniandes.travelhub.models.properties.Property
 import com.uniandes.travelhub.repositories.PropertiesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,24 +11,29 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-sealed class PropertyDetailUiState {
-    object Loading : PropertyDetailUiState()
-    data class Success(val property: Property) : PropertyDetailUiState()
-    data class Error(val message: String) : PropertyDetailUiState()
+/**
+ * UI State for the property detail screen.
+ */
+sealed interface PropertyDetailUiState {
+    data object Idle : PropertyDetailUiState
+    data object Loading : PropertyDetailUiState
+    data class Success(val property: Property) : PropertyDetailUiState
+    data class Error(val message: ErrorMessage) : PropertyDetailUiState
 }
 
 class PropertyDetailViewModel(
     private val repository: PropertiesRepository,
     private val propertyId: String
 ) : ViewModel() {
+
     private val _uiState = MutableStateFlow<PropertyDetailUiState>(PropertyDetailUiState.Loading)
     val uiState: StateFlow<PropertyDetailUiState> = _uiState.asStateFlow()
 
     init {
-        loadProperty()
+        loadPropertyDetail()
     }
 
-    fun loadProperty() {
+    fun loadPropertyDetail() {
         viewModelScope.launch {
             _uiState.value = PropertyDetailUiState.Loading
             repository.getPropertyDetail(propertyId)
@@ -35,7 +41,10 @@ class PropertyDetailViewModel(
                     _uiState.value = PropertyDetailUiState.Success(property)
                 }
                 .onFailure { error ->
-                    _uiState.value = PropertyDetailUiState.Error(error.message ?: "Unknown error")
+                    _uiState.value = PropertyDetailUiState.Error(
+                        error.message?.let { ErrorMessage.Plain(it) }
+                            ?: ErrorMessage.Resource(R.string.property_detail_load_error)
+                    )
                 }
         }
     }

@@ -5,25 +5,41 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Property(
-    val id: String,
-    val name: String,
-    val description: String,
-    val location: String,
+    @Json(name = "id") val id: String,
+    @Json(name = "name") val name: String,
+    @Json(name = "description") val description: String,
+    @Json(name = "location") val location: String,
+    @Json(name = "latitude") val latitude: Double? = null,
+    @Json(name = "longitude") val longitude: Double? = null,
     @Json(name = "price_per_night") val pricePerNight: Double,
-    val currency: String = "USD",
-    val rating: Double = 0.0,
+    @Json(name = "currency") val currency: String = "USD",
+    @Json(name = "rating") val rating: Double = 0.0,
     @Json(name = "review_count") val reviewCount: Int = 0,
-    val images: List<PropertyImage> = emptyList(),
-    val amenities: List<String> = emptyList(),
+    @Json(name = "bedrooms") val bedrooms: Int = 1,
+    @Json(name = "bathrooms") val bathrooms: Double = 1.0,
     @Json(name = "max_guests") val maxGuests: Int = 2,
-    val bedrooms: Double = 1.0,
-    val bathrooms: Double = 1.0,
-    @Json(name = "property_type") val propertyType: String = "Apartment"
+    @Json(name = "amenities") val amenities: List<String> = emptyList(),
+    @Json(name = "images") val images: List<PropertyImage> = emptyList(),
+    @Json(name = "reviews") val reviews: List<PropertyReview> = emptyList(),
+    @Json(name = "property_type") val propertyType: String = "Apartment",
+    @Json(name = "status") val status: Int = 0
 )
 
 @JsonClass(generateAdapter = true)
 data class PropertyImage(
-    val url: String,
+    @Json(name = "id") val id: String = "",
+    @Json(name = "url") val url: String,
+    @Json(name = "alt_text") val altText: String? = null,
     @Json(name = "is_primary") val isPrimary: Boolean = false,
-    @Json(name = "alt_text") val altText: String? = null
+    @Json(name = "position") val position: Int = 0
+)
+
+@JsonClass(generateAdapter = true)
+data class PropertyReview(
+    @Json(name = "id") val id: String,
+    @Json(name = "author") val author: String,
+    @Json(name = "rating") val rating: Int,
+    @Json(name = "date") val date: String,
+    @Json(name = "comment") val comment: String,
+    @Json(name = "verified_stay") val verifiedStay: Boolean
 )

@@ -3,6 +3,7 @@ package com.uniandes.travelhub.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.uniandes.travelhub.R
 import com.uniandes.travelhub.models.properties.Property
 import com.uniandes.travelhub.repositories.PropertiesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,13 +11,20 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-sealed class PropertyListUiState {
-    object Loading : PropertyListUiState()
-    data class Success(val properties: List<Property>) : PropertyListUiState()
-    data class Error(val message: String) : PropertyListUiState()
+/**
+ * UI State for the property list.
+ */
+sealed interface PropertyListUiState {
+    data object Idle : PropertyListUiState
+    data object Loading : PropertyListUiState
+    data class Success(val properties: List<Property>) : PropertyListUiState
+    data class Error(val message: ErrorMessage) : PropertyListUiState
 }
 
-class PropertiesViewModel(private val repository: PropertiesRepository) : ViewModel() {
+class PropertiesViewModel(
+    private val repository: PropertiesRepository
+) : ViewModel() {
+
     private val _uiState = MutableStateFlow<PropertyListUiState>(PropertyListUiState.Loading)
     val uiState: StateFlow<PropertyListUiState> = _uiState.asStateFlow()
 
@@ -32,7 +40,10 @@ class PropertiesViewModel(private val repository: PropertiesRepository) : ViewMo
                     _uiState.value = PropertyListUiState.Success(properties)
                 }
                 .onFailure { error ->
-                    _uiState.value = PropertyListUiState.Error(error.message ?: "Unknown error")
+                    _uiState.value = PropertyListUiState.Error(
+                        error.message?.let { ErrorMessage.Plain(it) }
+                            ?: ErrorMessage.Resource(R.string.property_list_load_error)
+                    )
                 }
         }
     }

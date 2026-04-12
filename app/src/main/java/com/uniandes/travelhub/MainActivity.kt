@@ -26,7 +26,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val propertiesRepository: PropertiesRepository by lazy {
-        PropertiesRepository(RetrofitFactory.propertiesApi)
+        PropertiesRepository(
+            propertiesApi = RetrofitFactory.propertiesApi
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

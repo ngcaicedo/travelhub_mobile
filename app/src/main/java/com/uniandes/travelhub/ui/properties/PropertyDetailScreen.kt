@@ -4,8 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,33 +17,35 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.VerticalDivider
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -48,10 +54,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.uniandes.travelhub.R
+import com.uniandes.travelhub.models.properties.Property
+import com.uniandes.travelhub.ui.auth.components.TravelHubPrimaryButton
+import com.uniandes.travelhub.ui.auth.components.asString
+import com.uniandes.travelhub.ui.theme.spacing
 import com.uniandes.travelhub.viewmodels.PropertyDetailUiState
 import com.uniandes.travelhub.viewmodels.PropertyDetailViewModel
 
@@ -63,269 +75,196 @@ fun PropertyDetailScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    Scaffold { padding ->
-        Box(modifier = Modifier.fillMaxSize().padding(padding)) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.property_detail_back)
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent
+                )
+            )
+        }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
             when (val state = uiState) {
+                is PropertyDetailUiState.Idle -> { /* nothing */ }
                 is PropertyDetailUiState.Loading -> {
-                    CircularProgressIndicator(modifier = Modifier.fillMaxSize().wrapContentSize())
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
                 is PropertyDetailUiState.Success -> {
-                    val property = state.property
-                    val primaryImage = property.images.find { it.isPrimary } ?: property.images.firstOrNull()
-
-                    AsyncImage(
-                        model = primaryImage?.url,
-                        contentDescription = property.name,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(450.dp),
-                        contentScale = ContentScale.Crop
-                    )
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 48.dp, start = 16.dp, end = 16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        IconButton(
-                            onClick = onBackClick,
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .background(Color.Black.copy(alpha = 0.3f))
-                        ) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
-                        }
-                        Row {
-                            IconButton(
-                                onClick = { },
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .background(Color.Black.copy(alpha = 0.3f))
-                            ) {
-                                Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.White)
-                            }
-                            Spacer(modifier = Modifier.width(8.dp))
-                            IconButton(
-                                onClick = { },
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .background(Color.Black.copy(alpha = 0.3f))
-                            ) {
-                                Icon(Icons.Default.FavoriteBorder, contentDescription = "Favorite", tint = Color.White)
-                            }
-                        }
-                    }
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        Spacer(modifier = Modifier.height(400.dp))
-                        
-                        Surface(
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
-                            color = MaterialTheme.colorScheme.background
-                        ) {
-                            Column(modifier = Modifier.padding(24.dp)) {
-                                Text(
-                                    text = property.name,
-                                    style = MaterialTheme.typography.headlineLarge.copy(
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 30.sp,
-                                        lineHeight = 36.sp
-                                    ),
-                                    color = Color(0xFF1E293B)
-                                )
-
-                                Spacer(modifier = Modifier.height(12.dp))
-
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Row(
-                                        verticalAlignment = Alignment.Top,
-                                        modifier = Modifier.weight(1f)
-                                    ) {
-                                        Icon(
-                                            Icons.Default.LocationOn,
-                                            contentDescription = null,
-                                            tint = Color(0xFF64748B),
-                                            modifier = Modifier.size(18.dp).padding(top = 2.dp)
-                                        )
-                                        Spacer(modifier = Modifier.width(4.dp))
-                                        Text(
-                                            text = property.location,
-                                            style = MaterialTheme.typography.bodyLarge,
-                                            color = Color(0xFF64748B)
-                                        )
-                                    }
-
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Icon(
-                                            Icons.Default.Star,
-                                            contentDescription = null,
-                                            tint = Color(0xFFFCC800),
-                                            modifier = Modifier.size(20.dp)
-                                        )
-                                        Spacer(modifier = Modifier.width(4.dp))
-                                        Text(
-                                            text = property.rating.toString(),
-                                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                            color = Color(0xFF1E293B)
-                                        )
-                                        Text(
-                                            text = " (${property.reviewCount} reseñas)",
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            color = Color(0xFF64748B)
-                                        )
-                                    }
-                                }
-
-                                Spacer(modifier = Modifier.height(24.dp))
-
-                                Surface(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    shape = RoundedCornerShape(20.dp),
-                                    color = Color(0xFFEFF4FF)
-                                ) {
-                                    Row(
-                                        modifier = Modifier.padding(16.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Box(
-                                            modifier = Modifier
-                                                .size(48.dp)
-                                                .clip(CircleShape)
-                                                .background(Color(0xFFBFD3FE))
-                                        )
-                                        Spacer(modifier = Modifier.width(16.dp))
-                                        Column {
-                                            Text(
-                                                text = "Anfitrión: Alejandro",
-                                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                                color = Color(0xFF1E293B)
-                                            )
-                                            Text(
-                                                text = "✓ SUPERHOST",
-                                                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                                                color = Color(0xFF2B7FFF)
-                                            )
-                                        }
-                                    }
-                                }
-
-                                Spacer(modifier = Modifier.height(32.dp))
-
-                                Text(
-                                    text = "Sobre este lugar",
-                                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                                    color = Color(0xFF1E293B)
-                                )
-                                Spacer(modifier = Modifier.height(12.dp))
-                                Text(
-                                    text = property.description,
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    color = Color(0xFF64748B),
-                                    lineHeight = 24.sp
-                                )
-
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Text(
-                                    text = "Leer más ⌵",
-                                    color = Color(0xFF2B7FFF),
-                                    fontWeight = FontWeight.Bold,
-                                    style = MaterialTheme.typography.bodyLarge
-                                )
-
-                                Spacer(modifier = Modifier.height(32.dp))
-
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceEvenly,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    PropertyInfoItem(
-                                        icon = Icons.Default.Person,
-                                        label = "${property.maxGuests} Huéspedes"
-                                    )
-                                    VerticalDivider(modifier = Modifier.height(24.dp), color = Color(0xFFCBD5E1))
-                                    PropertyInfoItem(
-                                        icon = Icons.Default.Home,
-                                        label = "${property.bedrooms.toInt()} Hab."
-                                    )
-                                    VerticalDivider(modifier = Modifier.height(24.dp), color = Color(0xFFCBD5E1))
-                                    PropertyInfoItem(
-                                        icon = Icons.Default.Check,
-                                        label = "${property.bathrooms.toInt()} Baños"
-                                    )
-                                }
-
-                                Spacer(modifier = Modifier.height(32.dp))
-                                HorizontalDivider(color = Color(0xFFE2E8F0))
-                                Spacer(modifier = Modifier.height(32.dp))
-
-                                if (property.amenities.isNotEmpty()) {
-                                    Text(
-                                        text = "Lo que ofrece este lugar",
-                                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                                        color = Color(0xFF1E293B)
-                                    )
-                                    Spacer(modifier = Modifier.height(16.dp))
-                                    FlowRow(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                                    ) {
-                                        property.amenities.forEach { amenity ->
-                                            AssistChip(
-                                                onClick = { },
-                                                label = { Text(amenity) },
-                                                colors = AssistChipDefaults.assistChipColors(
-                                                    containerColor = Color.White,
-                                                    labelColor = Color(0xFF475569)
-                                                )
-                                            )
-                                        }
-                                    }
-                                    Spacer(modifier = Modifier.height(32.dp))
-                                }
-
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Column {
-                                        Text(
-                                            text = "${property.pricePerNight} ${property.currency}",
-                                            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-                                            color = Color(0xFF1E293B)
-                                        )
-                                        Text(
-                                            text = "por noche",
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            color = Color(0xFF64748B)
-                                        )
-                                    }
-                                }
-                                Spacer(modifier = Modifier.height(32.dp))
-                            }
-                        }
-                    }
+                    PropertyDetailContent(property = state.property)
                 }
                 is PropertyDetailUiState.Error -> {
-                    Text(
-                        text = state.message,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.padding(16.dp)
+                    ErrorState(
+                        message = state.message.asString(),
+                        onRetry = { viewModel.loadPropertyDetail() },
+                        modifier = Modifier.align(Alignment.Center)
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun PropertyDetailContent(property: Property) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        // Image Carousel
+        if (property.images.isNotEmpty()) {
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1.5f),
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.sm),
+                contentPadding = PaddingValues(horizontal = MaterialTheme.spacing.md)
+            ) {
+                items(property.images) { image ->
+                    AsyncImage(
+                        model = image.url,
+                        contentDescription = image.altText ?: property.name,
+                        modifier = Modifier
+                            .fillParentMaxWidth()
+                            .clip(RoundedCornerShape(MaterialTheme.spacing.sm)),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1.5f)
+                    .padding(MaterialTheme.spacing.md)
+                    .clip(RoundedCornerShape(MaterialTheme.spacing.sm)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(stringResource(R.string.property_detail_no_images))
+            }
+        }
+
+        Column(modifier = Modifier.padding(MaterialTheme.spacing.md)) {
+            Text(
+                text = property.name,
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.sm))
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = " " + stringResource(
+                        R.string.property_detail_reviews_count,
+                        property.rating,
+                        property.reviewCount
+                    ),
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    text = " · ${property.location}",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(start = MaterialTheme.spacing.xs)
+                )
+            }
+
+            HorizontalDivider(modifier = Modifier.padding(vertical = MaterialTheme.spacing.lg))
+
+            // Details info
+            Text(
+                text = stringResource(
+                    R.string.property_detail_capacity,
+                    property.maxGuests,
+                    property.bedrooms,
+                    property.bathrooms
+                ),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+
+            HorizontalDivider(modifier = Modifier.padding(vertical = MaterialTheme.spacing.lg))
+
+            // Description
+            Text(
+                text = stringResource(R.string.property_detail_description_title),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.sm))
+            Text(
+                text = property.description,
+                style = MaterialTheme.typography.bodyLarge
+            )
+
+            HorizontalDivider(modifier = Modifier.padding(vertical = MaterialTheme.spacing.lg))
+
+            // Amenities
+            Text(
+                text = stringResource(R.string.property_detail_amenities_title),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.md))
+            property.amenities.forEach { amenity ->
+                Text(
+                    text = "• $amenity",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(bottom = MaterialTheme.spacing.sm)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.xl))
+
+            // Footer Price and Action
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Row(verticalAlignment = Alignment.Bottom) {
+                        Text(
+                            text = "${property.currency} ${property.pricePerNight}",
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = " " + stringResource(R.string.property_detail_price_per_night),
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(bottom = 2.dp)
+                        )
+                    }
+                }
+
+                TravelHubPrimaryButton(
+                    text = stringResource(R.string.property_detail_reserve),
+                    onClick = { /* Handle Reservation */ },
+                    modifier = Modifier.weight(0.5f).padding(start = MaterialTheme.spacing.md)
+                )
+            }
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.xl))
         }
     }
 }
@@ -344,6 +283,29 @@ fun PropertyInfoItem(icon: androidx.compose.ui.graphics.vector.ImageVector, labe
             text = label,
             style = MaterialTheme.typography.labelMedium,
             color = Color(0xFF1E293B)
+        )
+    }
+}
+
+@Composable
+private fun ErrorState(
+    message: String,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.padding(MaterialTheme.spacing.lg),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.md)
+    ) {
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.error
+        )
+        TravelHubPrimaryButton(
+            text = stringResource(R.string.property_retry),
+            onClick = onRetry
         )
     }
 }
