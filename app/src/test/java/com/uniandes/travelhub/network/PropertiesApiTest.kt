@@ -76,7 +76,7 @@ class PropertiesApiTest {
 
         val recorded = server.takeRequest()
         assertEquals("GET", recorded.method)
-        assertEquals("/properties", recorded.path)
+        assertEquals("/api/v1/properties", recorded.path)
     }
 
     @Test
@@ -125,7 +125,7 @@ class PropertiesApiTest {
 
         val recorded = server.takeRequest()
         assertEquals("GET", recorded.method)
-        assertEquals("/properties/42", recorded.path)
+        assertEquals("/api/v1/properties/42", recorded.path)
     }
 
     @Test(expected = HttpException::class)
