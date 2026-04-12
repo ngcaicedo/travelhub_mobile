@@ -6,9 +6,9 @@ import retrofit2.http.Path
 
 interface PropertiesApi {
 
-    @GET("properties")
+    @GET("api/v1/properties")
     suspend fun getProperties(): List<Property>
 
-    @GET("properties/{id}")
+    @GET("api/v1/properties/{id}")
     suspend fun getPropertyDetail(@Path("id") id: String): Property
 }
