@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kover)
 }
 
 // Read backend base URLs from local.properties (with safe defaults for the Android emulator).
@@ -14,15 +15,15 @@ val localProperties = Properties().apply {
 }
 val securityApiBase: String = localProperties.getProperty(
     "TRAVELHUB_SECURITY_API_BASE",
-    "http://10.0.2.2:8001/"
+    "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
 )
 val usersApiBase: String = localProperties.getProperty(
     "TRAVELHUB_USERS_API_BASE",
-    "http://10.0.2.2:8000/"
+    "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
 )
 val propertiesApiBase: String = localProperties.getProperty(
     "TRAVELHUB_PROPERTIES_API_BASE",
-    "http://10.0.2.2:8005/"
+    "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
 )
 
 android {
@@ -72,6 +73,36 @@ android {
                     showStandardStreams = false
                     exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.SHORT
                 }
+            }
+        }
+    }
+}
+
+kover {
+    reports {
+        filters {
+            excludes {
+                classes(
+                    // Moshi-generated JSON adapters (KSP)
+                    "*JsonAdapter",
+                    "*JsonAdapter\$*",
+                    // Compose compiler-generated singletons
+                    "*.ComposableSingletons\$*",
+                    // BuildConfig
+                    "*.BuildConfig",
+                    // MainActivity (Android entry point)
+                    "*.MainActivity",
+                    "*.MainActivity\$*",
+                    // Compose UI screens & components (not unit-testable)
+                    "*.ui.auth.navigation.*",
+                    "*.ui.auth.login.LoginScreenKt*",
+                    "*.ui.auth.register.RegisterScreenKt*",
+                    "*.ui.auth.verifyotp.VerifyOtpScreenKt*",
+                    "*.ui.auth.home.*",
+                    "*.ui.auth.components.PasswordStrengthMeterKt*",
+                    "*.ui.auth.components.ErrorMessageResolverKt*",
+                    "*.ui.properties.*",
+                )
             }
         }
     }
