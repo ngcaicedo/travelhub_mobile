@@ -11,6 +11,8 @@
     <string name="home_placeholder_title">Bem-vindo!</string>
     <string name="home_placeholder_subtitle">Conectado como %1$s</string>
     <string name="home_placeholder_logout">Sair</string>
+    <string name="home_partner_dashboard_title">Painel do Anfitrião</string>
+    <string name="home_admin_dashboard_title">Painel de Administração</string>
 
     <!-- auth: hero -->
     <string name="auth_brand_tagline">VIAGENS PREMIUM</string>

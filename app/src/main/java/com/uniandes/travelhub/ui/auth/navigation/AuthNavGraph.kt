@@ -1,6 +1,9 @@
 package com.uniandes.travelhub.ui.auth.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -9,8 +12,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.uniandes.travelhub.R
+import com.uniandes.travelhub.models.UserRole
 import com.uniandes.travelhub.repositories.AuthRepository
 import com.uniandes.travelhub.repositories.PropertiesRepository
+import com.uniandes.travelhub.ui.auth.home.PlaceholderHomeScreen
 import com.uniandes.travelhub.ui.auth.login.LoginScreen
 import com.uniandes.travelhub.ui.auth.register.RegisterScreen
 import com.uniandes.travelhub.ui.auth.verifyotp.VerifyOtpScreen
@@ -29,20 +35,38 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun AuthNavGraph(
-    repository: AuthRepository,
+    authRepository: AuthRepository,
     propertiesRepository: PropertiesRepository,
     currentLocale: String,
     onLocaleChange: (String) -> Unit,
     navController: NavHostController = rememberNavController(),
 ) {
+    val userRole by authRepository.observeRole().collectAsState(initial = null)
+    val scope = rememberCoroutineScope()
+
     NavHost(
         navController = navController,
         startDestination = AuthRoute.Login.route,
     ) {
         composable(AuthRoute.Login.route) {
             val viewModel: LoginViewModel = viewModel(
-                factory = LoginViewModel.Factory(repository)
+                factory = LoginViewModel.Factory(authRepository)
             )
+
+            // If the user is already logged in, navigate to their home based on role
+            LaunchedEffect(userRole) {
+                userRole?.let { role ->
+                    val destination = when (role) {
+                        UserRole.TRAVELER -> AuthRoute.TravelerHome.route
+                        UserRole.HOTEL_PARTNER -> AuthRoute.PartnerHome.route
+                        UserRole.ADMIN -> AuthRoute.AdminHome.route
+                    }
+                    navController.navigate(destination) {
+                        popUpTo(AuthRoute.Login.route) { inclusive = true }
+                    }
+                }
+            }
+
             LoginScreen(
                 viewModel = viewModel,
                 onNavigateToOtp = { email ->
@@ -58,7 +82,7 @@ fun AuthNavGraph(
 
         composable(AuthRoute.Register.route) {
             val viewModel: RegisterViewModel = viewModel(
-                factory = RegisterViewModel.Factory(repository)
+                factory = RegisterViewModel.Factory(authRepository)
             )
             RegisterScreen(
                 viewModel = viewModel,
@@ -81,13 +105,18 @@ fun AuthNavGraph(
         ) { backStackEntry ->
             val email = backStackEntry.arguments?.getString(AuthRoute.VerifyOtp.ARG_EMAIL).orEmpty()
             val viewModel: VerifyOtpViewModel = viewModel(
-                factory = VerifyOtpViewModel.Factory(repository, email)
+                factory = VerifyOtpViewModel.Factory(authRepository, email)
             )
             VerifyOtpScreen(
                 viewModel = viewModel,
                 email = email,
-                onNavigateToHome = {
-                    navController.navigate(AuthRoute.PlaceholderHome.route) {
+                onNavigateToHome = { role ->
+                    val destination = when (role) {
+                        UserRole.TRAVELER -> AuthRoute.TravelerHome.route
+                        UserRole.HOTEL_PARTNER -> AuthRoute.PartnerHome.route
+                        UserRole.ADMIN -> AuthRoute.AdminHome.route
+                    }
+                    navController.navigate(destination) {
                         popUpTo(AuthRoute.Login.route) { inclusive = true }
                     }
                 },
@@ -102,11 +131,42 @@ fun AuthNavGraph(
             )
         }
 
+        composable(AuthRoute.TravelerHome.route) {
+            val viewModel: PropertiesViewModel = viewModel(
+                factory = PropertiesViewModel.Factory(propertiesRepository)
+            )
+            PropertyListScreen(
+                viewModel = viewModel,
+                onPropertyClick = { id ->
+                    navController.navigate(AuthRoute.PropertyDetail.build(id))
+                },
+                onLoggedOut = {
+                    scope.launch {
+                        authRepository.logout()
+                        navController.navigate(AuthRoute.Login.route) {
+                            popUpTo(AuthRoute.TravelerHome.route) { inclusive = true }
+                        }
+                    }
+                }
+            )
+        }
+
+        composable(AuthRoute.PartnerHome.route) {
+            PlaceholderHomeScreen(
+                repository = authRepository,
+                titleRes = R.string.home_partner_dashboard_title,
+                onLoggedOut = {
+                    navController.navigate(AuthRoute.Login.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+            )
+        }
+
         composable(AuthRoute.PlaceholderHome.route) {
             val propertiesViewModel: PropertiesViewModel = viewModel(
                 factory = PropertiesViewModel.Factory(propertiesRepository)
             )
-            val scope = rememberCoroutineScope()
             PropertyListScreen(
                 viewModel = propertiesViewModel,
                 onPropertyClick = { propertyId ->
@@ -114,7 +174,7 @@ fun AuthNavGraph(
                 },
                 onLoggedOut = {
                     scope.launch {
-                        repository.logout()
+                        authRepository.logout()
                         navController.navigate(AuthRoute.Login.route) {
                             popUpTo(AuthRoute.PlaceholderHome.route) { inclusive = true }
                         }
@@ -136,6 +196,38 @@ fun AuthNavGraph(
             PropertyDetailScreen(
                 viewModel = detailViewModel,
                 onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(AuthRoute.AdminHome.route) {
+            PlaceholderHomeScreen(
+                repository = authRepository,
+                titleRes = R.string.home_admin_dashboard_title,
+                onLoggedOut = {
+                    navController.navigate(AuthRoute.Login.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+            )
+        }
+
+        composable(AuthRoute.PropertyList.route) {
+            val viewModel: PropertiesViewModel = viewModel(
+                factory = PropertiesViewModel.Factory(propertiesRepository)
+            )
+            PropertyListScreen(
+                viewModel = viewModel,
+                onPropertyClick = { id ->
+                    navController.navigate(AuthRoute.PropertyDetail.build(id))
+                },
+                onLoggedOut = {
+                    scope.launch {
+                        authRepository.logout()
+                        navController.navigate(AuthRoute.Login.route) {
+                            popUpTo(AuthRoute.PropertyList.route) { inclusive = true }
+                        }
+                    }
+                }
             )
         }
     }

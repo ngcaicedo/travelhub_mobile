@@ -11,6 +11,8 @@
     <string name="home_placeholder_title">¡Bienvenido!</string>
     <string name="home_placeholder_subtitle">Sesión iniciada como %1$s</string>
     <string name="home_placeholder_logout">Cerrar sesión</string>
+    <string name="home_partner_dashboard_title">Panel de Anfitrión</string>
+    <string name="home_admin_dashboard_title">Panel de Administración</string>
 
     <!-- auth: hero -->
     <string name="auth_brand_tagline">VIAJES PREMIUM</string>

@@ -11,12 +11,24 @@ import java.util.concurrent.TimeUnit
 object RetrofitFactory {
 
     private val moshi: Moshi = Moshi.Builder().build()
+    private var authTokenStore: AuthTokenStore? = null
+
+    /**
+     * Initializes the factory with an [AuthTokenStore] to enable JWT authentication.
+     */
+    fun init(tokenStore: AuthTokenStore) {
+        this.authTokenStore = tokenStore
+    }
 
     private val okHttpClient: OkHttpClient by lazy {
         val builder = OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
+
+        authTokenStore?.let {
+            builder.addInterceptor(AuthInterceptor(it))
+        }
 
         if (BuildConfig.DEBUG) {
             val logging = HttpLoggingInterceptor().apply {

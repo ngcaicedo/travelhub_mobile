@@ -9,27 +9,29 @@ data class Property(
     @Json(name = "name") val name: String,
     @Json(name = "description") val description: String,
     @Json(name = "location") val location: String,
-    @Json(name = "latitude") val latitude: Double?,
-    @Json(name = "longitude") val longitude: Double?,
+    @Json(name = "latitude") val latitude: Double? = null,
+    @Json(name = "longitude") val longitude: Double? = null,
     @Json(name = "price_per_night") val pricePerNight: Double,
-    @Json(name = "currency") val currency: String,
-    @Json(name = "rating") val rating: Double,
-    @Json(name = "review_count") val reviewCount: Int,
-    @Json(name = "bedrooms") val bedrooms: Int,
-    @Json(name = "bathrooms") val bathrooms: Double,
-    @Json(name = "max_guests") val maxGuests: Int,
-    @Json(name = "amenities") val amenities: List<String>,
+    @Json(name = "currency") val currency: String = "USD",
+    @Json(name = "rating") val rating: Double = 0.0,
+    @Json(name = "review_count") val reviewCount: Int = 0,
+    @Json(name = "bedrooms") val bedrooms: Int = 1,
+    @Json(name = "bathrooms") val bathrooms: Double = 1.0,
+    @Json(name = "max_guests") val maxGuests: Int = 2,
+    @Json(name = "amenities") val amenities: List<String> = emptyList(),
     @Json(name = "images") val images: List<PropertyImage> = emptyList(),
     @Json(name = "reviews") val reviews: List<PropertyReview> = emptyList(),
-    @Json(name = "status") val status: Int
+    @Json(name = "property_type") val propertyType: String = "Apartment",
+    @Json(name = "status") val status: Int = 0
 )
 
 @JsonClass(generateAdapter = true)
 data class PropertyImage(
-    @Json(name = "id") val id: String,
+    @Json(name = "id") val id: String = "",
     @Json(name = "url") val url: String,
-    @Json(name = "alt_text") val altText: String?,
-    @Json(name = "position") val position: Int
+    @Json(name = "alt_text") val altText: String? = null,
+    @Json(name = "is_primary") val isPrimary: Boolean = false,
+    @Json(name = "position") val position: Int = 0
 )
 
 @JsonClass(generateAdapter = true)

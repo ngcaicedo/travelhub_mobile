@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.uniandes.travelhub.R
+import com.uniandes.travelhub.models.UserRole
 import com.uniandes.travelhub.ui.auth.components.AuthHeroPlaceholder
 import com.uniandes.travelhub.ui.auth.components.ErrorBanner
 import com.uniandes.travelhub.ui.auth.components.LanguageSwitcher
@@ -52,7 +53,7 @@ import com.uniandes.travelhub.viewmodels.VerifyOtpViewModel
 fun VerifyOtpScreen(
     viewModel: VerifyOtpViewModel,
     email: String,
-    onNavigateToHome: () -> Unit,
+    onNavigateToHome: (UserRole) -> Unit,
     onNavigateBackToLogin: () -> Unit,
     currentLocale: String,
     onLocaleChange: (String) -> Unit,
@@ -64,7 +65,7 @@ fun VerifyOtpScreen(
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
             when (event) {
-                is VerifyOtpEvent.NavigateToHome -> onNavigateToHome()
+                is VerifyOtpEvent.NavigateToHome -> onNavigateToHome(event.role)
             }
         }
     }

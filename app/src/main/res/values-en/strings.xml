@@ -11,6 +11,8 @@
     <string name="home_placeholder_title">Welcome!</string>
     <string name="home_placeholder_subtitle">Signed in as %1$s</string>
     <string name="home_placeholder_logout">Sign out</string>
+    <string name="home_partner_dashboard_title">Hotel Partner Dashboard</string>
+    <string name="home_admin_dashboard_title">Admin Dashboard</string>
 
     <!-- auth: hero -->
     <string name="auth_brand_tagline">PREMIUM TRAVEL</string>

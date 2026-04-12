@@ -35,6 +35,7 @@ fun PlaceholderHomeScreen(
     repository: AuthRepository,
     onLoggedOut: () -> Unit,
     modifier: Modifier = Modifier,
+    titleRes: Int? = null,
 ) {
     val role by repository.observeRole()
         .collectAsStateWithLifecycle(initialValue = null)
@@ -42,6 +43,7 @@ fun PlaceholderHomeScreen(
 
     PlaceholderHomeContent(
         role = role,
+        title = titleRes?.let { stringResource(it) },
         onLogout = {
             scope.launch {
                 repository.logout()
@@ -57,6 +59,7 @@ fun PlaceholderHomeContent(
     role: UserRole?,
     onLogout: () -> Unit,
     modifier: Modifier = Modifier,
+    title: String? = null,
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -71,7 +74,7 @@ fun PlaceholderHomeContent(
             verticalArrangement = Arrangement.Center,
         ) {
             Text(
-                text = stringResource(R.string.home_placeholder_title),
+                text = title ?: stringResource(R.string.home_placeholder_title),
                 style = MaterialTheme.typography.headlineLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,

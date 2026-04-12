@@ -253,6 +253,24 @@ private fun PropertyDetailContent(property: Property) {
 }
 
 @Composable
+private fun PropertyInfoItem(icon: androidx.compose.ui.graphics.vector.ImageVector, label: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Icon(
+            icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.outline,
+            modifier = Modifier.size(24.dp)
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+@Composable
 private fun ErrorState(
     message: String,
     onRetry: () -> Unit,
