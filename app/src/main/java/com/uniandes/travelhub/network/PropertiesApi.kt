@@ -10,8 +10,5 @@ interface PropertiesApi {
     suspend fun getProperties(): List<Property>
 
     @GET("api/v1/properties/{id}")
-    suspend fun getProperty(@Path("id") id: String): Property
-
-    @GET("api/v1/properties/{id}")
     suspend fun getPropertyDetail(@Path("id") id: String): Property
 }

@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.uniandes.travelhub.R
 import com.uniandes.travelhub.models.UserRole
 import com.uniandes.travelhub.repositories.AuthRepository
 import com.uniandes.travelhub.repositories.PropertiesRepository
@@ -109,8 +110,15 @@ fun AuthNavGraph(
             VerifyOtpScreen(
                 viewModel = viewModel,
                 email = email,
-                onNavigateToHome = {
-                    // Handled by role observation in the next screen or globally
+                onNavigateToHome = { role ->
+                    val destination = when (role) {
+                        UserRole.TRAVELER -> AuthRoute.TravelerHome.route
+                        UserRole.HOTEL_PARTNER -> AuthRoute.PartnerHome.route
+                        UserRole.ADMIN -> AuthRoute.AdminHome.route
+                    }
+                    navController.navigate(destination) {
+                        popUpTo(AuthRoute.Login.route) { inclusive = true }
+                    }
                 },
                 onNavigateBackToLogin = {
                     navController.popBackStack(
@@ -146,7 +154,7 @@ fun AuthNavGraph(
         composable(AuthRoute.PartnerHome.route) {
             PlaceholderHomeScreen(
                 repository = authRepository,
-                title = "Hotel Partner Dashboard",
+                titleRes = R.string.home_partner_dashboard_title,
                 onLoggedOut = {
                     navController.navigate(AuthRoute.Login.route) {
                         popUpTo(0) { inclusive = true }
@@ -194,7 +202,7 @@ fun AuthNavGraph(
         composable(AuthRoute.AdminHome.route) {
             PlaceholderHomeScreen(
                 repository = authRepository,
-                title = "Admin Dashboard",
+                titleRes = R.string.home_admin_dashboard_title,
                 onLoggedOut = {
                     navController.navigate(AuthRoute.Login.route) {
                         popUpTo(0) { inclusive = true }

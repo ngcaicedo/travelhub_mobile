@@ -35,7 +35,7 @@ fun PlaceholderHomeScreen(
     repository: AuthRepository,
     onLoggedOut: () -> Unit,
     modifier: Modifier = Modifier,
-    title: String? = null,
+    titleRes: Int? = null,
 ) {
     val role by repository.observeRole()
         .collectAsStateWithLifecycle(initialValue = null)
@@ -43,7 +43,7 @@ fun PlaceholderHomeScreen(
 
     PlaceholderHomeContent(
         role = role,
-        title = title,
+        title = titleRes?.let { stringResource(it) },
         onLogout = {
             scope.launch {
                 repository.logout()
