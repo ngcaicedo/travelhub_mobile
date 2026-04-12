@@ -42,7 +42,7 @@ fun AuthNavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = AuthRoute.PropertyList.route,
+        startDestination = AuthRoute.Login.route,
     ) {
         composable(AuthRoute.Login.route) {
             val viewModel: LoginViewModel = viewModel(
@@ -121,14 +121,14 @@ fun AuthNavGraph(
         }
 
         composable(AuthRoute.TravelerHome.route) {
-            PlaceholderHomeScreen(
-                repository = authRepository,
-                title = "Traveler Dashboard",
-                onLoggedOut = {
-                    navController.navigate(AuthRoute.Login.route) {
-                        popUpTo(0) { inclusive = true }
-                    }
-                },
+            val viewModel: PropertiesViewModel = viewModel(
+                factory = PropertiesViewModel.Factory(propertiesRepository)
+            )
+            PropertyListScreen(
+                viewModel = viewModel,
+                onPropertyClick = { id ->
+                    navController.navigate(AuthRoute.PropertyDetail.build(id))
+                }
             )
         }
 

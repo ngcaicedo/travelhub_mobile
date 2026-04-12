@@ -16,8 +16,8 @@ data class Property(
     val images: List<PropertyImage> = emptyList(),
     val amenities: List<String> = emptyList(),
     @Json(name = "max_guests") val maxGuests: Int = 2,
-    val bedrooms: Int = 1,
-    val bathrooms: Int = 1,
+    val bedrooms: Double = 1.0,
+    val bathrooms: Double = 1.0,
     @Json(name = "property_type") val propertyType: String = "Apartment"
 )
 

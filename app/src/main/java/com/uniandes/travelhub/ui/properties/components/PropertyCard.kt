@@ -32,7 +32,10 @@ fun PropertyCard(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.background
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column {
             val primaryImage = property.images.find { it.isPrimary } ?: property.images.firstOrNull()
@@ -41,7 +44,7 @@ fun PropertyCard(
                 contentDescription = property.name,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(180.dp),
+                    .height(240.dp),
                 contentScale = ContentScale.Crop
             )
 
