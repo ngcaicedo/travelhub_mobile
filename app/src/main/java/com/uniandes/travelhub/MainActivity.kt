@@ -9,12 +9,13 @@ import androidx.core.os.LocaleListCompat
 import com.uniandes.travelhub.network.AuthTokenStore
 import com.uniandes.travelhub.network.RetrofitFactory
 import com.uniandes.travelhub.repositories.AuthRepository
+import com.uniandes.travelhub.repositories.PropertiesRepository
 import com.uniandes.travelhub.ui.auth.navigation.AuthNavGraph
 import com.uniandes.travelhub.ui.theme.TravelhubTheme
 
 class MainActivity : AppCompatActivity() {
 
-    private val repository: AuthRepository by lazy {
+    private val authRepository: AuthRepository by lazy {
         val tokenStore = AuthTokenStore.getInstance(applicationContext)
         RetrofitFactory.init(tokenStore)
         AuthRepository(
@@ -22,6 +23,10 @@ class MainActivity : AppCompatActivity() {
             usersApi = RetrofitFactory.usersApi,
             tokenStore = tokenStore,
         )
+    }
+
+    private val propertiesRepository: PropertiesRepository by lazy {
+        PropertiesRepository(RetrofitFactory.propertiesApi)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +41,8 @@ class MainActivity : AppCompatActivity() {
                     ?: "es"
 
                 AuthNavGraph(
-                    repository = repository,
+                    authRepository = authRepository,
+                    propertiesRepository = propertiesRepository,
                     currentLocale = currentLocale,
                     onLocaleChange = { tag ->
                         AppCompatDelegate.setApplicationLocales(

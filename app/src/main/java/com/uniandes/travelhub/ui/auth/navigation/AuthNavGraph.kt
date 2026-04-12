@@ -13,11 +13,16 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.uniandes.travelhub.models.UserRole
 import com.uniandes.travelhub.repositories.AuthRepository
+import com.uniandes.travelhub.repositories.PropertiesRepository
 import com.uniandes.travelhub.ui.auth.home.PlaceholderHomeScreen
 import com.uniandes.travelhub.ui.auth.login.LoginScreen
 import com.uniandes.travelhub.ui.auth.register.RegisterScreen
 import com.uniandes.travelhub.ui.auth.verifyotp.VerifyOtpScreen
+import com.uniandes.travelhub.ui.properties.PropertyDetailScreen
+import com.uniandes.travelhub.ui.properties.PropertyListScreen
 import com.uniandes.travelhub.viewmodels.LoginViewModel
+import com.uniandes.travelhub.viewmodels.PropertiesViewModel
+import com.uniandes.travelhub.viewmodels.PropertyDetailViewModel
 import com.uniandes.travelhub.viewmodels.RegisterViewModel
 import com.uniandes.travelhub.viewmodels.VerifyOtpViewModel
 
@@ -27,20 +32,21 @@ import com.uniandes.travelhub.viewmodels.VerifyOtpViewModel
  */
 @Composable
 fun AuthNavGraph(
-    repository: AuthRepository,
+    authRepository: AuthRepository,
+    propertiesRepository: PropertiesRepository,
     currentLocale: String,
     onLocaleChange: (String) -> Unit,
     navController: NavHostController = rememberNavController(),
 ) {
-    val userRole by repository.observeRole().collectAsState(initial = null)
+    val userRole by authRepository.observeRole().collectAsState(initial = null)
 
     NavHost(
         navController = navController,
-        startDestination = AuthRoute.Login.route,
+        startDestination = AuthRoute.PropertyList.route,
     ) {
         composable(AuthRoute.Login.route) {
             val viewModel: LoginViewModel = viewModel(
-                factory = LoginViewModel.Factory(repository)
+                factory = LoginViewModel.Factory(authRepository)
             )
             
             // If the user is already logged in, navigate to their home based on role
@@ -72,7 +78,7 @@ fun AuthNavGraph(
 
         composable(AuthRoute.Register.route) {
             val viewModel: RegisterViewModel = viewModel(
-                factory = RegisterViewModel.Factory(repository)
+                factory = RegisterViewModel.Factory(authRepository)
             )
             RegisterScreen(
                 viewModel = viewModel,
@@ -95,7 +101,7 @@ fun AuthNavGraph(
         ) { backStackEntry ->
             val email = backStackEntry.arguments?.getString(AuthRoute.VerifyOtp.ARG_EMAIL).orEmpty()
             val viewModel: VerifyOtpViewModel = viewModel(
-                factory = VerifyOtpViewModel.Factory(repository, email)
+                factory = VerifyOtpViewModel.Factory(authRepository, email)
             )
             VerifyOtpScreen(
                 viewModel = viewModel,
@@ -116,7 +122,7 @@ fun AuthNavGraph(
 
         composable(AuthRoute.TravelerHome.route) {
             PlaceholderHomeScreen(
-                repository = repository,
+                repository = authRepository,
                 title = "Traveler Dashboard",
                 onLoggedOut = {
                     navController.navigate(AuthRoute.Login.route) {
@@ -128,7 +134,7 @@ fun AuthNavGraph(
 
         composable(AuthRoute.PartnerHome.route) {
             PlaceholderHomeScreen(
-                repository = repository,
+                repository = authRepository,
                 title = "Hotel Partner Dashboard",
                 onLoggedOut = {
                     navController.navigate(AuthRoute.Login.route) {
@@ -140,13 +146,43 @@ fun AuthNavGraph(
 
         composable(AuthRoute.AdminHome.route) {
             PlaceholderHomeScreen(
-                repository = repository,
+                repository = authRepository,
                 title = "Admin Dashboard",
                 onLoggedOut = {
                     navController.navigate(AuthRoute.Login.route) {
                         popUpTo(0) { inclusive = true }
                     }
                 },
+            )
+        }
+
+        composable(AuthRoute.PropertyList.route) {
+            val viewModel: PropertiesViewModel = viewModel(
+                factory = PropertiesViewModel.Factory(propertiesRepository)
+            )
+            PropertyListScreen(
+                viewModel = viewModel,
+                onPropertyClick = { id ->
+                    navController.navigate(AuthRoute.PropertyDetail.build(id))
+                }
+            )
+        }
+
+        composable(
+            route = AuthRoute.PropertyDetail.route,
+            arguments = listOf(navArgument(AuthRoute.PropertyDetail.ARG_ID) {
+                type = NavType.StringType
+            })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString(AuthRoute.PropertyDetail.ARG_ID).orEmpty()
+            val viewModel: PropertyDetailViewModel = viewModel(
+                factory = PropertyDetailViewModel.Factory(propertiesRepository, id)
+            )
+            PropertyDetailScreen(
+                viewModel = viewModel,
+                onBackClick = {
+                    navController.popBackStack()
+                }
             )
         }
     }

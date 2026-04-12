@@ -22,4 +22,11 @@ sealed class AuthRoute(val route: String) {
     data object TravelerHome : AuthRoute("traveler_home")
     data object PartnerHome : AuthRoute("partner_home")
     data object AdminHome : AuthRoute("admin_home")
+
+    /** Property list and detail routes. */
+    data object PropertyList : AuthRoute("property_list")
+    data object PropertyDetail : AuthRoute("property_detail/{id}") {
+        const val ARG_ID = "id"
+        fun build(id: String): String = "property_detail/$id"
+    }
 }
