@@ -38,11 +38,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.uniandes.travelhub.R
 import com.uniandes.travelhub.models.properties.Property
 import com.uniandes.travelhub.ui.auth.components.TravelHubPrimaryButton
+import com.uniandes.travelhub.ui.auth.components.asString
 import com.uniandes.travelhub.ui.theme.spacing
 import com.uniandes.travelhub.viewmodels.PropertyDetailUiState
 import com.uniandes.travelhub.viewmodels.PropertyDetailViewModel
@@ -63,7 +66,7 @@ fun PropertyDetailScreen(
                     IconButton(onClick = onBackClick) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Volver"
+                            contentDescription = stringResource(R.string.property_detail_back)
                         )
                     }
                 },
@@ -79,6 +82,7 @@ fun PropertyDetailScreen(
                 .padding(innerPadding)
         ) {
             when (val state = uiState) {
+                is PropertyDetailUiState.Idle -> { /* nothing */ }
                 is PropertyDetailUiState.Loading -> {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
@@ -87,7 +91,7 @@ fun PropertyDetailScreen(
                 }
                 is PropertyDetailUiState.Error -> {
                     ErrorState(
-                        message = state.message,
+                        message = state.message.asString(),
                         onRetry = { viewModel.loadPropertyDetail() },
                         modifier = Modifier.align(Alignment.Center)
                     )
@@ -110,8 +114,8 @@ private fun PropertyDetailContent(property: Property) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1.5f),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp)
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.sm),
+                contentPadding = PaddingValues(horizontal = MaterialTheme.spacing.md)
             ) {
                 items(property.images) { image ->
                     AsyncImage(
@@ -119,95 +123,103 @@ private fun PropertyDetailContent(property: Property) {
                         contentDescription = image.altText ?: property.name,
                         modifier = Modifier
                             .fillParentMaxWidth()
-                            .clip(RoundedCornerShape(8.dp)),
+                            .clip(RoundedCornerShape(MaterialTheme.spacing.sm)),
                         contentScale = ContentScale.Crop
                     )
                 }
             }
         } else {
-            // Fallback empty space or placeholder
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1.5f)
-                    .padding(16.dp)
-                    .clip(RoundedCornerShape(8.dp)),
+                    .padding(MaterialTheme.spacing.md)
+                    .clip(RoundedCornerShape(MaterialTheme.spacing.sm)),
                 contentAlignment = Alignment.Center
             ) {
-                Text("No hay imágenes disponibles")
+                Text(stringResource(R.string.property_detail_no_images))
             }
         }
 
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(MaterialTheme.spacing.md)) {
             Text(
                 text = property.name,
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
-            
-            Spacer(modifier = Modifier.height(8.dp))
-            
+
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.sm))
+
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Default.Star,
                     contentDescription = null,
                     modifier = Modifier.size(20.dp),
-                    tint = Color.Black
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = " ${property.rating} · ${property.reviewCount} reseñas",
+                    text = " " + stringResource(
+                        R.string.property_detail_reviews_count,
+                        property.rating,
+                        property.reviewCount
+                    ),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium
                 )
                 Text(
                     text = " · ${property.location}",
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(start = 4.dp)
+                    modifier = Modifier.padding(start = MaterialTheme.spacing.xs)
                 )
             }
 
-            HorizontalDivider(modifier = Modifier.padding(vertical = 24.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = MaterialTheme.spacing.lg))
 
             // Details info
             Text(
-                text = "${property.maxGuests} huéspedes · ${property.bedrooms} habitación · ${property.bathrooms} baños",
+                text = stringResource(
+                    R.string.property_detail_capacity,
+                    property.maxGuests,
+                    property.bedrooms,
+                    property.bathrooms
+                ),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
 
-            HorizontalDivider(modifier = Modifier.padding(vertical = 24.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = MaterialTheme.spacing.lg))
 
             // Description
             Text(
-                text = "Descripción",
+                text = stringResource(R.string.property_detail_description_title),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.sm))
             Text(
                 text = property.description,
                 style = MaterialTheme.typography.bodyLarge
             )
 
-            HorizontalDivider(modifier = Modifier.padding(vertical = 24.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = MaterialTheme.spacing.lg))
 
             // Amenities
             Text(
-                text = "Lo que este lugar ofrece",
+                text = stringResource(R.string.property_detail_amenities_title),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.md))
             property.amenities.forEach { amenity ->
                 Text(
                     text = "• $amenity",
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = MaterialTheme.spacing.sm)
                 )
             }
-            
-            Spacer(modifier = Modifier.height(32.dp))
-            
+
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.xl))
+
             // Footer Price and Action
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -222,20 +234,20 @@ private fun PropertyDetailContent(property: Property) {
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = " noche",
+                            text = " " + stringResource(R.string.property_detail_price_per_night),
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier.padding(bottom = 2.dp)
                         )
                     }
                 }
-                
+
                 TravelHubPrimaryButton(
-                    text = "Reservar",
+                    text = stringResource(R.string.property_detail_reserve),
                     onClick = { /* Handle Reservation */ },
-                    modifier = Modifier.weight(0.5f).padding(start = 16.dp)
+                    modifier = Modifier.weight(0.5f).padding(start = MaterialTheme.spacing.md)
                 )
             }
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.xl))
         }
     }
 }
@@ -257,7 +269,7 @@ private fun ErrorState(
             color = MaterialTheme.colorScheme.error
         )
         TravelHubPrimaryButton(
-            text = "Reintentar",
+            text = stringResource(R.string.property_retry),
             onClick = onRetry
         )
     }

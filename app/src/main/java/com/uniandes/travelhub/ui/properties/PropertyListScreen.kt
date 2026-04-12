@@ -5,12 +5,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -22,9 +25,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import com.uniandes.travelhub.R
 import com.uniandes.travelhub.ui.auth.components.TravelHubPrimaryButton
+import com.uniandes.travelhub.ui.auth.components.asString
 import com.uniandes.travelhub.ui.properties.components.PropertyCard
 import com.uniandes.travelhub.ui.theme.spacing
 import com.uniandes.travelhub.viewmodels.PropertyListUiState
@@ -35,6 +38,7 @@ import com.uniandes.travelhub.viewmodels.PropertiesViewModel
 fun PropertyListScreen(
     viewModel: PropertiesViewModel,
     onPropertyClick: (String) -> Unit,
+    onLoggedOut: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -44,10 +48,18 @@ fun PropertyListScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Alojamientos",
+                        text = stringResource(R.string.property_list_title),
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold
                     )
+                },
+                actions = {
+                    IconButton(onClick = onLoggedOut) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Logout,
+                            contentDescription = stringResource(R.string.home_placeholder_logout)
+                        )
+                    }
                 }
             )
         }
@@ -58,6 +70,7 @@ fun PropertyListScreen(
                 .padding(innerPadding)
         ) {
             when (val state = uiState) {
+                is PropertyListUiState.Idle -> { /* nothing */ }
                 is PropertyListUiState.Loading -> {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
@@ -81,7 +94,7 @@ fun PropertyListScreen(
                 }
                 is PropertyListUiState.Error -> {
                     ErrorState(
-                        message = state.message,
+                        message = state.message.asString(),
                         onRetry = { viewModel.loadProperties() },
                         modifier = Modifier.align(Alignment.Center)
                     )
@@ -98,7 +111,7 @@ private fun EmptyState(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "No se encontraron alojamientos",
+            text = stringResource(R.string.property_list_empty),
             style = MaterialTheme.typography.titleMedium
         )
     }
@@ -121,7 +134,7 @@ private fun ErrorState(
             color = MaterialTheme.colorScheme.error
         )
         TravelHubPrimaryButton(
-            text = "Reintentar",
+            text = stringResource(R.string.property_retry),
             onClick = onRetry
         )
     }

@@ -3,6 +3,7 @@ package com.uniandes.travelhub.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.uniandes.travelhub.R
 import com.uniandes.travelhub.models.properties.Property
 import com.uniandes.travelhub.repositories.PropertiesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,9 +15,10 @@ import kotlinx.coroutines.launch
  * UI State for the property detail screen.
  */
 sealed interface PropertyDetailUiState {
+    data object Idle : PropertyDetailUiState
     data object Loading : PropertyDetailUiState
     data class Success(val property: Property) : PropertyDetailUiState
-    data class Error(val message: String) : PropertyDetailUiState
+    data class Error(val message: ErrorMessage) : PropertyDetailUiState
 }
 
 class PropertyDetailViewModel(
@@ -40,7 +42,8 @@ class PropertyDetailViewModel(
                 }
                 .onFailure { error ->
                     _uiState.value = PropertyDetailUiState.Error(
-                        error.message ?: "Error al cargar el detalle de la propiedad"
+                        error.message?.let { ErrorMessage.Plain(it) }
+                            ?: ErrorMessage.Resource(R.string.property_detail_load_error)
                     )
                 }
         }

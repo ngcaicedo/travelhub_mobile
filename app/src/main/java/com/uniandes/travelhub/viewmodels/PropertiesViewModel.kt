@@ -3,6 +3,7 @@ package com.uniandes.travelhub.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.uniandes.travelhub.R
 import com.uniandes.travelhub.models.properties.Property
 import com.uniandes.travelhub.repositories.PropertiesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,9 +15,10 @@ import kotlinx.coroutines.launch
  * UI State for the property list.
  */
 sealed interface PropertyListUiState {
+    data object Idle : PropertyListUiState
     data object Loading : PropertyListUiState
     data class Success(val properties: List<Property>) : PropertyListUiState
-    data class Error(val message: String) : PropertyListUiState
+    data class Error(val message: ErrorMessage) : PropertyListUiState
 }
 
 class PropertiesViewModel(
@@ -39,7 +41,8 @@ class PropertiesViewModel(
                 }
                 .onFailure { error ->
                     _uiState.value = PropertyListUiState.Error(
-                        error.message ?: "Error al cargar propiedades"
+                        error.message?.let { ErrorMessage.Plain(it) }
+                            ?: ErrorMessage.Resource(R.string.property_list_load_error)
                     )
                 }
         }

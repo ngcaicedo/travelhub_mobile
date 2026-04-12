@@ -71,6 +71,25 @@
     <string name="auth_verify_otp_invalid">O código deve ter 6 dígitos</string>
     <string name="auth_verify_otp_default_error">Não foi possível verificar o código</string>
 
+    <!-- properties: list -->
+    <string name="property_list_title">Acomodações</string>
+    <string name="property_list_empty">Nenhuma acomodação encontrada</string>
+    <string name="property_list_load_error">Não foi possível carregar as propriedades</string>
+
+    <!-- properties: detail -->
+    <string name="property_detail_back">Voltar</string>
+    <string name="property_detail_no_images">Nenhuma imagem disponível</string>
+    <string name="property_detail_reviews_count">%1$.1f · %2$d avaliações</string>
+    <string name="property_detail_capacity">%1$d hóspedes · %2$d quarto · %3$.0f banheiros</string>
+    <string name="property_detail_description_title">Descrição</string>
+    <string name="property_detail_amenities_title">O que este lugar oferece</string>
+    <string name="property_detail_price_per_night">noite</string>
+    <string name="property_detail_reserve">Reservar</string>
+    <string name="property_detail_load_error">Não foi possível carregar os detalhes da propriedade</string>
+
+    <!-- properties: common -->
+    <string name="property_retry">Tentar novamente</string>
+
     <!-- auth: password strength -->
     <string name="auth_password_strength_weak">Fraca</string>
     <string name="auth_password_strength_medium">Média</string>
