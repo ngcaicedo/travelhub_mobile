@@ -9,6 +9,7 @@ import androidx.core.os.LocaleListCompat
 import com.uniandes.travelhub.network.AuthTokenStore
 import com.uniandes.travelhub.network.RetrofitFactory
 import com.uniandes.travelhub.repositories.AuthRepository
+import com.uniandes.travelhub.repositories.PropertiesRepository
 import com.uniandes.travelhub.ui.auth.navigation.AuthNavGraph
 import com.uniandes.travelhub.ui.theme.TravelhubTheme
 
@@ -19,6 +20,12 @@ class MainActivity : AppCompatActivity() {
             securityApi = RetrofitFactory.securityApi,
             usersApi = RetrofitFactory.usersApi,
             tokenStore = AuthTokenStore.getInstance(applicationContext),
+        )
+    }
+
+    private val propertiesRepository: PropertiesRepository by lazy {
+        PropertiesRepository(
+            propertiesApi = RetrofitFactory.propertiesApi
         )
     }
 
@@ -35,6 +42,7 @@ class MainActivity : AppCompatActivity() {
 
                 AuthNavGraph(
                     repository = repository,
+                    propertiesRepository = propertiesRepository,
                     currentLocale = currentLocale,
                     onLocaleChange = { tag ->
                         AppCompatDelegate.setApplicationLocales(

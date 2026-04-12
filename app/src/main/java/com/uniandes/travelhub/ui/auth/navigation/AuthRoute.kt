@@ -20,4 +20,10 @@ sealed class AuthRoute(val route: String) {
 
     /** Temporary destination shown after a successful OTP verification. */
     data object PlaceholderHome : AuthRoute("home")
+
+    /** Property detail route with ID argument. */
+    data object PropertyDetail : AuthRoute("property_detail/{id}") {
+        const val ARG_ID = "id"
+        fun build(id: String): String = "property_detail/$id"
+    }
 }
