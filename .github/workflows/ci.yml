@@ -38,8 +38,8 @@ jobs:
       - name: Grant Gradle execute permission
         run: chmod +x gradlew
 
-      - name: Run unit tests
-        run: ./gradlew testDebugUnitTest --rerun --no-daemon
+      - name: Run unit tests with coverage
+        run: ./gradlew koverHtmlReportDebug koverXmlReportDebug --no-daemon
 
       - name: Upload test reports
         if: always()
@@ -48,3 +48,11 @@ jobs:
           name: unit-test-reports
           path: app/build/reports/tests/
           retention-days: 7
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: app/build/reports/kover/
+          retention-days: 14
