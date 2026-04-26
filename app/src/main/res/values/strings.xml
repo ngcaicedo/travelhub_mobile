@@ -1,4 +1,4 @@
-<resources>
+﻿<resources>
     <string name="app_name">TravelHub</string>
 
     <!-- common -->
@@ -11,8 +11,8 @@
     <string name="home_placeholder_title">¡Bienvenido!</string>
     <string name="home_placeholder_subtitle">Sesión iniciada como %1$s</string>
     <string name="home_placeholder_logout">Cerrar sesión</string>
-    <string name="home_partner_dashboard_title">Panel de Anfitrión</string>
-    <string name="home_admin_dashboard_title">Panel de Administración</string>
+    <string name="home_partner_dashboard_title">Panel de anfitrión</string>
+    <string name="home_admin_dashboard_title">Panel de administración</string>
 
     <!-- auth: hero -->
     <string name="auth_brand_tagline">VIAJES PREMIUM</string>
@@ -85,6 +85,11 @@
     <string name="property_detail_capacity">%1$d huéspedes · %2$d habitación · %3$.0f baños</string>
     <string name="property_detail_description_title">Descripción</string>
     <string name="property_detail_amenities_title">Lo que este lugar ofrece</string>
+    <string name="property_detail_policy_title">Política de cancelación</string>
+    <string name="property_detail_images_title">Galería</string>
+    <string name="property_detail_reviews_title">Reseñas</string>
+    <string name="property_detail_no_reviews">Aún no hay reseñas disponibles</string>
+    <string name="property_detail_verified_stay">Estadía verificada</string>
     <string name="property_detail_price_per_night">noche</string>
     <string name="property_detail_reserve">Reservar</string>
     <string name="property_detail_load_error">No fue posible cargar el detalle de la propiedad</string>
@@ -97,4 +102,9 @@
     <string name="auth_password_strength_medium">Media</string>
     <string name="auth_password_strength_strong">Fuerte</string>
     <string name="auth_password_strength_very_strong">Muy fuerte</string>
+
+    <string name="common_language_spanish">Español</string>
+    <string name="common_language_english">English</string>
+    <string name="common_language_portuguese">Português</string>
 </resources>
+

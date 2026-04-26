@@ -36,6 +36,7 @@ class PropertyDetailViewModelTest {
     @Test
     fun `init triggers loadPropertyDetail with correct id`() = runTest {
         val property = sampleProperty("42")
+        coEvery { repository.getCachedProperty("42") } returns null
         coEvery { repository.getPropertyDetail("42") } returns Result.success(property)
 
         val viewModel = createViewModel("42")
@@ -49,6 +50,7 @@ class PropertyDetailViewModelTest {
 
     @Test
     fun `loadPropertyDetail failure transitions to Error with message`() = runTest {
+        coEvery { repository.getCachedProperty(any()) } returns null
         coEvery { repository.getPropertyDetail(any()) } returns Result.failure(
             Exception("not found")
         )
@@ -66,6 +68,7 @@ class PropertyDetailViewModelTest {
 
     @Test
     fun `retry after error reloads with same propertyId`() = runTest {
+        coEvery { repository.getCachedProperty("42") } returns null
         coEvery { repository.getPropertyDetail("42") } returns Result.failure(Exception("fail"))
 
         val viewModel = createViewModel("42")
@@ -87,6 +90,7 @@ class PropertyDetailViewModelTest {
     @Test
     fun `loading state is emitted while repository call is in-flight`() = runTest {
         val gate = CompletableDeferred<Result<Property>>()
+        coEvery { repository.getCachedProperty(any()) } returns null
         coEvery { repository.getPropertyDetail(any()) } coAnswers { gate.await() }
 
         val viewModel = createViewModel()
@@ -96,6 +100,22 @@ class PropertyDetailViewModelTest {
         gate.complete(Result.success(sampleProperty("42")))
         runCurrent()
         assertTrue(viewModel.uiState.value is PropertyDetailUiState.Success)
+    }
+
+    @Test
+    fun `cached property is shown immediately while detail refreshes`() = runTest {
+        val cached = sampleProperty("42")
+        val refreshed = cached.copy(description = "Updated description")
+        coEvery { repository.getCachedProperty("42") } returns cached
+        coEvery { repository.getPropertyDetail("42") } returns Result.success(refreshed)
+
+        val viewModel = createViewModel("42")
+        runCurrent()
+
+        val state = viewModel.uiState.value
+        assertTrue(state is PropertyDetailUiState.Success)
+        assertEquals(refreshed, (state as PropertyDetailUiState.Success).property)
+        assertEquals(false, state.isRefreshing)
     }
 
     private fun sampleProperty(id: String) = Property(

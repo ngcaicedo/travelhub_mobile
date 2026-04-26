@@ -30,6 +30,7 @@ import coil.compose.AsyncImage
 import com.uniandes.travelhub.R
 import com.uniandes.travelhub.models.properties.Property
 import com.uniandes.travelhub.ui.theme.spacing
+import com.uniandes.travelhub.utils.sanitizeDisplayText
 
 @Composable
 fun PropertyCard(
@@ -51,7 +52,7 @@ fun PropertyCard(
             val imageUrl = property.images.firstOrNull()?.url
             AsyncImage(
                 model = imageUrl,
-                contentDescription = property.name,
+                contentDescription = sanitizeDisplayText(property.name),
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
@@ -67,7 +68,7 @@ fun PropertyCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = property.location,
+                    text = sanitizeDisplayText(property.location),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f),
@@ -90,7 +91,7 @@ fun PropertyCard(
             }
 
             Text(
-                text = property.name,
+                text = sanitizeDisplayText(property.name),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,

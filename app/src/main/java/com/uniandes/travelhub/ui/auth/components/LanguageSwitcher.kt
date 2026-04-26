@@ -1,5 +1,6 @@
-package com.uniandes.travelhub.ui.auth.components
+﻿package com.uniandes.travelhub.ui.auth.components
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -23,13 +24,13 @@ import com.uniandes.travelhub.ui.theme.TravelhubTheme
 
 data class LanguageOption(
     val tag: String,
-    val label: String,
+    @StringRes val labelRes: Int,
 )
 
 val DefaultLanguageOptions = listOf(
-    LanguageOption(tag = "es", label = "Español"),
-    LanguageOption(tag = "en", label = "English"),
-    LanguageOption(tag = "pt", label = "Português"),
+    LanguageOption(tag = "es", labelRes = R.string.common_language_spanish),
+    LanguageOption(tag = "en", labelRes = R.string.common_language_english),
+    LanguageOption(tag = "pt", labelRes = R.string.common_language_portuguese),
 )
 
 @Composable
@@ -55,7 +56,7 @@ fun LanguageSwitcher(
         ) {
             options.forEach { option ->
                 DropdownMenuItem(
-                    text = { Text(option.label) },
+                    text = { Text(stringResource(option.labelRes)) },
                     onClick = {
                         expanded = false
                         if (option.tag != currentTag) onLanguageSelected(option.tag)

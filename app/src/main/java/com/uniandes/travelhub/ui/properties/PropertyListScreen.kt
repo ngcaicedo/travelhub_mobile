@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.uniandes.travelhub.R
+import com.uniandes.travelhub.models.properties.Property
 import com.uniandes.travelhub.ui.auth.components.TravelHubPrimaryButton
 import com.uniandes.travelhub.ui.auth.components.asString
 import com.uniandes.travelhub.ui.properties.components.PropertyCard
@@ -37,7 +38,7 @@ import com.uniandes.travelhub.viewmodels.PropertiesViewModel
 @Composable
 fun PropertyListScreen(
     viewModel: PropertiesViewModel,
-    onPropertyClick: (String) -> Unit,
+    onPropertyClick: (Property) -> Unit,
     onLoggedOut: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -86,7 +87,7 @@ fun PropertyListScreen(
                             items(state.properties) { property ->
                                 PropertyCard(
                                     property = property,
-                                    onClick = { onPropertyClick(property.id) }
+                                    onClick = { onPropertyClick(property) }
                                 )
                             }
                         }
