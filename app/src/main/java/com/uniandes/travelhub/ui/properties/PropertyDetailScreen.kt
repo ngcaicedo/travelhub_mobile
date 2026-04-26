@@ -58,6 +58,7 @@ import com.uniandes.travelhub.ui.auth.components.TravelHubPrimaryButton
 import com.uniandes.travelhub.ui.auth.components.asString
 import com.uniandes.travelhub.ui.theme.spacing
 import com.uniandes.travelhub.utils.resolvePropertyImageUrl
+import com.uniandes.travelhub.utils.sanitizeDisplayText
 import com.uniandes.travelhub.utils.sortPropertyImages
 import com.uniandes.travelhub.viewmodels.PropertyDetailUiState
 import com.uniandes.travelhub.viewmodels.PropertyDetailViewModel
@@ -143,7 +144,7 @@ private fun PropertyDetailContent(
         item {
             Column(modifier = Modifier.padding(MaterialTheme.spacing.md)) {
                 Text(
-                    text = property.name,
+                    text = sanitizeDisplayText(property.name),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -167,7 +168,7 @@ private fun PropertyDetailContent(
                         fontWeight = FontWeight.Medium
                     )
                     Text(
-                        text = " · ${property.location}",
+                        text = " · ${sanitizeDisplayText(property.location)}",
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.padding(start = MaterialTheme.spacing.xs)
                     )
@@ -220,7 +221,7 @@ private fun PropertyDetailContent(
             ) {
                 property.amenities.forEach { amenity ->
                     Text(
-                        text = "• $amenity",
+                        text = "• ${sanitizeDisplayText(amenity)}",
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.padding(bottom = MaterialTheme.spacing.sm)
                     )
@@ -233,7 +234,7 @@ private fun PropertyDetailContent(
                 title = stringResource(R.string.property_detail_description_title)
             ) {
                 Text(
-                    text = property.description,
+                    text = sanitizeDisplayText(property.description),
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
@@ -244,7 +245,7 @@ private fun PropertyDetailContent(
                 title = stringResource(R.string.property_detail_policy_title)
             ) {
                 Text(
-                    text = property.cancellationPolicy,
+                    text = sanitizeDisplayText(property.cancellationPolicy),
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
@@ -266,7 +267,7 @@ private fun PropertyDetailContent(
                         items(sortedImages) { image ->
                             PropertyImageCard(
                                 image = image,
-                                propertyName = property.name,
+                                propertyName = sanitizeDisplayText(property.name),
                                 targetWidthPx = cardWidthPx,
                                 cardWidthDp = cardWidthDp
                             )
@@ -324,7 +325,7 @@ private fun PropertyImageCard(
 
     AsyncImage(
         model = imageUrl,
-        contentDescription = image.altText ?: propertyName,
+        contentDescription = sanitizeDisplayText(image.altText ?: propertyName),
         modifier = Modifier
             .width(cardWidthDp)
             .clip(RoundedCornerShape(MaterialTheme.spacing.sm)),
@@ -342,7 +343,7 @@ private fun ReviewCard(review: PropertyReview) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = review.author,
+                    text = sanitizeDisplayText(review.author),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -383,7 +384,7 @@ private fun ReviewCard(review: PropertyReview) {
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.sm))
 
             Text(
-                text = review.comment,
+                text = sanitizeDisplayText(review.comment),
                 style = MaterialTheme.typography.bodyLarge
             )
         }
