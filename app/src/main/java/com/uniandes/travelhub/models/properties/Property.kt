@@ -43,7 +43,11 @@ data class PropertyReview(
     @Json(name = "id") val id: String,
     @Json(name = "author") val author: String,
     @Json(name = "rating") val rating: Int,
-    @Json(name = "review_date") val reviewDate: String,
+    @Json(name = "review_date") val reviewDateValue: String? = null,
+    @Json(name = "date") val legacyDateValue: String? = null,
     @Json(name = "comment") val comment: String,
     @Json(name = "verified_stay") val verifiedStay: Boolean
-)
+) {
+    val reviewDate: String
+        get() = reviewDateValue ?: legacyDateValue.orEmpty()
+}
