@@ -1,4 +1,4 @@
-<resources>
+﻿<resources>
     <string name="app_name">TravelHub</string>
 
     <!-- common -->
@@ -11,8 +11,8 @@
     <string name="home_placeholder_title">Welcome!</string>
     <string name="home_placeholder_subtitle">Signed in as %1$s</string>
     <string name="home_placeholder_logout">Sign out</string>
-    <string name="home_partner_dashboard_title">Hotel Partner Dashboard</string>
-    <string name="home_admin_dashboard_title">Admin Dashboard</string>
+    <string name="home_partner_dashboard_title">Hotel partner dashboard</string>
+    <string name="home_admin_dashboard_title">Admin dashboard</string>
 
     <!-- auth: hero -->
     <string name="auth_brand_tagline">PREMIUM TRAVEL</string>
@@ -28,7 +28,7 @@
     <string name="auth_login_hide_password">Hide password</string>
     <string name="auth_login_forgot_password">Forgot your password?</string>
     <string name="auth_login_submit">Sign in</string>
-    <string name="auth_login_no_account">Don\'t have an account?</string>
+    <string name="auth_login_no_account">Don’t have an account?</string>
     <string name="auth_login_create_account">Sign up now</string>
     <string name="auth_login_email_invalid">Invalid email address</string>
     <string name="auth_login_password_required">Password is required</string>
@@ -85,6 +85,11 @@
     <string name="property_detail_capacity">%1$d guests · %2$d bedroom · %3$.0f bathrooms</string>
     <string name="property_detail_description_title">Description</string>
     <string name="property_detail_amenities_title">What this place offers</string>
+    <string name="property_detail_policy_title">Cancellation policy</string>
+    <string name="property_detail_images_title">Gallery</string>
+    <string name="property_detail_reviews_title">Reviews</string>
+    <string name="property_detail_no_reviews">No reviews available yet</string>
+    <string name="property_detail_verified_stay">Verified stay</string>
     <string name="property_detail_price_per_night">night</string>
     <string name="property_detail_reserve">Reserve</string>
     <string name="property_detail_load_error">Unable to load property details</string>
@@ -98,3 +103,4 @@
     <string name="auth_password_strength_strong">Strong</string>
     <string name="auth_password_strength_very_strong">Very strong</string>
 </resources>
+

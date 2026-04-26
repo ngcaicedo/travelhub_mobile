@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.uniandes.travelhub.R
 import com.uniandes.travelhub.models.UserRole
+import com.uniandes.travelhub.models.properties.Property
 import com.uniandes.travelhub.repositories.AuthRepository
 import com.uniandes.travelhub.repositories.PropertiesRepository
 import com.uniandes.travelhub.ui.auth.home.PlaceholderHomeScreen
@@ -137,8 +138,8 @@ fun AuthNavGraph(
             )
             PropertyListScreen(
                 viewModel = viewModel,
-                onPropertyClick = { id ->
-                    navController.navigate(AuthRoute.PropertyDetail.build(id))
+                onPropertyClick = { property ->
+                    navigateToPropertyDetail(navController, propertiesRepository, property)
                 },
                 onLoggedOut = {
                     scope.launch {
@@ -169,8 +170,8 @@ fun AuthNavGraph(
             )
             PropertyListScreen(
                 viewModel = propertiesViewModel,
-                onPropertyClick = { propertyId ->
-                    navController.navigate(AuthRoute.PropertyDetail.build(propertyId))
+                onPropertyClick = { property ->
+                    navigateToPropertyDetail(navController, propertiesRepository, property)
                 },
                 onLoggedOut = {
                     scope.launch {
@@ -217,8 +218,8 @@ fun AuthNavGraph(
             )
             PropertyListScreen(
                 viewModel = viewModel,
-                onPropertyClick = { id ->
-                    navController.navigate(AuthRoute.PropertyDetail.build(id))
+                onPropertyClick = { property ->
+                    navigateToPropertyDetail(navController, propertiesRepository, property)
                 },
                 onLoggedOut = {
                     scope.launch {
@@ -231,4 +232,13 @@ fun AuthNavGraph(
             )
         }
     }
+}
+
+private fun navigateToPropertyDetail(
+    navController: NavHostController,
+    propertiesRepository: PropertiesRepository,
+    property: Property
+) {
+    propertiesRepository.primePropertyPreview(property)
+    navController.navigate(AuthRoute.PropertyDetail.build(property.id))
 }

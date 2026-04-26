@@ -1,8 +1,10 @@
 package com.uniandes.travelhub.repositories
 
 import com.uniandes.travelhub.models.properties.Property
+import com.uniandes.travelhub.network.PropertyCacheStore
 import com.uniandes.travelhub.network.PropertiesApi
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -14,13 +16,16 @@ import java.io.IOException
 class PropertiesRepositoryTest {
 
     private lateinit var api: PropertiesApi
+    private lateinit var cacheStore: PropertyCacheStore
     private lateinit var repository: PropertiesRepository
 
     @Before
     fun setUp() {
         api = mockk()
+        cacheStore = mockk(relaxed = true)
         repository = PropertiesRepository(
             propertiesApi = api,
+            cacheStore = cacheStore,
             errorParser = { throwable, fallback -> throwable.message ?: fallback }
         )
     }
@@ -36,6 +41,8 @@ class PropertiesRepositoryTest {
 
         assertTrue(result.isSuccess)
         assertEquals(properties, result.getOrNull())
+        coVerify(exactly = 1) { cacheStore.saveProperty(properties[0]) }
+        coVerify(exactly = 1) { cacheStore.saveProperty(properties[1]) }
     }
 
     @Test
@@ -69,6 +76,7 @@ class PropertiesRepositoryTest {
 
         assertTrue(result.isSuccess)
         assertEquals(property, result.getOrNull())
+        coVerify(exactly = 1) { cacheStore.saveProperty(property) }
     }
 
     @Test
@@ -79,6 +87,27 @@ class PropertiesRepositoryTest {
 
         assertTrue(result.isFailure)
         assertEquals("timeout", result.exceptionOrNull()?.message)
+    }
+
+    @Test
+    fun `getCachedProperty returns in-memory preview before store`() = runTest {
+        val property = sampleProperty("42")
+        repository.primePropertyPreview(property)
+
+        val result = repository.getCachedProperty("42")
+
+        assertEquals(property, result)
+    }
+
+    @Test
+    fun `getCachedProperty loads persisted property when memory cache misses`() = runTest {
+        val property = sampleProperty("84")
+        coEvery { cacheStore.getProperty("84") } returns property
+
+        val result = repository.getCachedProperty("84")
+
+        assertEquals(property, result)
+        coVerify(exactly = 1) { cacheStore.getProperty("84") }
     }
 
     // ---------- helpers ----------

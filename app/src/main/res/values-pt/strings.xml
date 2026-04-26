@@ -1,4 +1,4 @@
-<resources>
+﻿<resources>
     <string name="app_name">TravelHub</string>
 
     <!-- common -->
@@ -9,10 +9,10 @@
 
     <!-- placeholder home -->
     <string name="home_placeholder_title">Bem-vindo!</string>
-    <string name="home_placeholder_subtitle">Conectado como %1$s</string>
+    <string name="home_placeholder_subtitle">Sessão iniciada como %1$s</string>
     <string name="home_placeholder_logout">Sair</string>
-    <string name="home_partner_dashboard_title">Painel do Anfitrião</string>
-    <string name="home_admin_dashboard_title">Painel de Administração</string>
+    <string name="home_partner_dashboard_title">Painel do anfitrião</string>
+    <string name="home_admin_dashboard_title">Painel de administração</string>
 
     <!-- auth: hero -->
     <string name="auth_brand_tagline">VIAGENS PREMIUM</string>
@@ -85,6 +85,11 @@
     <string name="property_detail_capacity">%1$d hóspedes · %2$d quarto · %3$.0f banheiros</string>
     <string name="property_detail_description_title">Descrição</string>
     <string name="property_detail_amenities_title">O que este lugar oferece</string>
+    <string name="property_detail_policy_title">Política de cancelamento</string>
+    <string name="property_detail_images_title">Galeria</string>
+    <string name="property_detail_reviews_title">Avaliações</string>
+    <string name="property_detail_no_reviews">Ainda não há avaliações disponíveis</string>
+    <string name="property_detail_verified_stay">Estadia verificada</string>
     <string name="property_detail_price_per_night">noite</string>
     <string name="property_detail_reserve">Reservar</string>
     <string name="property_detail_load_error">Não foi possível carregar os detalhes da propriedade</string>

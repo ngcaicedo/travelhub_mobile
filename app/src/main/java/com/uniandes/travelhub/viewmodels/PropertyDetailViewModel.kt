@@ -17,7 +17,11 @@ import kotlinx.coroutines.launch
 sealed interface PropertyDetailUiState {
     data object Idle : PropertyDetailUiState
     data object Loading : PropertyDetailUiState
-    data class Success(val property: Property) : PropertyDetailUiState
+    data class Success(
+        val property: Property,
+        val isRefreshing: Boolean = false,
+        val isFromCache: Boolean = false
+    ) : PropertyDetailUiState
     data class Error(val message: ErrorMessage) : PropertyDetailUiState
 }
 
@@ -35,16 +39,33 @@ class PropertyDetailViewModel(
 
     fun loadPropertyDetail() {
         viewModelScope.launch {
-            _uiState.value = PropertyDetailUiState.Loading
+            val cached = repository.getCachedProperty(propertyId)
+            _uiState.value = if (cached != null) {
+                PropertyDetailUiState.Success(
+                    property = cached,
+                    isRefreshing = true,
+                    isFromCache = true
+                )
+            } else {
+                PropertyDetailUiState.Loading
+            }
             repository.getPropertyDetail(propertyId)
                 .onSuccess { property ->
-                    _uiState.value = PropertyDetailUiState.Success(property)
+                    _uiState.value = PropertyDetailUiState.Success(property = property)
                 }
                 .onFailure { error ->
-                    _uiState.value = PropertyDetailUiState.Error(
-                        error.message?.let { ErrorMessage.Plain(it) }
-                            ?: ErrorMessage.Resource(R.string.property_detail_load_error)
-                    )
+                    if (cached == null) {
+                        _uiState.value = PropertyDetailUiState.Error(
+                            error.message?.let { ErrorMessage.Plain(it) }
+                                ?: ErrorMessage.Resource(R.string.property_detail_load_error)
+                        )
+                    } else {
+                        _uiState.value = PropertyDetailUiState.Success(
+                            property = cached,
+                            isRefreshing = false,
+                            isFromCache = true
+                        )
+                    }
                 }
         }
     }

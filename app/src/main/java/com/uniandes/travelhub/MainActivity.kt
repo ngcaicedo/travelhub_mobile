@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import com.uniandes.travelhub.network.AuthTokenStore
+import com.uniandes.travelhub.network.DataStorePropertyCacheStore
 import com.uniandes.travelhub.network.RetrofitFactory
 import com.uniandes.travelhub.repositories.AuthRepository
 import com.uniandes.travelhub.repositories.PropertiesRepository
@@ -27,7 +28,8 @@ class MainActivity : AppCompatActivity() {
 
     private val propertiesRepository: PropertiesRepository by lazy {
         PropertiesRepository(
-            propertiesApi = RetrofitFactory.propertiesApi
+            propertiesApi = RetrofitFactory.propertiesApi,
+            cacheStore = DataStorePropertyCacheStore.getInstance(applicationContext)
         )
     }
 

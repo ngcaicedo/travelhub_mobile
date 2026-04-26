@@ -19,6 +19,9 @@ data class Property(
     @Json(name = "bathrooms") val bathrooms: Double = 1.0,
     @Json(name = "max_guests") val maxGuests: Int = 2,
     @Json(name = "amenities") val amenities: List<String> = emptyList(),
+    @Json(name = "cancellation_policy") val cancellationPolicy: String = "",
+    @Json(name = "tax_rate") val taxRate: Double = 0.0,
+    @Json(name = "cleaning_fee") val cleaningFee: Double = 0.0,
     @Json(name = "images") val images: List<PropertyImage> = emptyList(),
     @Json(name = "reviews") val reviews: List<PropertyReview> = emptyList(),
     @Json(name = "property_type") val propertyType: String = "Apartment",
@@ -29,8 +32,9 @@ data class Property(
 data class PropertyImage(
     @Json(name = "id") val id: String = "",
     @Json(name = "url") val url: String,
+    @Json(name = "url_hires") val urlHires: String? = null,
     @Json(name = "alt_text") val altText: String? = null,
-    @Json(name = "is_primary") val isPrimary: Boolean = false,
+    @Json(name = "is_cover") val isCover: Boolean = false,
     @Json(name = "position") val position: Int = 0
 )
 
@@ -39,7 +43,7 @@ data class PropertyReview(
     @Json(name = "id") val id: String,
     @Json(name = "author") val author: String,
     @Json(name = "rating") val rating: Int,
-    @Json(name = "date") val date: String,
+    @Json(name = "review_date") val reviewDate: String,
     @Json(name = "comment") val comment: String,
     @Json(name = "verified_stay") val verifiedStay: Boolean
 )
