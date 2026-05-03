@@ -14,7 +14,8 @@ object RetrofitFactory {
     private var authTokenStore: AuthTokenStore? = null
 
     /**
-     * Initializes the factory with an [AuthTokenStore] to enable JWT authentication.
+     * Initializes the factory with an [AuthTokenStore] to enable JWT authentication
+     * and 401-driven session clearing. Call once from `MainActivity`.
      */
     fun init(tokenStore: AuthTokenStore) {
         this.authTokenStore = tokenStore
@@ -28,6 +29,7 @@ object RetrofitFactory {
 
         authTokenStore?.let {
             builder.addInterceptor(AuthInterceptor(it))
+            builder.authenticator(UnauthorizedAuthenticator(it))
         }
 
         if (BuildConfig.DEBUG) {
@@ -41,10 +43,11 @@ object RetrofitFactory {
     }
 
     val securityApi: SecurityApi by lazy { build(BuildConfig.SECURITY_API_BASE) }
-
     val usersApi: UsersApi by lazy { build(BuildConfig.USERS_API_BASE) }
-
     val propertiesApi: PropertiesApi by lazy { build(BuildConfig.PROPERTIES_API_BASE) }
+    val searchApi: SearchApi by lazy { build(BuildConfig.SEARCH_API_BASE) }
+    val reservationsApi: ReservationsApi by lazy { build(BuildConfig.RESERVATIONS_API_BASE) }
+    val paymentsApi: PaymentsApi by lazy { build(BuildConfig.PAYMENTS_API_BASE) }
 
     private inline fun <reified T> build(baseUrl: String): T =
         Retrofit.Builder()

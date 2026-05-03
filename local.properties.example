@@ -19,3 +19,6 @@
 TRAVELHUB_SECURITY_API_BASE=http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/
 TRAVELHUB_USERS_API_BASE=http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/
 TRAVELHUB_PROPERTIES_API_BASE=http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/
+TRAVELHUB_SEARCH_API_BASE=http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/
+TRAVELHUB_RESERVATIONS_API_BASE=http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/
+TRAVELHUB_PAYMENTS_API_BASE=http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/
