@@ -9,17 +9,17 @@ import com.uniandes.travelhub.network.AuthTokenStore
 import com.uniandes.travelhub.network.PaymentsApi
 import kotlinx.coroutines.flow.first
 
-class PaymentException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
+class PaymentException(message: String?, cause: Throwable? = null) : RuntimeException(message, cause)
 
 class PaymentsRepository(
     private val paymentsApi: PaymentsApi,
     private val tokenStore: AuthTokenStore,
-    private val errorParser: (Throwable, String) -> String = ApiErrorParser::getApiErrorMessage,
+    private val parseDetail: (Throwable) -> String? = ApiErrorParser::parseBackendDetail,
 ) {
 
     suspend fun getConfig(): Result<PaymentsConfig> = runCatching {
         paymentsApi.getConfig()
-    }.recoverFailure("No fue posible cargar la configuración de pago")
+    }.recoverFailure()
 
     suspend fun charge(
         reservationId: String,
@@ -29,7 +29,7 @@ class PaymentsRepository(
         idempotencyKey: String,
     ): Result<ChargeResponse> {
         val travelerId = tokenStore.userIdFlow.first()
-            ?: return Result.failure(PaymentException("Sesión inválida"))
+            ?: return Result.failure(PaymentException(message = null))
         return runCatching {
             paymentsApi.charge(
                 CreateChargeRequest(
@@ -41,18 +41,15 @@ class PaymentsRepository(
                     idempotencyKey = idempotencyKey,
                 )
             )
-        }.recoverFailure("No fue posible procesar el pago")
+        }.recoverFailure()
     }
 
     suspend fun getConfirmation(paymentId: String): Result<PaymentConfirmationSummary> = runCatching {
         paymentsApi.getConfirmationSummary(paymentId)
-    }.recoverFailure("No fue posible cargar la confirmación")
+    }.recoverFailure()
 
-    private fun <T> Result<T>.recoverFailure(fallback: String): Result<T> = fold(
+    private fun <T> Result<T>.recoverFailure(): Result<T> = fold(
         onSuccess = { this },
-        onFailure = { throwable ->
-            val message = errorParser(throwable, fallback)
-            Result.failure(PaymentException(message, throwable))
-        }
+        onFailure = { Result.failure(PaymentException(parseDetail(it), it)) }
     )
 }

@@ -11,29 +11,29 @@ import com.uniandes.travelhub.network.SecurityApi
 import com.uniandes.travelhub.network.UsersApi
 import kotlinx.coroutines.flow.Flow
 
-class AuthException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
+class AuthException(message: String?, cause: Throwable? = null) : RuntimeException(message, cause)
 
 class AuthRepository(
     private val securityApi: SecurityApi,
     private val usersApi: UsersApi,
     private val tokenStore: AuthTokenStore,
-    private val errorParser: (Throwable, String) -> String = ApiErrorParser::getApiErrorMessage
+    private val parseDetail: (Throwable) -> String? = ApiErrorParser::parseBackendDetail,
 ) {
 
     suspend fun login(email: String, password: String): Result<Unit> = runCatching {
         securityApi.login(LoginRequest(email = email, password = password))
         Unit
-    }.recoverFailure("No fue posible iniciar sesión")
+    }.recoverFailure()
 
     suspend fun verifyOtp(email: String, otpCode: String): Result<UserRole> = runCatching {
         val token = securityApi.verifyOtp(VerifyOtpRequest(email = email, otpCode = otpCode))
         tokenStore.saveSession(token.accessToken, token.role)
         token.role
-    }.recoverFailure("No fue posible verificar el código")
+    }.recoverFailure()
 
     suspend fun register(payload: RegisterRequest): Result<UserResponse> = runCatching {
         usersApi.register(payload)
-    }.recoverFailure("No fue posible crear la cuenta")
+    }.recoverFailure()
 
     suspend fun logout() {
         tokenStore.clear()
@@ -43,11 +43,8 @@ class AuthRepository(
 
     fun observeRole(): Flow<UserRole?> = tokenStore.roleFlow
 
-    private fun <T> Result<T>.recoverFailure(fallback: String): Result<T> = fold(
+    private fun <T> Result<T>.recoverFailure(): Result<T> = fold(
         onSuccess = { this },
-        onFailure = { throwable ->
-            val message = errorParser(throwable, fallback)
-            Result.failure(AuthException(message, throwable))
-        }
+        onFailure = { Result.failure(AuthException(parseDetail(it), it)) }
     )
 }

@@ -5,11 +5,11 @@ import com.uniandes.travelhub.models.search.SearchResponse
 import com.uniandes.travelhub.network.ApiErrorParser
 import com.uniandes.travelhub.network.SearchApi
 
-class SearchException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
+class SearchException(message: String?, cause: Throwable? = null) : RuntimeException(message, cause)
 
 class SearchRepository(
     private val searchApi: SearchApi,
-    private val errorParser: (Throwable, String) -> String = ApiErrorParser::getApiErrorMessage,
+    private val parseDetail: (Throwable) -> String? = ApiErrorParser::parseBackendDetail,
 ) {
 
     private var lastResult: Pair<SearchQuery, SearchResponse>? = null
@@ -30,7 +30,7 @@ class SearchRepository(
         )
     }.onSuccess { response ->
         lastResult = query to response
-    }.recoverFailure("No fue posible realizar la búsqueda")
+    }.recoverFailure()
 
     /**
      * Returns the last successful (query, response) pair so the UI can restore the
@@ -38,11 +38,8 @@ class SearchRepository(
      */
     fun lastResult(): Pair<SearchQuery, SearchResponse>? = lastResult
 
-    private fun <T> Result<T>.recoverFailure(fallback: String): Result<T> = fold(
+    private fun <T> Result<T>.recoverFailure(): Result<T> = fold(
         onSuccess = { this },
-        onFailure = { throwable ->
-            val message = errorParser(throwable, fallback)
-            Result.failure(SearchException(message, throwable))
-        }
+        onFailure = { Result.failure(SearchException(parseDetail(it), it)) }
     )
 }

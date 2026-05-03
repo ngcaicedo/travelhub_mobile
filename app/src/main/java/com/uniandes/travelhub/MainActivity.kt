@@ -10,15 +10,20 @@ import com.uniandes.travelhub.network.AuthTokenStore
 import com.uniandes.travelhub.network.DataStorePropertyCacheStore
 import com.uniandes.travelhub.network.RetrofitFactory
 import com.uniandes.travelhub.repositories.AuthRepository
+import com.uniandes.travelhub.repositories.PaymentsRepository
 import com.uniandes.travelhub.repositories.PropertiesRepository
+import com.uniandes.travelhub.repositories.ReservationsRepository
+import com.uniandes.travelhub.repositories.SearchRepository
 import com.uniandes.travelhub.ui.auth.navigation.AuthNavGraph
 import com.uniandes.travelhub.ui.theme.TravelhubTheme
 
 class MainActivity : AppCompatActivity() {
 
+    private val tokenStore: AuthTokenStore by lazy {
+        AuthTokenStore.getInstance(applicationContext).also(RetrofitFactory::init)
+    }
+
     private val authRepository: AuthRepository by lazy {
-        val tokenStore = AuthTokenStore.getInstance(applicationContext)
-        RetrofitFactory.init(tokenStore)
         AuthRepository(
             securityApi = RetrofitFactory.securityApi,
             usersApi = RetrofitFactory.usersApi,
@@ -29,7 +34,25 @@ class MainActivity : AppCompatActivity() {
     private val propertiesRepository: PropertiesRepository by lazy {
         PropertiesRepository(
             propertiesApi = RetrofitFactory.propertiesApi,
-            cacheStore = DataStorePropertyCacheStore.getInstance(applicationContext)
+            cacheStore = DataStorePropertyCacheStore.getInstance(applicationContext),
+        )
+    }
+
+    private val searchRepository: SearchRepository by lazy {
+        SearchRepository(searchApi = RetrofitFactory.searchApi)
+    }
+
+    private val reservationsRepository: ReservationsRepository by lazy {
+        ReservationsRepository(
+            reservationsApi = RetrofitFactory.reservationsApi,
+            tokenStore = tokenStore,
+        )
+    }
+
+    private val paymentsRepository: PaymentsRepository by lazy {
+        PaymentsRepository(
+            paymentsApi = RetrofitFactory.paymentsApi,
+            tokenStore = tokenStore,
         )
     }
 
@@ -47,6 +70,10 @@ class MainActivity : AppCompatActivity() {
                 AuthNavGraph(
                     authRepository = authRepository,
                     propertiesRepository = propertiesRepository,
+                    searchRepository = searchRepository,
+                    reservationsRepository = reservationsRepository,
+                    paymentsRepository = paymentsRepository,
+                    tokenStore = tokenStore,
                     currentLocale = currentLocale,
                     onLocaleChange = { tag ->
                         AppCompatDelegate.setApplicationLocales(

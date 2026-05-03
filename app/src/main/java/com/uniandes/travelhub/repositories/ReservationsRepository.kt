@@ -10,18 +10,18 @@ import com.uniandes.travelhub.models.reservations.ReservationModificationPreview
 import com.uniandes.travelhub.models.reservations.ReservationResponse
 import com.uniandes.travelhub.models.reservations.ReservationStatusGroup
 import com.uniandes.travelhub.models.reservations.ReservationWithDetailsResponse
-import java.util.UUID
 import com.uniandes.travelhub.network.ApiErrorParser
 import com.uniandes.travelhub.network.AuthTokenStore
 import com.uniandes.travelhub.network.ReservationsApi
 import kotlinx.coroutines.flow.first
+import java.util.UUID
 
-class ReservationException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
+class ReservationException(message: String?, cause: Throwable? = null) : RuntimeException(message, cause)
 
 class ReservationsRepository(
     private val reservationsApi: ReservationsApi,
     private val tokenStore: AuthTokenStore,
-    private val errorParser: (Throwable, String) -> String = ApiErrorParser::getApiErrorMessage,
+    private val parseDetail: (Throwable) -> String? = ApiErrorParser::parseBackendDetail,
 ) {
 
     suspend fun create(
@@ -33,7 +33,7 @@ class ReservationsRepository(
         roomId: String? = null,
     ): Result<ReservationResponse> {
         val travelerId = tokenStore.userIdFlow.first()
-            ?: return Result.failure(ReservationException("Sesión inválida"))
+            ?: return Result.failure(ReservationException(message = null))
         // Backend requires id_room. The web passes id_room = id_property when
         // there is no separate "room" concept (single-unit properties), so we
         // mirror that default here.
@@ -50,19 +50,19 @@ class ReservationsRepository(
                     currency = currency,
                 )
             )
-        }.recoverFailure("No fue posible crear la reserva")
+        }.recoverFailure()
     }
 
     suspend fun getById(reservationId: String): Result<ReservationResponse> = runCatching {
         reservationsApi.getById(reservationId)
-    }.recoverFailure("No fue posible cargar la reserva")
+    }.recoverFailure()
 
     suspend fun listForCurrentUser(group: ReservationStatusGroup? = null): Result<List<ReservationWithDetailsResponse>> {
         val userId = tokenStore.userIdFlow.first()
-            ?: return Result.failure(ReservationException("Sesión inválida"))
+            ?: return Result.failure(ReservationException(message = null))
         return runCatching {
             reservationsApi.listForUser(userId, group?.wire)
-        }.recoverFailure("No fue posible cargar las reservas")
+        }.recoverFailure()
     }
 
     suspend fun previewModification(
@@ -75,7 +75,7 @@ class ReservationsRepository(
             reservationId,
             ReservationModificationPreviewRequest(checkIn, checkOut, guests),
         )
-    }.recoverFailure("No fue posible calcular la modificación")
+    }.recoverFailure()
 
     suspend fun confirmModification(
         reservationId: String,
@@ -88,13 +88,13 @@ class ReservationsRepository(
             reservationId,
             ReservationModificationConfirmRequest(checkIn, checkOut, guests, idempotencyKey),
         )
-    }.recoverFailure("No fue posible modificar la reserva")
+    }.recoverFailure()
 
     suspend fun previewCancellation(
         reservationId: String,
     ): Result<ReservationCancellationPreviewResponse> = runCatching {
         reservationsApi.previewCancellation(reservationId)
-    }.recoverFailure("No fue posible calcular la cancelación")
+    }.recoverFailure()
 
     suspend fun confirmCancellation(
         reservationId: String,
@@ -105,13 +105,10 @@ class ReservationsRepository(
             reservationId,
             ReservationCancellationConfirmRequest(idempotencyKey = idempotencyKey, reason = reason),
         )
-    }.recoverFailure("No fue posible cancelar la reserva")
+    }.recoverFailure()
 
-    private fun <T> Result<T>.recoverFailure(fallback: String): Result<T> = fold(
+    private fun <T> Result<T>.recoverFailure(): Result<T> = fold(
         onSuccess = { this },
-        onFailure = { throwable ->
-            val message = errorParser(throwable, fallback)
-            Result.failure(ReservationException(message, throwable))
-        }
+        onFailure = { Result.failure(ReservationException(parseDetail(it), it)) }
     )
 }
