@@ -3,6 +3,7 @@
 
     <!-- common -->
     <string name="common_close">Cerrar</string>
+    <string name="common_confirm">Confirmar</string>
     <string name="common_unexpected_error">Ocurrió un error inesperado</string>
     <string name="common_change_language">Cambiar idioma</string>
     <string name="common_coming_soon">Próximamente</string>
@@ -106,5 +107,145 @@
     <string name="common_language_spanish">Español</string>
     <string name="common_language_english">English</string>
     <string name="common_language_portuguese">Português</string>
+
+    <!-- search -->
+    <string name="search_title">Buscar alojamientos</string>
+    <string name="search_button">Buscar</string>
+    <string name="search_load_more">Cargar más resultados</string>
+    <string name="search_my_reservations">Mis reservas</string>
+    <string name="search_field_city">Ciudad</string>
+    <string name="search_field_check_in">Check-in</string>
+    <string name="search_field_check_out">Check-out</string>
+    <string name="search_field_guests">Huéspedes</string>
+    <string name="search_field_min_price">Precio mínimo</string>
+    <string name="search_field_max_price">Precio máximo</string>
+    <string name="search_field_order_by">Ordenar por</string>
+    <string name="search_field_order_dir">Dirección</string>
+    <string name="search_section_amenities">Amenidades</string>
+    <string name="search_amenity_wifi">WiFi</string>
+    <string name="search_amenity_pool">Piscina</string>
+    <string name="search_amenity_breakfast">Desayuno</string>
+    <string name="search_amenity_air_conditioning">Aire acondicionado</string>
+    <string name="search_amenity_pet_friendly">Pet friendly</string>
+    <string name="search_amenity_parking">Estacionamiento</string>
+    <string name="search_amenity_gym">Gimnasio</string>
+    <string name="search_amenity_spa">Spa</string>
+    <string name="search_order_by_price">Precio</string>
+    <string name="search_order_by_rating">Calificación</string>
+    <string name="search_order_by_name">Nombre</string>
+    <string name="search_order_dir_asc">Ascendente</string>
+    <string name="search_order_dir_desc">Descendente</string>
+    <string name="search_order_none">Sin orden</string>
+    <string name="search_empty_title">No hay propiedades para estos filtros</string>
+    <string name="search_error_generic">No fue posible realizar la búsqueda</string>
+    <string name="search_error_city_required">Indica una ciudad</string>
+    <string name="search_error_check_in_required">Selecciona la fecha de entrada</string>
+    <string name="search_error_check_out_required">Selecciona la fecha de salida</string>
+    <string name="search_error_check_out_after_check_in">La salida debe ser posterior al check-in</string>
+    <string name="search_error_guests_min">Debe haber al menos un huésped</string>
+
+    <!-- checkout -->
+    <string name="checkout_title">Confirmar reserva</string>
+    <string name="checkout_subtitle">Revisa las fechas y huéspedes antes de pagar</string>
+    <string name="checkout_submit">Reservar y pagar</string>
+    <string name="checkout_error_generic">No fue posible crear la reserva</string>
+    <string name="checkout_error_check_in_required">Selecciona la fecha de entrada</string>
+    <string name="checkout_error_check_out_required">Selecciona la fecha de salida</string>
+    <string name="checkout_error_check_out_after_check_in">La salida debe ser posterior al check-in</string>
+    <string name="checkout_error_guests_min">Debe haber al menos un huésped</string>
+    <string name="checkout_summary_title">Resumen de costos</string>
+    <string name="checkout_summary_accommodation">Alojamiento (%1$s × %2$d noches × %3$d huéspedes)</string>
+    <string name="checkout_summary_service_fee">Tarifa de servicio</string>
+    <string name="checkout_summary_total">Total a pagar</string>
+
+    <!-- payment -->
+    <string name="payment_title">Pago seguro</string>
+    <string name="payment_subtitle_real">Selecciona un método de pago</string>
+    <string name="payment_subtitle_fake">Modo de prueba: elige un escenario simulado</string>
+    <string name="payment_loading_config">Preparando el pago…</string>
+    <string name="payment_processing">Procesando pago…</string>
+    <string name="payment_succeeded">Pago aprobado</string>
+    <string name="payment_pay_success">Pagar (tarjeta exitosa)</string>
+    <string name="payment_pay_insufficient">Pagar (fondos insuficientes)</string>
+    <string name="payment_pay_declined">Pagar (tarjeta rechazada)</string>
+    <string name="payment_error_generic">No fue posible procesar el pago</string>
+    <string name="payment_error_config">No fue posible cargar la configuración de pago</string>
+    <string name="payment_error_declined">El pago fue rechazado</string>
+    <string name="payment_error_confirmation">No fue posible cargar la confirmación</string>
+
+    <!-- payment confirmation -->
+    <string name="payment_confirmation_title">Confirmación</string>
+    <string name="payment_confirmation_success">¡Tu reserva está confirmada!</string>
+    <string name="payment_confirmation_subtitle">Te enviamos los detalles a tu correo</string>
+    <string name="payment_confirmation_reservation_id">ID de reserva</string>
+    <string name="payment_confirmation_payment_id">ID de pago</string>
+    <string name="payment_confirmation_property">Propiedad</string>
+    <string name="payment_confirmation_address">Dirección</string>
+    <string name="payment_confirmation_total">Total pagado</string>
+    <string name="payment_confirmation_receipt">N° de recibo</string>
+    <string name="payment_confirmation_see_reservations">Ver mis reservas</string>
+
+    <!-- reservations: list -->
+    <string name="reservations_list_title">Mis reservas</string>
+    <string name="reservations_list_empty">Aún no tienes reservas</string>
+    <string name="reservations_list_search_cta">Buscar alojamientos</string>
+    <string name="reservations_list_error">No fue posible cargar las reservas</string>
+    <string name="reservations_filter_active">Activas</string>
+    <string name="reservations_filter_past">Pasadas</string>
+    <string name="reservations_filter_cancelled">Canceladas</string>
+    <string name="reservations_filter_all">Todas</string>
+
+    <!-- reservation detail -->
+    <string name="reservation_detail_title">Detalle de reserva</string>
+    <string name="reservation_detail_status">Estado</string>
+    <string name="reservation_detail_breakdown">Desglose</string>
+    <string name="reservation_detail_nights">Noches</string>
+    <string name="reservation_detail_nightly_rate">Tarifa por noche</string>
+    <string name="reservation_detail_accommodation">Alojamiento</string>
+    <string name="reservation_detail_cleaning">Limpieza</string>
+    <string name="reservation_detail_service">Servicio</string>
+    <string name="reservation_detail_taxes">Impuestos</string>
+    <string name="reservation_detail_error">No fue posible cargar la reserva</string>
+    <string name="reservation_card_dates">%1$s → %2$s</string>
+    <string name="reservation_card_guests_singular">%1$d huésped</string>
+    <string name="reservation_card_guests_plural">%1$d huéspedes</string>
+    <string name="reservation_status_pending_payment">Pendiente de pago</string>
+    <string name="reservation_status_confirmed">Confirmada</string>
+    <string name="reservation_status_cancelled">Cancelada</string>
+    <string name="reservation_status_completed">Completada</string>
+    <string name="reservation_status_refund_pending">Reembolso pendiente</string>
+    <string name="reservation_status_refund_completed">Reembolsada</string>
+    <string name="reservation_status_refund_failed">Reembolso fallido</string>
+    <string name="reservation_actions_title">Gestionar reserva</string>
+    <string name="reservation_action_modify">Modificar</string>
+    <string name="reservation_action_cancel">Cancelar reserva</string>
+    <string name="reservation_action_preview">Calcular cambios</string>
+    <string name="reservation_action_modify_confirm">Confirmar modificación</string>
+    <string name="reservation_action_cancel_confirm">Confirmar cancelación</string>
+    <string name="reservation_action_change_blocked">No se puede aplicar este cambio</string>
+    <string name="reservation_action_delta">Diferencia de precio</string>
+    <string name="reservation_action_refund_estimate">Reembolso estimado</string>
+    <string name="reservation_action_refund">Reembolso</string>
+    <string name="reservation_action_penalty">Penalización</string>
+    <string name="reservation_action_refund_type">Tipo de reembolso</string>
+    <string name="reservation_action_policy">Política aplicada</string>
+    <string name="reservation_action_extra_charge_required">Requiere cargo adicional</string>
+    <string name="reservation_action_modify_error">No fue posible modificar la reserva</string>
+    <string name="reservation_action_cancel_error">No fue posible cancelar la reserva</string>
+    <string name="reservation_action_modify_done">Modificación aplicada</string>
+    <string name="reservation_action_cancel_done">Reserva cancelada</string>
+    <string name="reservation_refund_type_full_refund">Reembolso total</string>
+    <string name="reservation_refund_type_partial_refund">Reembolso parcial</string>
+    <string name="reservation_refund_type_non_refundable">No reembolsable</string>
+    <string name="reservation_refund_type_none">Sin reembolso</string>
+    <string name="reservation_refund_type_partial">Parcial</string>
+    <string name="reservation_refund_type_full">Completo</string>
+    <string name="reservation_policy_free_flexible">Política flexible</string>
+    <string name="reservation_policy_moderate">Política moderada</string>
+    <string name="reservation_policy_strict">Política estricta</string>
+
+    <!-- forbidden / role guard -->
+    <string name="forbidden_title">Acceso denegado</string>
+    <string name="forbidden_subtitle">Tu rol no tiene permisos para esta sección</string>
 </resources>
 
