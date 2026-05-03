@@ -11,14 +11,22 @@ import java.util.concurrent.TimeUnit
 object RetrofitFactory {
 
     private val moshi: Moshi = Moshi.Builder().build()
-    private var authTokenStore: AuthTokenStore? = null
 
     /**
-     * Initializes the factory with an [AuthTokenStore] to enable JWT authentication
-     * and 401-driven session clearing. Call once from `MainActivity`.
+     * Held in a volatile reference so [AuthInterceptor]/[UnauthorizedAuthenticator]
+     * — which capture the provider at OkHttp build time — see the latest value
+     * even when `init` is called after the client is already cached.
+     */
+    @Volatile
+    private var authTokenStoreRef: AuthTokenStore? = null
+
+    /**
+     * Registers the [AuthTokenStore] used by the auth interceptor and 401 authenticator.
+     * Safe to call before, during or after the first API access — the OkHttp client
+     * always carries the interceptors, and they read the store lazily on every request.
      */
     fun init(tokenStore: AuthTokenStore) {
-        this.authTokenStore = tokenStore
+        authTokenStoreRef = tokenStore
     }
 
     private val okHttpClient: OkHttpClient by lazy {
@@ -26,11 +34,8 @@ object RetrofitFactory {
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
-
-        authTokenStore?.let {
-            builder.addInterceptor(AuthInterceptor(it))
-            builder.authenticator(UnauthorizedAuthenticator(it))
-        }
+            .addInterceptor(AuthInterceptor { authTokenStoreRef })
+            .authenticator(UnauthorizedAuthenticator { authTokenStoreRef })
 
         if (BuildConfig.DEBUG) {
             val logging = HttpLoggingInterceptor().apply {
