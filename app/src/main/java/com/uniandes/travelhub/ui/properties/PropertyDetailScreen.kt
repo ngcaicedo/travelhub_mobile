@@ -67,7 +67,8 @@ import com.uniandes.travelhub.viewmodels.PropertyDetailViewModel
 @Composable
 fun PropertyDetailScreen(
     viewModel: PropertyDetailViewModel,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onReserveClick: (Property) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -102,7 +103,8 @@ fun PropertyDetailScreen(
                 is PropertyDetailUiState.Success -> {
                     PropertyDetailContent(
                         property = state.property,
-                        isRefreshing = state.isRefreshing
+                        isRefreshing = state.isRefreshing,
+                        onReserveClick = { onReserveClick(state.property) },
                     )
                 }
                 is PropertyDetailUiState.Error -> {
@@ -120,7 +122,8 @@ fun PropertyDetailScreen(
 @Composable
 private fun PropertyDetailContent(
     property: Property,
-    isRefreshing: Boolean
+    isRefreshing: Boolean,
+    onReserveClick: () -> Unit,
 ) {
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current
@@ -138,6 +141,32 @@ private fun PropertyDetailContent(
         if (isRefreshing) {
             item {
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
+        }
+
+        item {
+            if (sortedImages.isEmpty()) {
+                Text(
+                    text = stringResource(R.string.property_detail_no_images),
+                    modifier = Modifier.padding(MaterialTheme.spacing.md),
+                )
+            } else {
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1.5f),
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.sm),
+                    contentPadding = PaddingValues(horizontal = MaterialTheme.spacing.md),
+                ) {
+                    items(sortedImages) { image ->
+                        PropertyImageCard(
+                            image = image,
+                            propertyName = sanitizeDisplayText(property.name),
+                            targetWidthPx = cardWidthPx,
+                            cardWidthDp = cardWidthDp,
+                        )
+                    }
+                }
             }
         }
 
@@ -176,42 +205,36 @@ private fun PropertyDetailContent(
 
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.md))
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Column {
-                        Row(verticalAlignment = Alignment.Bottom) {
-                            Text(
-                                text = "${property.currency} ${property.pricePerNight}",
-                                style = MaterialTheme.typography.headlineSmall,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(
-                                text = " " + stringResource(R.string.property_detail_price_per_night),
-                                style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.padding(bottom = 2.dp)
-                            )
-                        }
-                        Text(
-                            text = stringResource(
-                                R.string.property_detail_capacity,
-                                property.maxGuests,
-                                property.bedrooms,
-                                property.bathrooms
-                            ),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-
-                    TravelHubPrimaryButton(
-                        text = stringResource(R.string.property_detail_reserve),
-                        onClick = { /* Handle Reservation */ },
-                        modifier = Modifier.padding(start = MaterialTheme.spacing.md)
+                Row(verticalAlignment = Alignment.Bottom) {
+                    Text(
+                        text = "${property.currency} ${property.pricePerNight}",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = " " + stringResource(R.string.property_detail_price_per_night),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(bottom = 2.dp)
                     )
                 }
+                Text(
+                    text = stringResource(
+                        R.string.property_detail_capacity,
+                        property.maxGuests,
+                        property.bedrooms,
+                        property.bathrooms
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.md))
+
+                TravelHubPrimaryButton(
+                    text = stringResource(R.string.property_detail_reserve),
+                    onClick = onReserveClick,
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
         }
 
@@ -248,32 +271,6 @@ private fun PropertyDetailContent(
                     text = sanitizeDisplayText(property.cancellationPolicy),
                     style = MaterialTheme.typography.bodyLarge
                 )
-            }
-        }
-
-        item {
-            DetailSection(
-                title = stringResource(R.string.property_detail_images_title)
-            ) {
-                if (sortedImages.isEmpty()) {
-                    Text(stringResource(R.string.property_detail_no_images))
-                } else {
-                    LazyRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(1.5f),
-                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.sm)
-                    ) {
-                        items(sortedImages) { image ->
-                            PropertyImageCard(
-                                image = image,
-                                propertyName = sanitizeDisplayText(property.name),
-                                targetWidthPx = cardWidthPx,
-                                cardWidthDp = cardWidthDp
-                            )
-                        }
-                    }
-                }
             }
         }
 
