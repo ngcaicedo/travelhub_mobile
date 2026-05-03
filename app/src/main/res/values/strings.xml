@@ -216,6 +216,10 @@
     <string name="reservation_status_refund_pending">Reembolso pendiente</string>
     <string name="reservation_status_refund_completed">Reembolsada</string>
     <string name="reservation_status_refund_failed">Reembolso fallido</string>
+    <string name="reservation_status_cancel_requested">Cancelación solicitada</string>
+    <string name="reservation_status_modification_pending_payment">Modificación pendiente de pago</string>
+    <string name="reservation_status_modification_confirmed">Modificación confirmada</string>
+    <string name="reservation_status_additional_charge_failed">Cargo adicional fallido</string>
     <string name="reservation_actions_title">Gestionar reserva</string>
     <string name="reservation_action_modify">Modificar</string>
     <string name="reservation_action_cancel">Cancelar reserva</string>

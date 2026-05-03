@@ -216,6 +216,10 @@
     <string name="reservation_status_refund_pending">Refund pending</string>
     <string name="reservation_status_refund_completed">Refunded</string>
     <string name="reservation_status_refund_failed">Refund failed</string>
+    <string name="reservation_status_cancel_requested">Cancellation requested</string>
+    <string name="reservation_status_modification_pending_payment">Modification pending payment</string>
+    <string name="reservation_status_modification_confirmed">Modification confirmed</string>
+    <string name="reservation_status_additional_charge_failed">Additional charge failed</string>
     <string name="reservation_actions_title">Manage reservation</string>
     <string name="reservation_action_modify">Modify</string>
     <string name="reservation_action_cancel">Cancel reservation</string>
