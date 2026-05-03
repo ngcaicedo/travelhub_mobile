@@ -8,6 +8,7 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -26,7 +27,7 @@ class PropertiesRepositoryTest {
         repository = PropertiesRepository(
             propertiesApi = api,
             cacheStore = cacheStore,
-            errorParser = { throwable, fallback -> throwable.message ?: fallback }
+            parseDetail = { it.message }
         )
     }
 
@@ -56,13 +57,13 @@ class PropertiesRepositoryTest {
     }
 
     @Test
-    fun `getProperties uses fallback when exception message is null`() = runTest {
+    fun `getProperties leaves exception message null when no backend detail is available`() = runTest {
         coEvery { api.getProperties() } throws RuntimeException()
 
         val result = repository.getProperties()
 
         assertTrue(result.isFailure)
-        assertEquals("No fue posible cargar las propiedades", result.exceptionOrNull()?.message)
+        assertNull(result.exceptionOrNull()?.message)
     }
 
     // ---------- getPropertyDetail ----------
