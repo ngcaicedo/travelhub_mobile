@@ -159,6 +159,18 @@
     <string name="checkout_summary_accommodation">Stay (%1$s × %2$d nights × %3$d guests)</string>
     <string name="checkout_summary_service_fee">Service fee</string>
     <string name="checkout_summary_total">Total due</string>
+    <string name="checkout_continue">Continue</string>
+    <string name="checkout_nights_summary">%1$d nights</string>
+    <string name="payment_method_title">Payment method</string>
+    <string name="payment_method_card">Credit or debit card</string>
+    <string name="payment_method_card_subtitle">Visa, Mastercard, Amex</string>
+    <string name="payment_price_details_title">Price details</string>
+    <string name="payment_summary_total">Total (%1$s)</string>
+    <string name="payment_legal_disclaimer">By confirming you accept the House Rules, Terms of Service and the property\'s Cancellation Policy.</string>
+    <string name="payment_secure_ssl">Secure SSL-encrypted payment</string>
+    <string name="payment_confirm_and_pay">Confirm and pay %1$s</string>
+    <string name="payment_review_title">Confirm and pay</string>
+    <string name="payment_test_scenarios">Test scenarios</string>
 
     <!-- payment -->
     <string name="payment_title">Secure payment</string>

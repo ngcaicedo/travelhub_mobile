@@ -159,6 +159,18 @@
     <string name="checkout_summary_accommodation">Alojamiento (%1$s × %2$d noches × %3$d huéspedes)</string>
     <string name="checkout_summary_service_fee">Tarifa de servicio</string>
     <string name="checkout_summary_total">Total a pagar</string>
+    <string name="checkout_continue">Continuar</string>
+    <string name="checkout_nights_summary">%1$d noches</string>
+    <string name="payment_method_title">Método de pago</string>
+    <string name="payment_method_card">Tarjeta de crédito o débito</string>
+    <string name="payment_method_card_subtitle">Visa, Mastercard, Amex</string>
+    <string name="payment_price_details_title">Detalles del precio</string>
+    <string name="payment_summary_total">Total (%1$s)</string>
+    <string name="payment_legal_disclaimer">Al confirmar aceptas las Reglas de la casa, los Términos de servicio y la Política de cancelación del alojamiento.</string>
+    <string name="payment_secure_ssl">Pago seguro encriptado con SSL</string>
+    <string name="payment_confirm_and_pay">Confirmar y pagar %1$s</string>
+    <string name="payment_review_title">Confirmar y pagar</string>
+    <string name="payment_test_scenarios">Escenarios de prueba</string>
 
     <!-- payment -->
     <string name="payment_title">Pago seguro</string>

@@ -28,8 +28,8 @@ sealed interface PaymentEvent {
 
 class PaymentViewModel(
     private val reservationId: String,
-    private val amountInCents: Long,
-    private val currency: String,
+    val amountInCents: Long,
+    val currency: String,
     private val repository: PaymentsRepository,
 ) : ViewModel() {
 
