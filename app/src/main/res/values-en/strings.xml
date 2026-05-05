@@ -198,6 +198,9 @@
     <string name="payment_confirmation_total">Total paid</string>
     <string name="payment_confirmation_receipt">Receipt number</string>
     <string name="payment_confirmation_see_reservations">See my reservations</string>
+    <string name="payment_confirmation_stay_details">Stay details</string>
+    <string name="payment_confirmation_booking_id">Booking ID</string>
+    <string name="payment_confirmation_dates_range">%1$s · %2$s</string>
 
     <!-- reservations: list -->
     <string name="reservations_list_title">My reservations</string>

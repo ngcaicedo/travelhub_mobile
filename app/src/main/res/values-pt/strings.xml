@@ -198,6 +198,9 @@
     <string name="payment_confirmation_total">Total pago</string>
     <string name="payment_confirmation_receipt">Número do recibo</string>
     <string name="payment_confirmation_see_reservations">Ver minhas reservas</string>
+    <string name="payment_confirmation_stay_details">Detalhes da estadia</string>
+    <string name="payment_confirmation_booking_id">ID da reserva</string>
+    <string name="payment_confirmation_dates_range">%1$s · %2$s</string>
 
     <!-- reservations: list -->
     <string name="reservations_list_title">Minhas reservas</string>
