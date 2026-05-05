@@ -11,16 +11,25 @@ object ApiErrorParser {
     private val mapAdapter = moshi.adapter<Map<String, Any?>>(
         Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
     )
+    fun parseBackendDetail(throwable: Throwable): String? = when (throwable) {
+        is HttpException -> parseHttp(throwable, fallback = null)?.takeIf { it.isNotBlank() }
+        is IOException -> null
+        else -> throwable.message?.takeIf { it.isNotBlank() }
+    }
 
+    @Deprecated(
+        "Use parseBackendDetail() and let the UI resolve a localized resource fallback.",
+        ReplaceWith("parseBackendDetail(throwable) ?: fallback"),
+    )
     fun getApiErrorMessage(throwable: Throwable, fallback: String): String {
         return when (throwable) {
-            is HttpException -> parseHttp(throwable, fallback)
+            is HttpException -> parseHttp(throwable, fallback) ?: fallback
             is IOException -> fallback
             else -> throwable.message ?: fallback
         }
     }
 
-    private fun parseHttp(error: HttpException, fallback: String): String {
+    private fun parseHttp(error: HttpException, fallback: String?): String? {
         val body = runCatching { error.response()?.errorBody()?.string() }.getOrNull()
         if (body.isNullOrBlank()) return fallback
 
@@ -34,6 +43,7 @@ object ApiErrorParser {
                 .takeIf { it.isNotEmpty() }
                 ?.joinToString(", ")
                 ?: fallback
+            is Map<*, *> -> detail["message"]?.toString() ?: fallback
             else -> fallback
         }
     }

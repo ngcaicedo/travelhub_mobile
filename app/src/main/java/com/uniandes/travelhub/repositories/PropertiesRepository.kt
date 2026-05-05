@@ -8,7 +8,7 @@ import com.uniandes.travelhub.network.PropertiesApi
 class PropertiesRepository(
     private val propertiesApi: PropertiesApi,
     private val cacheStore: PropertyCacheStore? = null,
-    private val errorParser: (Throwable, String) -> String = ApiErrorParser::getApiErrorMessage
+    private val parseDetail: (Throwable) -> String? = ApiErrorParser::parseBackendDetail,
 ) {
     private val memoryCache = linkedMapOf<String, Property>()
 
@@ -16,13 +16,13 @@ class PropertiesRepository(
         propertiesApi.getProperties()
     }.onSuccess { properties ->
         properties.forEach { cacheProperty(it) }
-    }.recoverFailure("No fue posible cargar las propiedades")
+    }.recoverFailure()
 
     suspend fun getPropertyDetail(id: String): Result<Property> = runCatching {
         propertiesApi.getPropertyDetail(id)
     }.onSuccess { property ->
         cacheProperty(property)
-    }.recoverFailure("No fue posible cargar el detalle de la propiedad")
+    }.recoverFailure()
 
     fun primePropertyPreview(property: Property) {
         memoryCache[property.id] = property
@@ -42,11 +42,8 @@ class PropertiesRepository(
         cacheStore?.saveProperty(property)
     }
 
-    private fun <T> Result<T>.recoverFailure(fallback: String): Result<T> = fold(
+    private fun <T> Result<T>.recoverFailure(): Result<T> = fold(
         onSuccess = { this },
-        onFailure = { throwable ->
-            val message = errorParser(throwable, fallback)
-            Result.failure(Exception(message, throwable))
-        }
+        onFailure = { Result.failure(Exception(parseDetail(it), it)) }
     )
 }

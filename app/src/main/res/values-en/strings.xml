@@ -3,6 +3,7 @@
 
     <!-- common -->
     <string name="common_close">Close</string>
+    <string name="common_confirm">Confirm</string>
     <string name="common_unexpected_error">An unexpected error occurred</string>
     <string name="common_change_language">Change language</string>
     <string name="common_coming_soon">Coming soon</string>
@@ -106,6 +107,150 @@
     <string name="common_language_spanish">Español</string>
     <string name="common_language_english">English</string>
     <string name="common_language_portuguese">Português</string>
+
+    <!-- search -->
+    <string name="search_title">Search stays</string>
+    <string name="search_button">Search</string>
+    <string name="search_load_more">Load more results</string>
+    <string name="search_my_reservations">My reservations</string>
+    <string name="search_field_city">City</string>
+    <string name="search_field_check_in">Check-in</string>
+    <string name="search_field_check_out">Check-out</string>
+    <string name="search_field_guests">Guests</string>
+    <string name="search_field_min_price">Min price</string>
+    <string name="search_field_max_price">Max price</string>
+    <string name="search_field_order_by">Order by</string>
+    <string name="search_field_order_dir">Direction</string>
+    <string name="search_section_amenities">Amenities</string>
+    <string name="search_amenity_wifi">WiFi</string>
+    <string name="search_amenity_pool">Pool</string>
+    <string name="search_amenity_breakfast">Breakfast</string>
+    <string name="search_amenity_air_conditioning">Air conditioning</string>
+    <string name="search_amenity_pet_friendly">Pet friendly</string>
+    <string name="search_amenity_parking">Parking</string>
+    <string name="search_amenity_gym">Gym</string>
+    <string name="search_amenity_spa">Spa</string>
+    <string name="search_order_by_price">Price</string>
+    <string name="search_order_by_rating">Rating</string>
+    <string name="search_order_by_name">Name</string>
+    <string name="search_order_dir_asc">Ascending</string>
+    <string name="search_order_dir_desc">Descending</string>
+    <string name="search_order_none">No order</string>
+    <string name="search_empty_title">No properties match these filters</string>
+    <string name="search_error_generic">Search could not be completed</string>
+    <string name="search_error_city_required">Enter a city</string>
+    <string name="search_error_check_in_required">Pick a check-in date</string>
+    <string name="search_error_check_out_required">Pick a check-out date</string>
+    <string name="search_error_check_out_after_check_in">Check-out must be after check-in</string>
+    <string name="search_error_guests_min">At least one guest is required</string>
+
+    <!-- checkout -->
+    <string name="checkout_title">Confirm reservation</string>
+    <string name="checkout_subtitle">Review your dates and guests before paying</string>
+    <string name="checkout_submit">Reserve and pay</string>
+    <string name="checkout_error_generic">Reservation could not be created</string>
+    <string name="checkout_error_check_in_required">Pick a check-in date</string>
+    <string name="checkout_error_check_out_required">Pick a check-out date</string>
+    <string name="checkout_error_check_out_after_check_in">Check-out must be after check-in</string>
+    <string name="checkout_error_guests_min">At least one guest is required</string>
+    <string name="checkout_summary_title">Cost summary</string>
+    <string name="checkout_summary_accommodation">Stay (%1$s × %2$d nights × %3$d guests)</string>
+    <string name="checkout_summary_service_fee">Service fee</string>
+    <string name="checkout_summary_total">Total due</string>
+
+    <!-- payment -->
+    <string name="payment_title">Secure payment</string>
+    <string name="payment_subtitle_real">Choose a payment method</string>
+    <string name="payment_subtitle_fake">Test mode: pick a simulated scenario</string>
+    <string name="payment_loading_config">Preparing payment…</string>
+    <string name="payment_processing">Processing payment…</string>
+    <string name="payment_succeeded">Payment approved</string>
+    <string name="payment_pay_success">Pay (successful card)</string>
+    <string name="payment_pay_insufficient">Pay (insufficient funds)</string>
+    <string name="payment_pay_declined">Pay (declined card)</string>
+    <string name="payment_error_generic">Payment could not be processed</string>
+    <string name="payment_error_config">Payment configuration could not be loaded</string>
+    <string name="payment_error_declined">Payment was declined</string>
+    <string name="payment_error_confirmation">Confirmation could not be loaded</string>
+
+    <!-- payment confirmation -->
+    <string name="payment_confirmation_title">Confirmation</string>
+    <string name="payment_confirmation_success">Your reservation is confirmed!</string>
+    <string name="payment_confirmation_subtitle">We sent details to your email</string>
+    <string name="payment_confirmation_reservation_id">Reservation ID</string>
+    <string name="payment_confirmation_payment_id">Payment ID</string>
+    <string name="payment_confirmation_property">Property</string>
+    <string name="payment_confirmation_address">Address</string>
+    <string name="payment_confirmation_total">Total paid</string>
+    <string name="payment_confirmation_receipt">Receipt number</string>
+    <string name="payment_confirmation_see_reservations">See my reservations</string>
+
+    <!-- reservations: list -->
+    <string name="reservations_list_title">My reservations</string>
+    <string name="reservations_list_empty">You don\'t have reservations yet</string>
+    <string name="reservations_list_search_cta">Search stays</string>
+    <string name="reservations_list_error">Reservations could not be loaded</string>
+    <string name="reservations_filter_active">Active</string>
+    <string name="reservations_filter_past">Past</string>
+    <string name="reservations_filter_cancelled">Cancelled</string>
+    <string name="reservations_filter_all">All</string>
+
+    <!-- reservation detail -->
+    <string name="reservation_detail_title">Reservation details</string>
+    <string name="reservation_detail_status">Status</string>
+    <string name="reservation_detail_breakdown">Breakdown</string>
+    <string name="reservation_detail_nights">Nights</string>
+    <string name="reservation_detail_nightly_rate">Nightly rate</string>
+    <string name="reservation_detail_accommodation">Accommodation</string>
+    <string name="reservation_detail_cleaning">Cleaning</string>
+    <string name="reservation_detail_service">Service</string>
+    <string name="reservation_detail_taxes">Taxes</string>
+    <string name="reservation_detail_error">Reservation could not be loaded</string>
+    <string name="reservation_card_dates">%1$s → %2$s</string>
+    <string name="reservation_card_guests_singular">%1$d guest</string>
+    <string name="reservation_card_guests_plural">%1$d guests</string>
+    <string name="reservation_status_pending_payment">Payment pending</string>
+    <string name="reservation_status_confirmed">Confirmed</string>
+    <string name="reservation_status_cancelled">Cancelled</string>
+    <string name="reservation_status_completed">Completed</string>
+    <string name="reservation_status_refund_pending">Refund pending</string>
+    <string name="reservation_status_refund_completed">Refunded</string>
+    <string name="reservation_status_refund_failed">Refund failed</string>
+    <string name="reservation_status_cancel_requested">Cancellation requested</string>
+    <string name="reservation_status_modification_pending_payment">Modification pending payment</string>
+    <string name="reservation_status_modification_confirmed">Modification confirmed</string>
+    <string name="reservation_status_additional_charge_failed">Additional charge failed</string>
+    <string name="reservation_actions_title">Manage reservation</string>
+    <string name="reservation_action_modify">Modify</string>
+    <string name="reservation_action_cancel">Cancel reservation</string>
+    <string name="reservation_action_preview">Preview changes</string>
+    <string name="reservation_action_modify_confirm">Confirm changes</string>
+    <string name="reservation_action_cancel_confirm">Confirm cancellation</string>
+    <string name="reservation_action_change_blocked">This change cannot be applied</string>
+    <string name="reservation_action_delta">Price delta</string>
+    <string name="reservation_action_refund_estimate">Estimated refund</string>
+    <string name="reservation_action_refund">Refund</string>
+    <string name="reservation_action_penalty">Penalty</string>
+    <string name="reservation_action_refund_type">Refund type</string>
+    <string name="reservation_action_policy">Policy applied</string>
+    <string name="reservation_action_extra_charge_required">Additional charge required</string>
+    <string name="reservation_action_modify_error">Reservation could not be modified</string>
+    <string name="reservation_action_cancel_error">Reservation could not be cancelled</string>
+    <string name="reservation_action_modify_done">Modification applied</string>
+    <string name="reservation_action_cancel_done">Reservation cancelled</string>
+    <string name="reservation_refund_type_full_refund">Full refund</string>
+    <string name="reservation_refund_type_partial_refund">Partial refund</string>
+    <string name="reservation_refund_type_non_refundable">Non-refundable</string>
+    <string name="reservation_refund_type_none">No refund</string>
+    <string name="reservation_refund_type_partial">Partial</string>
+    <string name="reservation_refund_type_full">Full</string>
+    <string name="reservation_policy_free_flexible">Flexible policy</string>
+    <string name="reservation_policy_moderate">Moderate policy</string>
+    <string name="reservation_policy_strict">Strict policy</string>
+
+    <!-- forbidden / role guard -->
+    <string name="forbidden_title">Access denied</string>
+    <string name="forbidden_subtitle">Your role does not have access to this section</string>
 </resources>
 
 

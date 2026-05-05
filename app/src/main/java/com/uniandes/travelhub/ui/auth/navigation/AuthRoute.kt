@@ -8,11 +8,6 @@ sealed class AuthRoute(val route: String) {
     data object Login : AuthRoute("login")
     data object Register : AuthRoute("register")
 
-    /**
-     * VerifyOtp accepts the user's email as a path argument so the screen can
-     * display it in the subtitle and the ViewModel can submit the OTP for that
-     * specific account.
-     */
     data object VerifyOtp : AuthRoute("verify_otp/{email}") {
         const val ARG_EMAIL = "email"
         fun build(email: String): String = "verify_otp/$email"
@@ -31,5 +26,31 @@ sealed class AuthRoute(val route: String) {
     data object PropertyDetail : AuthRoute("property_detail/{id}") {
         const val ARG_ID = "id"
         fun build(id: String): String = "property_detail/$id"
+    }
+
+    data object Search : AuthRoute("search")
+
+    data object Checkout : AuthRoute("checkout/{propertyId}") {
+        const val ARG_PROPERTY_ID = "propertyId"
+        fun build(propertyId: String): String = "checkout/$propertyId"
+    }
+
+    data object Payment : AuthRoute("payment/{reservationId}/{amountInCents}/{currency}") {
+        const val ARG_RESERVATION_ID = "reservationId"
+        const val ARG_AMOUNT_IN_CENTS = "amountInCents"
+        const val ARG_CURRENCY = "currency"
+        fun build(reservationId: String, amountInCents: Long, currency: String): String =
+            "payment/$reservationId/$amountInCents/$currency"
+    }
+
+    data object PaymentConfirmation : AuthRoute("payment_confirmation/{paymentId}") {
+        const val ARG_PAYMENT_ID = "paymentId"
+        fun build(paymentId: String): String = "payment_confirmation/$paymentId"
+    }
+
+    data object ReservationsList : AuthRoute("reservations")
+    data object ReservationDetail : AuthRoute("reservation/{id}") {
+        const val ARG_ID = "id"
+        fun build(id: String): String = "reservation/$id"
     }
 }

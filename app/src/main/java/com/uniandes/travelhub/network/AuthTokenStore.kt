@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.uniandes.travelhub.models.UserRole
+import com.uniandes.travelhub.utils.JwtUtils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -21,6 +22,9 @@ class AuthTokenStore(private val dataStore: DataStore<Preferences>) {
     }
 
     val localeFlow: Flow<String?> = dataStore.data.map { it[KEY_LOCALE] }
+    val userIdFlow: Flow<String?> = dataStore.data.map { prefs ->
+        prefs[KEY_TOKEN]?.let { JwtUtils.extractSubject(it) }
+    }
 
     suspend fun saveSession(token: String, role: UserRole) {
         dataStore.edit { prefs ->

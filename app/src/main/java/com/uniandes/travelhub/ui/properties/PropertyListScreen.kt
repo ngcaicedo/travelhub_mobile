@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -40,7 +42,9 @@ fun PropertyListScreen(
     viewModel: PropertiesViewModel,
     onPropertyClick: (Property) -> Unit,
     onLoggedOut: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSearchClick: () -> Unit = {},
+    onMyReservationsClick: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -55,6 +59,18 @@ fun PropertyListScreen(
                     )
                 },
                 actions = {
+                    IconButton(onClick = onSearchClick) {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = stringResource(R.string.search_title),
+                        )
+                    }
+                    IconButton(onClick = onMyReservationsClick) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.List,
+                            contentDescription = stringResource(R.string.search_my_reservations),
+                        )
+                    }
                     IconButton(onClick = onLoggedOut) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Logout,

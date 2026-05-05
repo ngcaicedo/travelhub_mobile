@@ -25,6 +25,18 @@ val propertiesApiBase: String = localProperties.getProperty(
     "TRAVELHUB_PROPERTIES_API_BASE",
     "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
 )
+val searchApiBase: String = localProperties.getProperty(
+    "TRAVELHUB_SEARCH_API_BASE",
+    "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
+)
+val reservationsApiBase: String = localProperties.getProperty(
+    "TRAVELHUB_RESERVATIONS_API_BASE",
+    "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
+)
+val paymentsApiBase: String = localProperties.getProperty(
+    "TRAVELHUB_PAYMENTS_API_BASE",
+    "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
+)
 
 android {
     namespace = "com.uniandes.travelhub"
@@ -42,6 +54,9 @@ android {
         buildConfigField("String", "SECURITY_API_BASE", "\"$securityApiBase\"")
         buildConfigField("String", "USERS_API_BASE", "\"$usersApiBase\"")
         buildConfigField("String", "PROPERTIES_API_BASE", "\"$propertiesApiBase\"")
+        buildConfigField("String", "SEARCH_API_BASE", "\"$searchApiBase\"")
+        buildConfigField("String", "RESERVATIONS_API_BASE", "\"$reservationsApiBase\"")
+        buildConfigField("String", "PAYMENTS_API_BASE", "\"$paymentsApiBase\"")
     }
 
     buildTypes {
@@ -137,6 +152,7 @@ dependencies {
     ksp(libs.moshi.kotlin.codegen)
 
     implementation(libs.coil.compose)
+    implementation(libs.stripe.android)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)

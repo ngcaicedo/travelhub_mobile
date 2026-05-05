@@ -41,7 +41,7 @@ class AuthRepositoryTest {
             securityApi = securityApi,
             usersApi = usersApi,
             tokenStore = tokenStore,
-            errorParser = { throwable, fallback -> throwable.message ?: fallback }
+            parseDetail = { it.message }
         )
     }
 
