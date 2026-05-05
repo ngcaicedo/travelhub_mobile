@@ -1,4 +1,4 @@
-﻿package com.uniandes.travelhub.ui.properties
+package com.uniandes.travelhub.ui.properties
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -7,10 +7,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -20,20 +23,19 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -41,6 +43,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
@@ -56,6 +59,7 @@ import com.uniandes.travelhub.models.properties.PropertyImage
 import com.uniandes.travelhub.models.properties.PropertyReview
 import com.uniandes.travelhub.ui.auth.components.TravelHubPrimaryButton
 import com.uniandes.travelhub.ui.auth.components.asString
+import com.uniandes.travelhub.ui.properties.components.AmenityPill
 import com.uniandes.travelhub.ui.theme.spacing
 import com.uniandes.travelhub.utils.resolvePropertyImageUrl
 import com.uniandes.travelhub.utils.sanitizeDisplayText
@@ -63,7 +67,6 @@ import com.uniandes.travelhub.utils.sortPropertyImages
 import com.uniandes.travelhub.viewmodels.PropertyDetailUiState
 import com.uniandes.travelhub.viewmodels.PropertyDetailViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PropertyDetailScreen(
     viewModel: PropertyDetailViewModel,
@@ -72,48 +75,32 @@ fun PropertyDetailScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.property_detail_back)
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent
+    Box(modifier = Modifier.fillMaxSize()) {
+        when (val state = uiState) {
+            is PropertyDetailUiState.Idle -> Unit
+            is PropertyDetailUiState.Loading -> {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            }
+            is PropertyDetailUiState.Success -> {
+                PropertyDetailContent(
+                    property = state.property,
+                    isRefreshing = state.isRefreshing,
+                    onBackClick = onBackClick,
+                    onReserveClick = { onReserveClick(state.property) },
                 )
-            )
-        }
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            when (val state = uiState) {
-                is PropertyDetailUiState.Idle -> Unit
-                is PropertyDetailUiState.Loading -> {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                }
-                is PropertyDetailUiState.Success -> {
-                    PropertyDetailContent(
-                        property = state.property,
-                        isRefreshing = state.isRefreshing,
-                        onReserveClick = { onReserveClick(state.property) },
-                    )
-                }
-                is PropertyDetailUiState.Error -> {
-                    ErrorState(
-                        message = state.message.asString(),
-                        onRetry = { viewModel.loadPropertyDetail() },
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
+            }
+            is PropertyDetailUiState.Error -> {
+                ErrorState(
+                    message = state.message.asString(),
+                    onRetry = { viewModel.loadPropertyDetail() },
+                    modifier = Modifier.align(Alignment.Center)
+                )
+                BackOverlayButton(
+                    onBackClick = onBackClick,
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(MaterialTheme.spacing.md)
+                )
             }
         }
     }
@@ -123,169 +110,348 @@ fun PropertyDetailScreen(
 private fun PropertyDetailContent(
     property: Property,
     isRefreshing: Boolean,
+    onBackClick: () -> Unit,
     onReserveClick: () -> Unit,
 ) {
-    val configuration = LocalConfiguration.current
-    val density = LocalDensity.current
-    val galleryHorizontalPadding = MaterialTheme.spacing.xl
-    val cardWidthDp = remember(configuration, galleryHorizontalPadding) { configuration.screenWidthDp.dp - galleryHorizontalPadding }
-    val cardWidthPx = remember(configuration, density, cardWidthDp) {
-        with(density) { cardWidthDp.roundToPx() }
-    }
-    val sortedImages = remember(property.images) { sortPropertyImages(property.images) }
-
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(bottom = MaterialTheme.spacing.xl)
-    ) {
-        if (isRefreshing) {
-            item {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            if (isRefreshing) {
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
-        }
-
-        item {
-            if (sortedImages.isEmpty()) {
-                Text(
-                    text = stringResource(R.string.property_detail_no_images),
-                    modifier = Modifier.padding(MaterialTheme.spacing.md),
-                )
-            } else {
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1.5f),
-                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.sm),
-                    contentPadding = PaddingValues(horizontal = MaterialTheme.spacing.md),
-                ) {
-                    items(sortedImages) { image ->
-                        PropertyImageCard(
-                            image = image,
-                            propertyName = sanitizeDisplayText(property.name),
-                            targetWidthPx = cardWidthPx,
-                            cardWidthDp = cardWidthDp,
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f),
+                contentPadding = PaddingValues(bottom = 120.dp)
+            ) {
+                item {
+                    HeroSection(
+                        property = property,
+                        onBackClick = onBackClick,
+                    )
+                }
+                item {
+                    HeaderInfo(property = property)
+                }
+                if (property.amenities.isNotEmpty()) {
+                    item {
+                        AmenitiesSection(amenities = property.amenities)
+                    }
+                }
+                item {
+                    DetailSection(title = stringResource(R.string.property_detail_about_title)) {
+                        Text(
+                            text = sanitizeDisplayText(property.description),
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
+                if (property.cancellationPolicy.isNotBlank()) {
+                    item {
+                        DetailSection(title = stringResource(R.string.property_detail_policy_title)) {
+                            Text(
+                                text = sanitizeDisplayText(property.cancellationPolicy),
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+                item {
+                    DetailSection(title = stringResource(R.string.property_detail_reviews_title)) {
+                        if (property.reviews.isEmpty()) {
+                            Text(
+                                text = stringResource(R.string.property_detail_no_reviews),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        } else {
+                            Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.md)) {
+                                property.reviews.forEach { review ->
+                                    ReviewCard(review)
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
-        item {
-            Column(modifier = Modifier.padding(MaterialTheme.spacing.md)) {
-                Text(
-                    text = sanitizeDisplayText(property.name),
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold
-                )
+        StickyReserveBar(
+            property = property,
+            onReserveClick = onReserveClick,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+        )
+    }
+}
 
-                Spacer(modifier = Modifier.height(MaterialTheme.spacing.sm))
+@Composable
+private fun HeroSection(
+    property: Property,
+    onBackClick: () -> Unit,
+) {
+    val configuration = LocalConfiguration.current
+    val density = LocalDensity.current
+    val widthDp = configuration.screenWidthDp.dp
+    val widthPx = remember(widthDp, density) { with(density) { widthDp.roundToPx() } }
+    val sortedImages = remember(property.images) { sortPropertyImages(property.images) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(320.dp)
+    ) {
+        if (sortedImages.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(R.string.property_detail_no_images),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        } else {
+            LazyRow(modifier = Modifier.fillMaxSize()) {
+                items(sortedImages) { image ->
+                    HeroImage(
+                        image = image,
+                        propertyName = sanitizeDisplayText(property.name),
+                        widthDp = widthDp,
+                        widthPx = widthPx,
+                    )
+                }
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        0f to Color.Black.copy(alpha = 0.4f),
+                        0.5f to Color.Transparent
+                    )
+                )
+        )
+
+        BackOverlayButton(
+            onBackClick = onBackClick,
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(MaterialTheme.spacing.md)
+        )
+    }
+}
+
+@Composable
+private fun HeroImage(
+    image: PropertyImage,
+    propertyName: String,
+    widthDp: Dp,
+    widthPx: Int,
+) {
+    val imageUrl = remember(image, widthPx) {
+        resolvePropertyImageUrl(image, targetWidthPx = widthPx)
+    }
+    AsyncImage(
+        model = imageUrl,
+        contentDescription = sanitizeDisplayText(image.altText ?: propertyName),
+        modifier = Modifier
+            .width(widthDp)
+            .fillMaxSize(),
+        contentScale = ContentScale.Crop
+    )
+}
+
+@Composable
+private fun BackOverlayButton(
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        modifier = modifier.size(40.dp),
+        shape = RoundedCornerShape(50),
+        color = Color.Black.copy(alpha = 0.35f),
+    ) {
+        IconButton(onClick = onBackClick) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = stringResource(R.string.property_detail_back),
+                tint = Color.White
+            )
+        }
+    }
+}
+
+@Composable
+private fun HeaderInfo(property: Property) {
+    Surface(
+        color = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .offset(y = (-24).dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(
+                start = MaterialTheme.spacing.md,
+                end = MaterialTheme.spacing.md,
+                top = MaterialTheme.spacing.lg,
+                bottom = MaterialTheme.spacing.sm
+            )
+        ) {
+            Text(
+                text = sanitizeDisplayText(property.name),
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.sm))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.LocationOn,
+                        contentDescription = null,
+                        modifier = Modifier.size(14.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = sanitizeDisplayText(property.location),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(MaterialTheme.spacing.sm))
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector = Icons.Default.Star,
+                        imageVector = Icons.Filled.Star,
                         contentDescription = null,
-                        modifier = Modifier.size(20.dp),
-                        tint = MaterialTheme.colorScheme.onSurface
+                        modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colorScheme.primary
                     )
+                    Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = " " + stringResource(
-                            R.string.property_detail_reviews_count,
-                            property.rating,
+                        text = String.format(java.util.Locale.US, "%.1f", property.rating),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = stringResource(
+                            R.string.property_detail_reviews_count_short,
                             property.reviewCount
                         ),
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Text(
-                        text = " · ${sanitizeDisplayText(property.location)}",
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(start = MaterialTheme.spacing.xs)
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+            }
 
-                Spacer(modifier = Modifier.height(MaterialTheme.spacing.md))
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.sm))
 
+            Text(
+                text = stringResource(
+                    R.string.property_detail_capacity,
+                    property.maxGuests,
+                    property.bedrooms,
+                    property.bathrooms
+                ),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Composable
+private fun AmenitiesSection(amenities: List<String>) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = MaterialTheme.spacing.md,
+                vertical = MaterialTheme.spacing.sm
+            )
+    ) {
+        Text(
+            text = stringResource(R.string.property_detail_amenities_title),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.md))
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.sm),
+        ) {
+            items(amenities) { amenity ->
+                AmenityPill(label = sanitizeDisplayText(amenity))
+            }
+        }
+    }
+}
+
+@Composable
+private fun StickyReserveBar(
+    property: Property,
+    onReserveClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.surface,
+        shadowElevation = 8.dp,
+    ) {
+        Column(modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars)) {
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(MaterialTheme.spacing.md),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Row(verticalAlignment = Alignment.Bottom) {
                     Text(
                         text = "${property.currency} ${property.pricePerNight}",
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
                     )
                     Text(
                         text = " " + stringResource(R.string.property_detail_price_per_night),
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(bottom = 2.dp)
                     )
                 }
-                Text(
-                    text = stringResource(
-                        R.string.property_detail_capacity,
-                        property.maxGuests,
-                        property.bedrooms,
-                        property.bathrooms
-                    ),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-
-                Spacer(modifier = Modifier.height(MaterialTheme.spacing.md))
-
-                TravelHubPrimaryButton(
-                    text = stringResource(R.string.property_detail_reserve),
+                Button(
                     onClick = onReserveClick,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-        }
-
-        item {
-            DetailSection(
-                title = stringResource(R.string.property_detail_amenities_title)
-            ) {
-                property.amenities.forEach { amenity ->
-                    Text(
-                        text = "• ${sanitizeDisplayText(amenity)}",
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(bottom = MaterialTheme.spacing.sm)
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
                     )
-                }
-            }
-        }
-
-        item {
-            DetailSection(
-                title = stringResource(R.string.property_detail_description_title)
-            ) {
-                Text(
-                    text = sanitizeDisplayText(property.description),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-        }
-
-        item {
-            DetailSection(
-                title = stringResource(R.string.property_detail_policy_title)
-            ) {
-                Text(
-                    text = sanitizeDisplayText(property.cancellationPolicy),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-        }
-
-        item {
-            DetailSection(
-                title = stringResource(R.string.property_detail_reviews_title)
-            ) {
-                if (property.reviews.isEmpty()) {
-                    Text(stringResource(R.string.property_detail_no_reviews))
-                } else {
-                    Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.md)) {
-                        property.reviews.forEach { review ->
-                            ReviewCard(review)
-                        }
-                    }
+                ) {
+                    Text(
+                        text = stringResource(R.string.property_detail_reserve),
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }
@@ -297,7 +463,12 @@ private fun DetailSection(
     title: String,
     content: @Composable () -> Unit
 ) {
-    Column(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.md, vertical = MaterialTheme.spacing.sm)) {
+    Column(
+        modifier = Modifier.padding(
+            horizontal = MaterialTheme.spacing.md,
+            vertical = MaterialTheme.spacing.sm
+        )
+    ) {
         HorizontalDivider(modifier = Modifier.padding(bottom = MaterialTheme.spacing.lg))
         Text(
             text = title,
@@ -307,27 +478,6 @@ private fun DetailSection(
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.sm))
         content()
     }
-}
-
-@Composable
-private fun PropertyImageCard(
-    image: PropertyImage,
-    propertyName: String,
-    targetWidthPx: Int,
-    cardWidthDp: Dp
-) {
-    val imageUrl = remember(image, targetWidthPx) {
-        resolvePropertyImageUrl(image, targetWidthPx = targetWidthPx)
-    }
-
-    AsyncImage(
-        model = imageUrl,
-        contentDescription = sanitizeDisplayText(image.altText ?: propertyName),
-        modifier = Modifier
-            .width(cardWidthDp)
-            .clip(RoundedCornerShape(MaterialTheme.spacing.sm)),
-        contentScale = ContentScale.Crop
-    )
 }
 
 @Composable
@@ -410,5 +560,3 @@ private fun ErrorState(
         )
     }
 }
-
-

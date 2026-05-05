@@ -85,7 +85,9 @@
     <string name="property_detail_reviews_count">%1$.1f · %2$d reviews</string>
     <string name="property_detail_capacity">%1$d guests · %2$d bedroom · %3$.0f bathrooms</string>
     <string name="property_detail_description_title">Description</string>
-    <string name="property_detail_amenities_title">What this place offers</string>
+    <string name="property_detail_amenities_title">Amenities</string>
+    <string name="property_detail_about_title">About this place</string>
+    <string name="property_detail_reviews_count_short">(%1$d reviews)</string>
     <string name="property_detail_policy_title">Cancellation policy</string>
     <string name="property_detail_images_title">Gallery</string>
     <string name="property_detail_reviews_title">Reviews</string>
