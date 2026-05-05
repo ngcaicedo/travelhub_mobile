@@ -98,7 +98,7 @@ fun PropertyListScreen(
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
                             contentPadding = PaddingValues(MaterialTheme.spacing.md),
-                            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.md)
+                            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.lg)
                         ) {
                             items(state.properties) { property ->
                                 PropertyCard(
