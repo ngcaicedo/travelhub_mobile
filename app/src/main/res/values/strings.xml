@@ -223,7 +223,13 @@
     <string name="reservation_detail_service">Servicio</string>
     <string name="reservation_detail_taxes">Impuestos</string>
     <string name="reservation_detail_error">No fue posible cargar la reserva</string>
+    <string name="reservation_detail_stay_section">Tu estadía</string>
+    <string name="reservation_detail_pricing_section">Resumen de costos</string>
+    <string name="reservation_detail_info_section">Información de la reserva</string>
     <string name="reservation_card_dates">%1$s → %2$s</string>
+    <string name="reservation_card_view_details">Ver detalles</string>
+    <string name="reservations_section_next_trip">Próximo viaje</string>
+    <string name="reservations_section_other">Otras reservas</string>
     <string name="reservation_card_guests_singular">%1$d huésped</string>
     <string name="reservation_card_guests_plural">%1$d huéspedes</string>
     <string name="reservation_status_pending_payment">Pendiente de pago</string>
