@@ -85,7 +85,9 @@
     <string name="property_detail_reviews_count">%1$.1f · %2$d reviews</string>
     <string name="property_detail_capacity">%1$d guests · %2$d bedroom · %3$.0f bathrooms</string>
     <string name="property_detail_description_title">Description</string>
-    <string name="property_detail_amenities_title">What this place offers</string>
+    <string name="property_detail_amenities_title">Amenities</string>
+    <string name="property_detail_about_title">About this place</string>
+    <string name="property_detail_reviews_count_short">(%1$d reviews)</string>
     <string name="property_detail_policy_title">Cancellation policy</string>
     <string name="property_detail_images_title">Gallery</string>
     <string name="property_detail_reviews_title">Reviews</string>
@@ -157,6 +159,18 @@
     <string name="checkout_summary_accommodation">Stay (%1$s × %2$d nights × %3$d guests)</string>
     <string name="checkout_summary_service_fee">Service fee</string>
     <string name="checkout_summary_total">Total due</string>
+    <string name="checkout_continue">Continue</string>
+    <string name="checkout_nights_summary">%1$d nights</string>
+    <string name="payment_method_title">Payment method</string>
+    <string name="payment_method_card">Credit or debit card</string>
+    <string name="payment_method_card_subtitle">Visa, Mastercard, Amex</string>
+    <string name="payment_price_details_title">Price details</string>
+    <string name="payment_summary_total">Total (%1$s)</string>
+    <string name="payment_legal_disclaimer">By confirming you accept the House Rules, Terms of Service and the property\'s Cancellation Policy.</string>
+    <string name="payment_secure_ssl">Secure SSL-encrypted payment</string>
+    <string name="payment_confirm_and_pay">Confirm and pay %1$s</string>
+    <string name="payment_review_title">Confirm and pay</string>
+    <string name="payment_test_scenarios">Test scenarios</string>
 
     <!-- payment -->
     <string name="payment_title">Secure payment</string>
@@ -184,6 +198,9 @@
     <string name="payment_confirmation_total">Total paid</string>
     <string name="payment_confirmation_receipt">Receipt number</string>
     <string name="payment_confirmation_see_reservations">See my reservations</string>
+    <string name="payment_confirmation_stay_details">Stay details</string>
+    <string name="payment_confirmation_booking_id">Booking ID</string>
+    <string name="payment_confirmation_dates_range">%1$s · %2$s</string>
 
     <!-- reservations: list -->
     <string name="reservations_list_title">My reservations</string>
@@ -206,7 +223,13 @@
     <string name="reservation_detail_service">Service</string>
     <string name="reservation_detail_taxes">Taxes</string>
     <string name="reservation_detail_error">Reservation could not be loaded</string>
+    <string name="reservation_detail_stay_section">Your stay</string>
+    <string name="reservation_detail_pricing_section">Cost summary</string>
+    <string name="reservation_detail_info_section">Reservation info</string>
     <string name="reservation_card_dates">%1$s → %2$s</string>
+    <string name="reservation_card_view_details">View details</string>
+    <string name="reservations_section_next_trip">Next trip</string>
+    <string name="reservations_section_other">Other bookings</string>
     <string name="reservation_card_guests_singular">%1$d guest</string>
     <string name="reservation_card_guests_plural">%1$d guests</string>
     <string name="reservation_status_pending_payment">Payment pending</string>
@@ -247,6 +270,23 @@
     <string name="reservation_policy_free_flexible">Flexible policy</string>
     <string name="reservation_policy_moderate">Moderate policy</string>
     <string name="reservation_policy_strict">Strict policy</string>
+    <string name="checkin_qr_cta">Show check-in QR</string>
+    <string name="checkin_qr_title">Express Check-in</string>
+    <string name="checkin_qr_error">We couldn’t load the check-in QR code</string>
+    <string name="checkin_qr_invalidated">Your reservation changed and the previous QR code is no longer valid. Refresh to generate a new one.</string>
+    <string name="checkin_qr_property_fallback">Your active stay</string>
+    <string name="checkin_qr_reservation_id">ID: %1$s</string>
+    <string name="checkin_qr_image_content_description">Check-in QR code</string>
+    <string name="checkin_qr_scan_hint">Show it at reception to speed up your arrival</string>
+    <string name="checkin_qr_offline_ready">Ready offline. You can present it even without connection.</string>
+    <string name="checkin_qr_arrival_instructions">Arrival instructions</string>
+    <string name="checkin_qr_step_lobby_title">Arrive at the lobby</string>
+    <string name="checkin_qr_step_lobby_body">Find the digital check-in point or go to the main front desk.</string>
+    <string name="checkin_qr_step_scan_title">Present your QR</string>
+    <string name="checkin_qr_step_scan_body">Hotel staff can scan it to validate your reservation quickly.</string>
+    <string name="checkin_qr_step_verify_title">Complete verification</string>
+    <string name="checkin_qr_step_verify_body">Confirm your details and arrival for the stay starting on %1$s.</string>
+    <string name="checkin_qr_stay_summary">Stay: %1$s → %2$s</string>
 
     <!-- forbidden / role guard -->
     <string name="forbidden_title">Access denied</string>

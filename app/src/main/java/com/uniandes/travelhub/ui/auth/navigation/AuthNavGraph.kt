@@ -33,10 +33,12 @@ import com.uniandes.travelhub.ui.checkout.CheckoutScreen
 import com.uniandes.travelhub.ui.payment.PaymentConfirmationScreen
 import com.uniandes.travelhub.ui.payment.PaymentScreen
 import com.uniandes.travelhub.ui.properties.PropertyDetailScreen
+import com.uniandes.travelhub.ui.reservations.CheckInQrScreen
 import com.uniandes.travelhub.ui.reservations.ReservationDetailScreen
 import com.uniandes.travelhub.ui.reservations.ReservationsListScreen
 import com.uniandes.travelhub.ui.search.SearchScreen
 import com.uniandes.travelhub.viewmodels.CheckoutViewModel
+import com.uniandes.travelhub.viewmodels.CheckInQrViewModel
 import com.uniandes.travelhub.viewmodels.LoginViewModel
 import com.uniandes.travelhub.viewmodels.PaymentViewModel
 import com.uniandes.travelhub.viewmodels.PropertyDetailViewModel
@@ -68,6 +70,7 @@ fun AuthNavGraph(
     val scope = rememberCoroutineScope()
 
     val paymentConfirmationCache = remember { mutableStateOf<PaymentConfirmationSummary?>(null) }
+    val bookingCoverUrlCache = remember { mutableStateOf<String?>(null) }
 
     val onUnauthorized: () -> Unit = {
         navController.navigate(AuthRoute.Login.route) {
@@ -225,6 +228,11 @@ fun AuthNavGraph(
                     viewModel = viewModel,
                     onBackClick = { navController.popBackStack() },
                     onNavigateToPayment = { reservation ->
+                        bookingCoverUrlCache.value = viewModel.property.value
+                            ?.images
+                            ?.sortedBy { it.position }
+                            ?.firstOrNull { it.url.isNotBlank() }
+                            ?.url
                         val cents = (reservation.priceBreakdown?.totalInCents
                             ?: parseCents(reservation.totalPrice))
                         navController.navigate(
@@ -280,6 +288,7 @@ fun AuthNavGraph(
                 } else {
                     PaymentConfirmationScreen(
                         confirmation = confirmation,
+                        propertyCoverUrl = bookingCoverUrlCache.value,
                         onSeeReservationsClick = {
                             navController.navigate(AuthRoute.ReservationsList.route) {
                                 popUpTo(AuthRoute.Search.route) { inclusive = false }
@@ -299,6 +308,9 @@ fun AuthNavGraph(
                     viewModel = viewModel,
                     onReservationClick = { reservation ->
                         navController.navigate(AuthRoute.ReservationDetail.build(reservation.id))
+                    },
+                    onCheckInClick = { reservation ->
+                        navController.navigate(AuthRoute.CheckInQr.build(reservation.id))
                     },
                     onBackClick = { navController.popBackStack() },
                     onSearchClick = {
@@ -320,6 +332,23 @@ fun AuthNavGraph(
                     factory = ReservationDetailViewModel.Factory(id, reservationsRepository)
                 )
                 ReservationDetailScreen(
+                    viewModel = viewModel,
+                    onBackClick = { navController.popBackStack() },
+                    onOpenCheckInQr = { navController.navigate(AuthRoute.CheckInQr.build(id)) },
+                )
+            }
+        }
+
+        composable(
+            route = AuthRoute.CheckInQr.route,
+            arguments = listOf(navArgument(AuthRoute.CheckInQr.ARG_ID) { type = NavType.StringType }),
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString(AuthRoute.CheckInQr.ARG_ID).orEmpty()
+            RequireRole(tokenStore = tokenStore, requiredRole = UserRole.TRAVELER, onUnauthorized = onUnauthorized) {
+                val viewModel: CheckInQrViewModel = viewModel(
+                    factory = CheckInQrViewModel.Factory(id, reservationsRepository)
+                )
+                CheckInQrScreen(
                     viewModel = viewModel,
                     onBackClick = { navController.popBackStack() },
                 )
