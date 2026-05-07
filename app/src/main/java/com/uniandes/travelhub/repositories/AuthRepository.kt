@@ -27,7 +27,7 @@ class AuthRepository(
 
     suspend fun verifyOtp(email: String, otpCode: String): Result<UserRole> = runCatching {
         val token = securityApi.verifyOtp(VerifyOtpRequest(email = email, otpCode = otpCode))
-        tokenStore.saveSession(token.accessToken, token.role)
+        tokenStore.saveSession(token.accessToken, token.role, email = email)
         token.role
     }.recoverFailure()
 

@@ -22,14 +22,16 @@ class AuthTokenStore(private val dataStore: DataStore<Preferences>) {
     }
 
     val localeFlow: Flow<String?> = dataStore.data.map { it[KEY_LOCALE] }
+    val emailFlow: Flow<String?> = dataStore.data.map { it[KEY_EMAIL] }
     val userIdFlow: Flow<String?> = dataStore.data.map { prefs ->
         prefs[KEY_TOKEN]?.let { JwtUtils.extractSubject(it) }
     }
 
-    suspend fun saveSession(token: String, role: UserRole) {
+    suspend fun saveSession(token: String, role: UserRole, email: String? = null) {
         dataStore.edit { prefs ->
             prefs[KEY_TOKEN] = token
             prefs[KEY_ROLE] = role.name
+            if (!email.isNullOrBlank()) prefs[KEY_EMAIL] = email
         }
     }
 
@@ -37,6 +39,7 @@ class AuthTokenStore(private val dataStore: DataStore<Preferences>) {
         dataStore.edit { prefs ->
             prefs.remove(KEY_TOKEN)
             prefs.remove(KEY_ROLE)
+            prefs.remove(KEY_EMAIL)
         }
     }
 
@@ -48,6 +51,7 @@ class AuthTokenStore(private val dataStore: DataStore<Preferences>) {
         private val KEY_TOKEN: Preferences.Key<String> = stringPreferencesKey("auth_token")
         private val KEY_ROLE: Preferences.Key<String> = stringPreferencesKey("auth_role")
         private val KEY_LOCALE: Preferences.Key<String> = stringPreferencesKey("app_locale")
+        private val KEY_EMAIL: Preferences.Key<String> = stringPreferencesKey("auth_email")
 
         @Volatile
         private var instance: AuthTokenStore? = null

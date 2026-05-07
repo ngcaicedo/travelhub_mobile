@@ -53,4 +53,8 @@ sealed class AuthRoute(val route: String) {
         const val ARG_ID = "id"
         fun build(id: String): String = "reservation/$id"
     }
+    data object CheckInQr : AuthRoute("reservation/{id}/checkin_qr") {
+        const val ARG_ID = "id"
+        fun build(id: String): String = "reservation/$id/checkin_qr"
+    }
 }
