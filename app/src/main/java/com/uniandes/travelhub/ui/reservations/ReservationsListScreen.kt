@@ -13,11 +13,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -32,6 +33,7 @@ import com.uniandes.travelhub.models.reservations.ReservationStatusGroup
 import com.uniandes.travelhub.models.reservations.ReservationWithDetailsResponse
 import com.uniandes.travelhub.ui.auth.components.TravelHubPrimaryButton
 import com.uniandes.travelhub.ui.auth.components.asString
+import com.uniandes.travelhub.ui.reservations.components.NextTripHighlightCard
 import com.uniandes.travelhub.ui.reservations.components.ReservationCard
 import com.uniandes.travelhub.ui.theme.spacing
 import com.uniandes.travelhub.viewmodels.ReservationsListUiState
@@ -58,6 +60,13 @@ fun ReservationsListScreen(
     )
 }
 
+private val Tabs = listOf(
+    ReservationStatusGroup.ACTIVE to R.string.reservations_filter_active,
+    ReservationStatusGroup.PAST to R.string.reservations_filter_past,
+    ReservationStatusGroup.CANCELLED to R.string.reservations_filter_cancelled,
+    null to R.string.reservations_filter_all,
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReservationsListScreenContent(
@@ -73,10 +82,18 @@ fun ReservationsListScreenContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.reservations_list_title), fontWeight = FontWeight.Bold) },
+                title = {
+                    Text(
+                        text = stringResource(R.string.reservations_list_title),
+                        fontWeight = FontWeight.Bold,
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.property_detail_back))
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            stringResource(R.string.property_detail_back),
+                        )
                     }
                 },
             )
@@ -87,29 +104,54 @@ fun ReservationsListScreenContent(
                 .fillMaxSize()
                 .padding(innerPadding),
         ) {
-            FilterRow(
-                selectedGroup = selectedGroup,
-                onSelectGroup = onSelectGroup,
-                modifier = Modifier.padding(horizontal = MaterialTheme.spacing.md, vertical = MaterialTheme.spacing.sm),
-            )
+            val selectedIndex = Tabs.indexOfFirst { it.first == selectedGroup }.coerceAtLeast(0)
+            TabRow(selectedTabIndex = selectedIndex) {
+                Tabs.forEachIndexed { index, (group, labelRes) ->
+                    Tab(
+                        selected = index == selectedIndex,
+                        onClick = { onSelectGroup(group) },
+                        text = {
+                            Text(
+                                text = stringResource(labelRes),
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = if (index == selectedIndex) FontWeight.Bold else FontWeight.Medium,
+                                maxLines = 1,
+                                softWrap = false,
+                                overflow = androidx.compose.ui.text.style.TextOverflow.Visible,
+                            )
+                        },
+                    )
+                }
+            }
+
             Box(modifier = Modifier.fillMaxSize()) {
                 when (uiState) {
                     is ReservationsListUiState.Loading ->
                         CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                     is ReservationsListUiState.Error -> {
                         Column(
-                            modifier = Modifier.align(Alignment.Center).padding(MaterialTheme.spacing.lg),
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .padding(MaterialTheme.spacing.lg),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.sm),
                         ) {
-                            Text(uiState.message.asString(), color = MaterialTheme.colorScheme.error)
-                            TravelHubPrimaryButton(stringResource(R.string.property_retry), onClick = onRetry)
+                            Text(
+                                text = uiState.message.asString(),
+                                color = MaterialTheme.colorScheme.error,
+                            )
+                            TravelHubPrimaryButton(
+                                stringResource(R.string.property_retry),
+                                onClick = onRetry,
+                            )
                         }
                     }
                     is ReservationsListUiState.Success -> {
                         if (uiState.reservations.isEmpty()) {
                             Column(
-                                modifier = Modifier.align(Alignment.Center).padding(MaterialTheme.spacing.lg),
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .padding(MaterialTheme.spacing.lg),
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.sm),
                             ) {
@@ -123,18 +165,11 @@ fun ReservationsListScreenContent(
                                 )
                             }
                         } else {
-                            LazyColumn(
-                                modifier = Modifier.fillMaxSize(),
-                                contentPadding = PaddingValues(MaterialTheme.spacing.md),
-                                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.md),
-                            ) {
-                                items(uiState.reservations, key = { it.id }) { reservation ->
-                                    ReservationCard(
-                                        reservation = reservation,
-                                        onClick = { onReservationClick(reservation) },
-                                    )
-                                }
-                            }
+                            ReservationsList(
+                                reservations = uiState.reservations,
+                                showHero = selectedGroup == ReservationStatusGroup.ACTIVE,
+                                onReservationClick = onReservationClick,
+                            )
                         }
                     }
                 }
@@ -144,42 +179,52 @@ fun ReservationsListScreenContent(
 }
 
 @Composable
-private fun FilterRow(
-    selectedGroup: ReservationStatusGroup?,
-    onSelectGroup: (ReservationStatusGroup?) -> Unit,
-    modifier: Modifier = Modifier,
+private fun ReservationsList(
+    reservations: List<ReservationWithDetailsResponse>,
+    showHero: Boolean,
+    onReservationClick: (ReservationWithDetailsResponse) -> Unit,
 ) {
-    androidx.compose.foundation.lazy.LazyRow(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.xs),
+    val hero = if (showHero) reservations.firstOrNull() else null
+    val rest = if (hero != null) reservations.drop(1) else reservations
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(MaterialTheme.spacing.md),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.md),
     ) {
-        item {
-            FilterChip(
-                selected = selectedGroup == ReservationStatusGroup.ACTIVE,
-                onClick = { onSelectGroup(ReservationStatusGroup.ACTIVE) },
-                label = { Text(stringResource(R.string.reservations_filter_active)) },
-            )
+        if (hero != null) {
+            item {
+                SectionLabel(stringResource(R.string.reservations_section_next_trip))
+            }
+            item(key = "hero-${hero.id}") {
+                NextTripHighlightCard(
+                    reservation = hero,
+                    onClick = { onReservationClick(hero) },
+                )
+            }
+            if (rest.isNotEmpty()) {
+                item {
+                    SectionLabel(stringResource(R.string.reservations_section_other))
+                }
+            }
         }
-        item {
-            FilterChip(
-                selected = selectedGroup == ReservationStatusGroup.PAST,
-                onClick = { onSelectGroup(ReservationStatusGroup.PAST) },
-                label = { Text(stringResource(R.string.reservations_filter_past)) },
-            )
-        }
-        item {
-            FilterChip(
-                selected = selectedGroup == ReservationStatusGroup.CANCELLED,
-                onClick = { onSelectGroup(ReservationStatusGroup.CANCELLED) },
-                label = { Text(stringResource(R.string.reservations_filter_cancelled)) },
-            )
-        }
-        item {
-            FilterChip(
-                selected = selectedGroup == null,
-                onClick = { onSelectGroup(null) },
-                label = { Text(stringResource(R.string.reservations_filter_all)) },
+        items(rest, key = { it.id }) { reservation ->
+            ReservationCard(
+                reservation = reservation,
+                onClick = { onReservationClick(reservation) },
             )
         }
     }
+}
+
+@Composable
+private fun SectionLabel(text: String) {
+    Text(
+        text = text.uppercase(),
+        style = MaterialTheme.typography.labelMedium,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        letterSpacing = MaterialTheme.typography.labelLarge.letterSpacing,
+        modifier = Modifier.fillMaxWidth(),
+    )
 }

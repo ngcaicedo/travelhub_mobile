@@ -85,7 +85,9 @@
     <string name="property_detail_reviews_count">%1$.1f · %2$d avaliações</string>
     <string name="property_detail_capacity">%1$d hóspedes · %2$d quarto · %3$.0f banheiros</string>
     <string name="property_detail_description_title">Descrição</string>
-    <string name="property_detail_amenities_title">O que este lugar oferece</string>
+    <string name="property_detail_amenities_title">Comodidades</string>
+    <string name="property_detail_about_title">Sobre este lugar</string>
+    <string name="property_detail_reviews_count_short">(%1$d avaliações)</string>
     <string name="property_detail_policy_title">Política de cancelamento</string>
     <string name="property_detail_images_title">Galeria</string>
     <string name="property_detail_reviews_title">Avaliações</string>
@@ -157,6 +159,18 @@
     <string name="checkout_summary_accommodation">Hospedagem (%1$s × %2$d noites × %3$d hóspedes)</string>
     <string name="checkout_summary_service_fee">Taxa de serviço</string>
     <string name="checkout_summary_total">Total a pagar</string>
+    <string name="checkout_continue">Continuar</string>
+    <string name="checkout_nights_summary">%1$d noites</string>
+    <string name="payment_method_title">Método de pagamento</string>
+    <string name="payment_method_card">Cartão de crédito ou débito</string>
+    <string name="payment_method_card_subtitle">Visa, Mastercard, Amex</string>
+    <string name="payment_price_details_title">Detalhes do preço</string>
+    <string name="payment_summary_total">Total (%1$s)</string>
+    <string name="payment_legal_disclaimer">Ao confirmar você aceita as Regras da casa, os Termos de serviço e a Política de cancelamento do alojamento.</string>
+    <string name="payment_secure_ssl">Pagamento seguro com SSL</string>
+    <string name="payment_confirm_and_pay">Confirmar e pagar %1$s</string>
+    <string name="payment_review_title">Confirmar e pagar</string>
+    <string name="payment_test_scenarios">Cenários de teste</string>
 
     <!-- payment -->
     <string name="payment_title">Pagamento seguro</string>
@@ -184,6 +198,9 @@
     <string name="payment_confirmation_total">Total pago</string>
     <string name="payment_confirmation_receipt">Número do recibo</string>
     <string name="payment_confirmation_see_reservations">Ver minhas reservas</string>
+    <string name="payment_confirmation_stay_details">Detalhes da estadia</string>
+    <string name="payment_confirmation_booking_id">ID da reserva</string>
+    <string name="payment_confirmation_dates_range">%1$s · %2$s</string>
 
     <!-- reservations: list -->
     <string name="reservations_list_title">Minhas reservas</string>
@@ -206,7 +223,13 @@
     <string name="reservation_detail_service">Serviço</string>
     <string name="reservation_detail_taxes">Impostos</string>
     <string name="reservation_detail_error">Não foi possível carregar a reserva</string>
+    <string name="reservation_detail_stay_section">Sua estadia</string>
+    <string name="reservation_detail_pricing_section">Resumo de custos</string>
+    <string name="reservation_detail_info_section">Informações da reserva</string>
     <string name="reservation_card_dates">%1$s → %2$s</string>
+    <string name="reservation_card_view_details">Ver detalhes</string>
+    <string name="reservations_section_next_trip">Próxima viagem</string>
+    <string name="reservations_section_other">Outras reservas</string>
     <string name="reservation_card_guests_singular">%1$d hóspede</string>
     <string name="reservation_card_guests_plural">%1$d hóspedes</string>
     <string name="reservation_status_pending_payment">Pagamento pendente</string>

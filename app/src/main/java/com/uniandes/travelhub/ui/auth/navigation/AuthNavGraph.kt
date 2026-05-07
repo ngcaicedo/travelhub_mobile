@@ -68,6 +68,7 @@ fun AuthNavGraph(
     val scope = rememberCoroutineScope()
 
     val paymentConfirmationCache = remember { mutableStateOf<PaymentConfirmationSummary?>(null) }
+    val bookingCoverUrlCache = remember { mutableStateOf<String?>(null) }
 
     val onUnauthorized: () -> Unit = {
         navController.navigate(AuthRoute.Login.route) {
@@ -225,6 +226,11 @@ fun AuthNavGraph(
                     viewModel = viewModel,
                     onBackClick = { navController.popBackStack() },
                     onNavigateToPayment = { reservation ->
+                        bookingCoverUrlCache.value = viewModel.property.value
+                            ?.images
+                            ?.sortedBy { it.position }
+                            ?.firstOrNull { it.url.isNotBlank() }
+                            ?.url
                         val cents = (reservation.priceBreakdown?.totalInCents
                             ?: parseCents(reservation.totalPrice))
                         navController.navigate(
@@ -280,6 +286,7 @@ fun AuthNavGraph(
                 } else {
                     PaymentConfirmationScreen(
                         confirmation = confirmation,
+                        propertyCoverUrl = bookingCoverUrlCache.value,
                         onSeeReservationsClick = {
                             navController.navigate(AuthRoute.ReservationsList.route) {
                                 popUpTo(AuthRoute.Search.route) { inclusive = false }
