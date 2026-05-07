@@ -139,4 +139,6 @@ object ReservationStatus {
     const val REFUND_PENDING = "refund_pending"
     const val REFUND_COMPLETED = "refund_completed"
     const val REFUND_FAILED = "refund_failed"
+    const val MODIFICATION_PENDING_PAYMENT = "modification_pending_payment"
+    const val MODIFICATION_CONFIRMED = "modification_confirmed"
 }

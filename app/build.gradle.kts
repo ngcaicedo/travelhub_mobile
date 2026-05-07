@@ -153,6 +153,7 @@ dependencies {
 
     implementation(libs.coil.compose)
     implementation(libs.stripe.android)
+    implementation(libs.zxing.core)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)

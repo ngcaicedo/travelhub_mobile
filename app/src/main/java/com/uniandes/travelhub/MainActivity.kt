@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import com.uniandes.travelhub.network.AuthTokenStore
+import com.uniandes.travelhub.network.DataStoreCheckInQrCacheStore
 import com.uniandes.travelhub.network.DataStorePropertyCacheStore
 import com.uniandes.travelhub.network.RetrofitFactory
 import com.uniandes.travelhub.repositories.AuthRepository
@@ -46,6 +47,7 @@ class MainActivity : AppCompatActivity() {
         ReservationsRepository(
             reservationsApi = RetrofitFactory.reservationsApi,
             tokenStore = tokenStore,
+            checkInQrCacheStore = DataStoreCheckInQrCacheStore.getInstance(applicationContext),
         )
     }
 
