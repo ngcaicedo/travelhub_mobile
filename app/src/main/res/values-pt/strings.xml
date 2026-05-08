@@ -18,6 +18,9 @@
     <string name="hotel_pricing_home_body">Atualize tarifas base, crie descontos dinâmicos e revise o impacto direto do seu celular.</string>
     <string name="hotel_pricing_home_subtitle">Mantenha preços e promoções em dia com um fluxo pensado para telas pequenas.</string>
     <string name="hotel_pricing_home_cta">Abrir gestão de preços</string>
+    <string name="hotel_reservations_home_title">Gestão de reservas</string>
+    <string name="hotel_reservations_home_body">Confirme ou cancele reservas a partir do detalhe, revisando hóspede e estadia em um único fluxo móvel.</string>
+    <string name="hotel_reservations_home_cta">Abrir gestão de reservas</string>
 
     <!-- auth: hero -->
     <string name="auth_brand_tagline">VIAGENS PREMIUM</string>
@@ -113,6 +116,7 @@
     <string name="common_language_spanish">Español</string>
     <string name="common_language_english">English</string>
     <string name="common_language_portuguese">Português</string>
+    <string name="common_retry">Tentar novamente</string>
 
     <!-- search -->
     <string name="search_title">Buscar hospedagens</string>
@@ -340,8 +344,41 @@
     <string name="hotel_pricing_success_apply">Alteração aplicada e registrada no histórico</string>
     <string name="hotel_pricing_success_revert">Alteração revertida com sucesso</string>
 
+    <!-- hotel reservations -->
+    <string name="hotel_reservations_title">Reservas do hotel</string>
+    <string name="hotel_reservations_property_section">PROPRIEDADE</string>
+    <string name="hotel_reservations_property_label">Selecione uma propriedade</string>
+    <string name="hotel_reservations_status_section">STATUS</string>
+    <string name="hotel_reservations_status_all">Todas</string>
+    <string name="hotel_reservations_status_pending">Pendentes</string>
+    <string name="hotel_reservations_status_confirmed">Confirmadas</string>
+    <string name="hotel_reservations_status_cancelled">Canceladas</string>
+    <string name="hotel_reservations_empty">Não há reservas para os filtros selecionados.</string>
+    <string name="hotel_reservations_detail_title">Detalhe da reserva do hotel</string>
+    <string name="hotel_reservations_history_title">Histórico de alterações</string>
+    <string name="hotel_reservations_action_confirm">Confirmar reserva</string>
+    <string name="hotel_reservations_action_cancel">Cancelar reserva</string>
+    <string name="hotel_reservations_action_confirm_success">Reserva confirmada com sucesso</string>
+    <string name="hotel_reservations_action_confirm_error">Não foi possível confirmar a reserva</string>
+    <string name="hotel_reservations_action_cancel_success">Reserva cancelada com sucesso</string>
+    <string name="hotel_reservations_action_cancel_error">Não foi possível cancelar a reserva</string>
+    <string name="hotel_reservations_confirm_title">Confirmar reserva</string>
+    <string name="hotel_reservations_confirm_body">Confirme esta reserva para habilitar a estadia do hóspede e manter o fluxo móvel alinhado ao web.</string>
+    <string name="hotel_reservations_cancel_title">Cancelar reserva</string>
+    <string name="hotel_reservations_cancel_body">Informe o motivo para registrar o cancelamento neste dispositivo.</string>
+    <string name="hotel_reservations_cancel_note">Nota adicional</string>
+    <string name="hotel_reservations_cancel_confirm">Confirmar cancelamento</string>
+    <string name="hotel_reservations_reason_maintenance">Manutenção</string>
+    <string name="hotel_reservations_reason_overbooking">Overbooking</string>
+    <string name="hotel_reservations_reason_policy">Política do hotel</string>
+    <string name="hotel_reservations_reason_other">Outro motivo</string>
+    <string name="hotel_reservations_error_load_properties">Não foi possível carregar as propriedades do hotel</string>
+    <string name="hotel_reservations_error_load_list">Não foi possível carregar as reservas do hotel</string>
+    <string name="hotel_reservations_error_load_detail">Não foi possível carregar o detalhe da reserva</string>
+
     <!-- forbidden / role guard -->
     <string name="forbidden_title">Acesso negado</string>
     <string name="forbidden_subtitle">Seu perfil não tem acesso a esta seção</string>
+
 </resources>
 

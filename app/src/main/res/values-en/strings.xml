@@ -18,6 +18,9 @@
     <string name="hotel_pricing_home_body">Update base rates, create dynamic discounts and review their impact directly from your phone.</string>
     <string name="hotel_pricing_home_subtitle">Keep rates and promotions up to date with a touch-friendly flow for small screens.</string>
     <string name="hotel_pricing_home_cta">Open pricing manager</string>
+    <string name="hotel_reservations_home_title">Reservation management</string>
+    <string name="hotel_reservations_home_body">Confirm or cancel reservations from the detail view while reviewing guest and stay data in one mobile flow.</string>
+    <string name="hotel_reservations_home_cta">Open reservation management</string>
 
     <!-- auth: hero -->
     <string name="auth_brand_tagline">PREMIUM TRAVEL</string>
@@ -113,6 +116,7 @@
     <string name="common_language_spanish">Español</string>
     <string name="common_language_english">English</string>
     <string name="common_language_portuguese">Português</string>
+    <string name="common_retry">Retry</string>
 
     <!-- search -->
     <string name="search_title">Search stays</string>
@@ -340,9 +344,42 @@
     <string name="hotel_pricing_success_apply">Change applied and recorded in history</string>
     <string name="hotel_pricing_success_revert">Change reverted successfully</string>
 
+    <!-- hotel reservations -->
+    <string name="hotel_reservations_title">Hotel reservations</string>
+    <string name="hotel_reservations_property_section">PROPERTY</string>
+    <string name="hotel_reservations_property_label">Select a property</string>
+    <string name="hotel_reservations_status_section">STATUS</string>
+    <string name="hotel_reservations_status_all">All</string>
+    <string name="hotel_reservations_status_pending">Pending</string>
+    <string name="hotel_reservations_status_confirmed">Confirmed</string>
+    <string name="hotel_reservations_status_cancelled">Cancelled</string>
+    <string name="hotel_reservations_empty">There are no reservations for the selected filters.</string>
+    <string name="hotel_reservations_detail_title">Hotel reservation detail</string>
+    <string name="hotel_reservations_history_title">Change history</string>
+    <string name="hotel_reservations_action_confirm">Confirm reservation</string>
+    <string name="hotel_reservations_action_cancel">Cancel reservation</string>
+    <string name="hotel_reservations_action_confirm_success">Reservation confirmed successfully</string>
+    <string name="hotel_reservations_action_confirm_error">Unable to confirm the reservation</string>
+    <string name="hotel_reservations_action_cancel_success">Reservation cancelled successfully</string>
+    <string name="hotel_reservations_action_cancel_error">Unable to cancel the reservation</string>
+    <string name="hotel_reservations_confirm_title">Confirm reservation</string>
+    <string name="hotel_reservations_confirm_body">Confirm this reservation to enable the guest stay and keep the mobile flow aligned with web operations.</string>
+    <string name="hotel_reservations_cancel_title">Cancel reservation</string>
+    <string name="hotel_reservations_cancel_body">Provide a reason so the cancellation is recorded from this device.</string>
+    <string name="hotel_reservations_cancel_note">Additional note</string>
+    <string name="hotel_reservations_cancel_confirm">Confirm cancellation</string>
+    <string name="hotel_reservations_reason_maintenance">Maintenance</string>
+    <string name="hotel_reservations_reason_overbooking">Overbooking</string>
+    <string name="hotel_reservations_reason_policy">Hotel policy</string>
+    <string name="hotel_reservations_reason_other">Other reason</string>
+    <string name="hotel_reservations_error_load_properties">Unable to load hotel properties</string>
+    <string name="hotel_reservations_error_load_list">Unable to load hotel reservations</string>
+    <string name="hotel_reservations_error_load_detail">Unable to load reservation details</string>
+
     <!-- forbidden / role guard -->
     <string name="forbidden_title">Access denied</string>
     <string name="forbidden_subtitle">Your role does not have access to this section</string>
+
 </resources>
 
 

@@ -20,20 +20,27 @@ class PartnerHomeScreenTest {
     val composeRule = createComposeRule()
 
     @Test
-    fun `renders pricing entry and opens module`() {
-        var opened = false
+    fun `renders hotel modules and opens each entry`() {
+        var pricingOpened = false
+        var reservationsOpened = false
+
         composeRule.setContent {
             TravelhubTheme {
                 PartnerHomeScreen(
-                    onOpenPricing = { opened = true },
+                    onOpenPricing = { pricingOpened = true },
+                    onOpenReservations = { reservationsOpened = true },
                     onLogout = {},
                 )
             }
         }
 
+        composeRule.onNodeWithText("Gestión de reservas").assertIsDisplayed()
         composeRule.onNodeWithText("Gestión de tarifas").assertIsDisplayed()
+
+        composeRule.onNodeWithText("Abrir gestión de reservas").performClick()
         composeRule.onNodeWithText("Abrir gestión de precios").performClick()
 
-        assertTrue(opened)
+        assertTrue(reservationsOpened)
+        assertTrue(pricingOpened)
     }
 }

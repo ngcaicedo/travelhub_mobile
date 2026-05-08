@@ -18,6 +18,9 @@
     <string name="hotel_pricing_home_body">Actualiza tarifas base, crea descuentos dinámicos y revisa su impacto sin salir de tu celular.</string>
     <string name="hotel_pricing_home_subtitle">Controla precios y promociones con un flujo táctil pensado para pantallas pequeñas.</string>
     <string name="hotel_pricing_home_cta">Abrir gestión de precios</string>
+    <string name="hotel_reservations_home_title">Gestión de reservas</string>
+    <string name="hotel_reservations_home_body">Confirma o cancela reservas desde el detalle, revisando el estado del huésped y la estadía en un solo flujo móvil.</string>
+    <string name="hotel_reservations_home_cta">Abrir gestión de reservas</string>
 
     <!-- auth: hero -->
     <string name="auth_brand_tagline">VIAJES PREMIUM</string>
@@ -113,6 +116,7 @@
     <string name="common_language_spanish">Español</string>
     <string name="common_language_english">English</string>
     <string name="common_language_portuguese">Português</string>
+    <string name="common_retry">Reintentar</string>
 
     <!-- search -->
     <string name="search_title">Buscar alojamientos</string>
@@ -340,8 +344,41 @@
     <string name="hotel_pricing_success_apply">Ajuste aplicado y registrado en el historial</string>
     <string name="hotel_pricing_success_revert">Cambio revertido correctamente</string>
 
+    <!-- hotel reservations -->
+    <string name="hotel_reservations_title">Reservas del hotel</string>
+    <string name="hotel_reservations_property_section">PROPIEDAD</string>
+    <string name="hotel_reservations_property_label">Selecciona una propiedad</string>
+    <string name="hotel_reservations_status_section">ESTADO</string>
+    <string name="hotel_reservations_status_all">Todas</string>
+    <string name="hotel_reservations_status_pending">Pendientes</string>
+    <string name="hotel_reservations_status_confirmed">Confirmadas</string>
+    <string name="hotel_reservations_status_cancelled">Canceladas</string>
+    <string name="hotel_reservations_empty">No hay reservas para los filtros seleccionados.</string>
+    <string name="hotel_reservations_detail_title">Detalle de reserva hotelera</string>
+    <string name="hotel_reservations_history_title">Historial de cambios</string>
+    <string name="hotel_reservations_action_confirm">Confirmar reserva</string>
+    <string name="hotel_reservations_action_cancel">Cancelar reserva</string>
+    <string name="hotel_reservations_action_confirm_success">Reserva confirmada correctamente</string>
+    <string name="hotel_reservations_action_confirm_error">No fue posible confirmar la reserva</string>
+    <string name="hotel_reservations_action_cancel_success">Reserva cancelada correctamente</string>
+    <string name="hotel_reservations_action_cancel_error">No fue posible cancelar la reserva</string>
+    <string name="hotel_reservations_confirm_title">Confirmar reserva</string>
+    <string name="hotel_reservations_confirm_body">Confirma la reserva para habilitar la estadía del huésped y mantener el estado alineado con los canales web.</string>
+    <string name="hotel_reservations_cancel_title">Cancelar reserva</string>
+    <string name="hotel_reservations_cancel_body">Indica el motivo para registrar la cancelación desde este dispositivo.</string>
+    <string name="hotel_reservations_cancel_note">Nota adicional</string>
+    <string name="hotel_reservations_cancel_confirm">Confirmar cancelación</string>
+    <string name="hotel_reservations_reason_maintenance">Mantenimiento</string>
+    <string name="hotel_reservations_reason_overbooking">Sobreventa</string>
+    <string name="hotel_reservations_reason_policy">Política del hotel</string>
+    <string name="hotel_reservations_reason_other">Otro motivo</string>
+    <string name="hotel_reservations_error_load_properties">No fue posible cargar las propiedades del hotel</string>
+    <string name="hotel_reservations_error_load_list">No fue posible cargar las reservas del hotel</string>
+    <string name="hotel_reservations_error_load_detail">No fue posible cargar el detalle de la reserva</string>
+
     <!-- forbidden / role guard -->
     <string name="forbidden_title">Acceso denegado</string>
     <string name="forbidden_subtitle">Tu rol no tiene permisos para esta sección</string>
+
 </resources>
 
