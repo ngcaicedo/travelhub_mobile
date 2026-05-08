@@ -14,6 +14,10 @@
     <string name="home_placeholder_logout">Cerrar sesión</string>
     <string name="home_partner_dashboard_title">Panel de anfitrión</string>
     <string name="home_admin_dashboard_title">Panel de administración</string>
+    <string name="hotel_pricing_home_title">Gestión de tarifas</string>
+    <string name="hotel_pricing_home_body">Actualiza tarifas base, crea descuentos dinámicos y revisa su impacto sin salir de tu celular.</string>
+    <string name="hotel_pricing_home_subtitle">Controla precios y promociones con un flujo táctil pensado para pantallas pequeñas.</string>
+    <string name="hotel_pricing_home_cta">Abrir gestión de precios</string>
 
     <!-- auth: hero -->
     <string name="auth_brand_tagline">VIAJES PREMIUM</string>
@@ -287,6 +291,54 @@
     <string name="checkin_qr_step_verify_title">Completa la validación</string>
     <string name="checkin_qr_step_verify_body">Confirma tus datos y tu ingreso para la estancia del %1$s.</string>
     <string name="checkin_qr_stay_summary">Estancia: %1$s → %2$s</string>
+
+    <!-- hotel pricing -->
+    <string name="hotel_pricing_title">Gestión de Tarifas</string>
+    <string name="hotel_pricing_target_section">PROPIEDAD O HABITACIÓN</string>
+    <string name="hotel_pricing_target_label">Selecciona una tarifa</string>
+    <string name="hotel_pricing_base_price_section">AJUSTAR TARIFA BASE</string>
+    <string name="hotel_pricing_base_price_label">Precio por noche (%1$s)</string>
+    <string name="hotel_pricing_discount_section">NUEVO DESCUENTO</string>
+    <string name="hotel_pricing_rule_name">Nombre de la regla</string>
+    <string name="hotel_pricing_rule_placeholder">Ej: Black Friday</string>
+    <string name="hotel_pricing_discount_percentage">Porcentaje</string>
+    <string name="hotel_pricing_discount_fixed">Valor fijo</string>
+    <string name="hotel_pricing_discount_value_percentage">Descuento</string>
+    <string name="hotel_pricing_discount_value_money">Descuento</string>
+    <string name="hotel_pricing_start_date">Desde</string>
+    <string name="hotel_pricing_end_date">Hasta</string>
+    <string name="hotel_pricing_preview_button">Ver impacto</string>
+    <string name="hotel_pricing_preview_section">VISTA PREVIA</string>
+    <string name="hotel_pricing_preview_empty">Genera una vista previa para revisar el impacto antes de aplicar el cambio.</string>
+    <string name="hotel_pricing_preview_current_base">Tarifa base actual</string>
+    <string name="hotel_pricing_preview_proposed_base">Nueva tarifa base</string>
+    <string name="hotel_pricing_preview_final_price">Tarifa final calculada</string>
+    <string name="hotel_pricing_preview_savings">-%1$d%% AHORRO</string>
+    <string name="hotel_pricing_preview_revenue_before">Ingresos proyectados antes</string>
+    <string name="hotel_pricing_preview_revenue_after">Ingresos proyectados después</string>
+    <string name="hotel_pricing_preview_revenue_delta">Diferencia proyectada</string>
+    <string name="hotel_pricing_apply_button">Aplicar cambio</string>
+    <string name="hotel_pricing_history_section">HISTORIAL DE CAMBIOS</string>
+    <string name="hotel_pricing_history_empty">Aún no hay ajustes registrados desde móvil.</string>
+    <string name="hotel_pricing_history_meta">Por %1$s · %2$s</string>
+    <string name="hotel_pricing_history_final_price">Tarifa final registrada</string>
+    <string name="hotel_pricing_revert_button">Revertir</string>
+    <string name="hotel_pricing_confirm_title">Confirmación de seguridad</string>
+    <string name="hotel_pricing_confirm_body">Este ajuste afecta múltiples fechas o genera un impacto alto. Confirma para aplicarlo desde este dispositivo.</string>
+    <string name="hotel_pricing_error_load_targets">No fue posible cargar las tarifas del hotel</string>
+    <string name="hotel_pricing_error_load_history">No fue posible cargar el historial de cambios</string>
+    <string name="hotel_pricing_error_preview">No fue posible calcular el impacto</string>
+    <string name="hotel_pricing_error_apply">No fue posible aplicar el ajuste de tarifa</string>
+    <string name="hotel_pricing_error_revert">No fue posible revertir el ajuste</string>
+    <string name="hotel_pricing_error_target_required">Selecciona una tarifa para continuar</string>
+    <string name="hotel_pricing_error_start_date_required">Selecciona la fecha inicial</string>
+    <string name="hotel_pricing_error_end_date_required">Selecciona la fecha final</string>
+    <string name="hotel_pricing_error_end_date_after_start">La fecha final debe ser posterior o igual a la inicial</string>
+    <string name="hotel_pricing_error_change_required">Define una nueva tarifa base o un descuento para continuar</string>
+    <string name="hotel_pricing_error_base_price_invalid">La tarifa base debe ser un valor válido</string>
+    <string name="hotel_pricing_error_discount_invalid">El descuento debe ser un valor válido</string>
+    <string name="hotel_pricing_success_apply">Ajuste aplicado y registrado en el historial</string>
+    <string name="hotel_pricing_success_revert">Cambio revertido correctamente</string>
 
     <!-- forbidden / role guard -->
     <string name="forbidden_title">Acceso denegado</string>

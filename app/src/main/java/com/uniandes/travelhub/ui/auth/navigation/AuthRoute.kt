@@ -20,6 +20,7 @@ sealed class AuthRoute(val route: String) {
     data object TravelerHome : AuthRoute("traveler_home")
     data object PartnerHome : AuthRoute("partner_home")
     data object AdminHome : AuthRoute("admin_home")
+    data object HotelPricing : AuthRoute("hotel_pricing")
 
     /** Property list and detail routes. */
     data object PropertyList : AuthRoute("property_list")

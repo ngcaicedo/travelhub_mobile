@@ -1,5 +1,6 @@
 package com.uniandes.travelhub.ui.auth.navigation
 
+import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -20,12 +21,15 @@ import com.uniandes.travelhub.models.payments.PaymentConfirmationSummary
 import com.uniandes.travelhub.models.properties.Property
 import com.uniandes.travelhub.network.AuthTokenStore
 import com.uniandes.travelhub.repositories.AuthRepository
+import com.uniandes.travelhub.repositories.HotelPricingRepository
 import com.uniandes.travelhub.repositories.PaymentsRepository
 import com.uniandes.travelhub.repositories.PropertiesRepository
 import com.uniandes.travelhub.repositories.ReservationsRepository
 import com.uniandes.travelhub.repositories.SearchRepository
 import com.uniandes.travelhub.ui.auth.components.RequireRole
 import com.uniandes.travelhub.ui.auth.home.PlaceholderHomeScreen
+import com.uniandes.travelhub.ui.hotel.HotelPricingScreen
+import com.uniandes.travelhub.ui.hotel.PartnerHomeScreen
 import com.uniandes.travelhub.ui.auth.login.LoginScreen
 import com.uniandes.travelhub.ui.auth.register.RegisterScreen
 import com.uniandes.travelhub.ui.auth.verifyotp.VerifyOtpScreen
@@ -40,6 +44,7 @@ import com.uniandes.travelhub.ui.search.SearchScreen
 import com.uniandes.travelhub.viewmodels.CheckoutViewModel
 import com.uniandes.travelhub.viewmodels.CheckInQrViewModel
 import com.uniandes.travelhub.viewmodels.LoginViewModel
+import com.uniandes.travelhub.viewmodels.HotelPricingViewModel
 import com.uniandes.travelhub.viewmodels.PaymentViewModel
 import com.uniandes.travelhub.viewmodels.PropertyDetailViewModel
 import com.uniandes.travelhub.viewmodels.RegisterViewModel
@@ -59,6 +64,7 @@ fun AuthNavGraph(
     authRepository: AuthRepository,
     propertiesRepository: PropertiesRepository,
     searchRepository: SearchRepository,
+    hotelPricingRepository: HotelPricingRepository,
     reservationsRepository: ReservationsRepository,
     paymentsRepository: PaymentsRepository,
     tokenStore: AuthTokenStore,
@@ -356,13 +362,38 @@ fun AuthNavGraph(
         }
 
         composable(AuthRoute.PartnerHome.route) {
-            PlaceholderHomeScreen(
-                repository = authRepository,
-                titleRes = R.string.home_partner_dashboard_title,
-                onLoggedOut = {
-                    navController.navigate(AuthRoute.Login.route) { popUpTo(0) { inclusive = true } }
-                },
-            )
+            RequireRole(tokenStore = tokenStore, requiredRole = UserRole.HOTEL_PARTNER, onUnauthorized = onUnauthorized) {
+                PartnerHomeScreen(
+                    onOpenPricing = { navController.navigate(AuthRoute.HotelPricing.route) },
+                    onLogout = {
+                        scope.launch {
+                            authRepository.logout()
+                            navController.navigate(AuthRoute.Login.route) { popUpTo(0) { inclusive = true } }
+                        }
+                    },
+                )
+            }
+        }
+
+        composable(AuthRoute.HotelPricing.route) {
+            RequireRole(tokenStore = tokenStore, requiredRole = UserRole.HOTEL_PARTNER, onUnauthorized = onUnauthorized) {
+                val viewModel: HotelPricingViewModel = viewModel(
+                    factory = HotelPricingViewModel.Factory(
+                        repository = hotelPricingRepository,
+                        deviceLabelProvider = {
+                            listOf(Build.MANUFACTURER, Build.MODEL)
+                                .filter { it.isNotBlank() }
+                                .joinToString(" ")
+                                .ifBlank { "Android device" }
+                        },
+                        devicePlatformProvider = { "Android API ${Build.VERSION.SDK_INT}" },
+                    )
+                )
+                HotelPricingScreen(
+                    viewModel = viewModel,
+                    onBackClick = { navController.popBackStack() },
+                )
+            }
         }
 
         composable(AuthRoute.AdminHome.route) {

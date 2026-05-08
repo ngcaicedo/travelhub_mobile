@@ -11,6 +11,7 @@ import com.uniandes.travelhub.network.DataStoreCheckInQrCacheStore
 import com.uniandes.travelhub.network.DataStorePropertyCacheStore
 import com.uniandes.travelhub.network.RetrofitFactory
 import com.uniandes.travelhub.repositories.AuthRepository
+import com.uniandes.travelhub.repositories.HotelPricingRepository
 import com.uniandes.travelhub.repositories.PaymentsRepository
 import com.uniandes.travelhub.repositories.PropertiesRepository
 import com.uniandes.travelhub.repositories.ReservationsRepository
@@ -43,6 +44,10 @@ class MainActivity : AppCompatActivity() {
         SearchRepository(searchApi = RetrofitFactory.searchApi)
     }
 
+    private val hotelPricingRepository: HotelPricingRepository by lazy {
+        HotelPricingRepository(api = RetrofitFactory.hotelPricingApi)
+    }
+
     private val reservationsRepository: ReservationsRepository by lazy {
         ReservationsRepository(
             reservationsApi = RetrofitFactory.reservationsApi,
@@ -73,6 +78,7 @@ class MainActivity : AppCompatActivity() {
                     authRepository = authRepository,
                     propertiesRepository = propertiesRepository,
                     searchRepository = searchRepository,
+                    hotelPricingRepository = hotelPricingRepository,
                     reservationsRepository = reservationsRepository,
                     paymentsRepository = paymentsRepository,
                     tokenStore = tokenStore,

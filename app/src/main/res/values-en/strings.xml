@@ -14,6 +14,10 @@
     <string name="home_placeholder_logout">Sign out</string>
     <string name="home_partner_dashboard_title">Hotel partner dashboard</string>
     <string name="home_admin_dashboard_title">Admin dashboard</string>
+    <string name="hotel_pricing_home_title">Price management</string>
+    <string name="hotel_pricing_home_body">Update base rates, create dynamic discounts and review their impact directly from your phone.</string>
+    <string name="hotel_pricing_home_subtitle">Keep rates and promotions up to date with a touch-friendly flow for small screens.</string>
+    <string name="hotel_pricing_home_cta">Open pricing manager</string>
 
     <!-- auth: hero -->
     <string name="auth_brand_tagline">PREMIUM TRAVEL</string>
@@ -287,6 +291,54 @@
     <string name="checkin_qr_step_verify_title">Complete verification</string>
     <string name="checkin_qr_step_verify_body">Confirm your details and arrival for the stay starting on %1$s.</string>
     <string name="checkin_qr_stay_summary">Stay: %1$s → %2$s</string>
+
+    <!-- hotel pricing -->
+    <string name="hotel_pricing_title">Rate Management</string>
+    <string name="hotel_pricing_target_section">PROPERTY OR ROOM</string>
+    <string name="hotel_pricing_target_label">Choose a rate</string>
+    <string name="hotel_pricing_base_price_section">ADJUST BASE RATE</string>
+    <string name="hotel_pricing_base_price_label">Nightly price (%1$s)</string>
+    <string name="hotel_pricing_discount_section">NEW DISCOUNT</string>
+    <string name="hotel_pricing_rule_name">Rule name</string>
+    <string name="hotel_pricing_rule_placeholder">E.g. Black Friday</string>
+    <string name="hotel_pricing_discount_percentage">Percentage</string>
+    <string name="hotel_pricing_discount_fixed">Fixed amount</string>
+    <string name="hotel_pricing_discount_value_percentage">Discount</string>
+    <string name="hotel_pricing_discount_value_money">Discount</string>
+    <string name="hotel_pricing_start_date">From</string>
+    <string name="hotel_pricing_end_date">To</string>
+    <string name="hotel_pricing_preview_button">Preview impact</string>
+    <string name="hotel_pricing_preview_section">PREVIEW</string>
+    <string name="hotel_pricing_preview_empty">Generate a preview to review the impact before applying the change.</string>
+    <string name="hotel_pricing_preview_current_base">Current base rate</string>
+    <string name="hotel_pricing_preview_proposed_base">New base rate</string>
+    <string name="hotel_pricing_preview_final_price">Calculated final rate</string>
+    <string name="hotel_pricing_preview_savings">-%1$d%% SAVINGS</string>
+    <string name="hotel_pricing_preview_revenue_before">Projected revenue before</string>
+    <string name="hotel_pricing_preview_revenue_after">Projected revenue after</string>
+    <string name="hotel_pricing_preview_revenue_delta">Projected delta</string>
+    <string name="hotel_pricing_apply_button">Apply change</string>
+    <string name="hotel_pricing_history_section">CHANGE HISTORY</string>
+    <string name="hotel_pricing_history_empty">There are no mobile pricing changes yet.</string>
+    <string name="hotel_pricing_history_meta">By %1$s · %2$s</string>
+    <string name="hotel_pricing_history_final_price">Recorded final rate</string>
+    <string name="hotel_pricing_revert_button">Revert</string>
+    <string name="hotel_pricing_confirm_title">Security confirmation</string>
+    <string name="hotel_pricing_confirm_body">This change affects multiple dates or has a high impact. Confirm to apply it from this device.</string>
+    <string name="hotel_pricing_error_load_targets">Unable to load hotel rates</string>
+    <string name="hotel_pricing_error_load_history">Unable to load change history</string>
+    <string name="hotel_pricing_error_preview">Unable to calculate the impact</string>
+    <string name="hotel_pricing_error_apply">Unable to apply the rate change</string>
+    <string name="hotel_pricing_error_revert">Unable to revert the change</string>
+    <string name="hotel_pricing_error_target_required">Select a rate to continue</string>
+    <string name="hotel_pricing_error_start_date_required">Choose a start date</string>
+    <string name="hotel_pricing_error_end_date_required">Choose an end date</string>
+    <string name="hotel_pricing_error_end_date_after_start">End date must be on or after the start date</string>
+    <string name="hotel_pricing_error_change_required">Set a new base rate or discount to continue</string>
+    <string name="hotel_pricing_error_base_price_invalid">Base rate must be a valid value</string>
+    <string name="hotel_pricing_error_discount_invalid">Discount must be a valid value</string>
+    <string name="hotel_pricing_success_apply">Change applied and recorded in history</string>
+    <string name="hotel_pricing_success_revert">Change reverted successfully</string>
 
     <!-- forbidden / role guard -->
     <string name="forbidden_title">Access denied</string>
