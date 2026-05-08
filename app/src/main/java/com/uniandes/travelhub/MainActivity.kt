@@ -1,4 +1,4 @@
-package com.uniandes.travelhub
+﻿package com.uniandes.travelhub
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -12,6 +12,7 @@ import com.uniandes.travelhub.network.DataStorePropertyCacheStore
 import com.uniandes.travelhub.network.RetrofitFactory
 import com.uniandes.travelhub.repositories.AuthRepository
 import com.uniandes.travelhub.repositories.HotelPricingRepository
+import com.uniandes.travelhub.repositories.HotelReservationsRepository
 import com.uniandes.travelhub.repositories.PaymentsRepository
 import com.uniandes.travelhub.repositories.PropertiesRepository
 import com.uniandes.travelhub.repositories.ReservationsRepository
@@ -48,6 +49,13 @@ class MainActivity : AppCompatActivity() {
         HotelPricingRepository(api = RetrofitFactory.hotelPricingApi)
     }
 
+    private val hotelReservationsRepository: HotelReservationsRepository by lazy {
+        HotelReservationsRepository(
+            api = RetrofitFactory.hotelReservationsApi,
+            pricingApi = RetrofitFactory.hotelPricingApi,
+        )
+    }
+
     private val reservationsRepository: ReservationsRepository by lazy {
         ReservationsRepository(
             reservationsApi = RetrofitFactory.reservationsApi,
@@ -79,6 +87,7 @@ class MainActivity : AppCompatActivity() {
                     propertiesRepository = propertiesRepository,
                     searchRepository = searchRepository,
                     hotelPricingRepository = hotelPricingRepository,
+                    hotelReservationsRepository = hotelReservationsRepository,
                     reservationsRepository = reservationsRepository,
                     paymentsRepository = paymentsRepository,
                     tokenStore = tokenStore,

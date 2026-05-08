@@ -1,4 +1,4 @@
-package com.uniandes.travelhub.network
+﻿package com.uniandes.travelhub.network
 
 import com.squareup.moshi.Moshi
 import com.uniandes.travelhub.BuildConfig
@@ -52,6 +52,7 @@ object RetrofitFactory {
     val propertiesApi: PropertiesApi by lazy { build(BuildConfig.PROPERTIES_API_BASE) }
     val searchApi: SearchApi by lazy { build(BuildConfig.SEARCH_API_BASE) }
     val hotelPricingApi: HotelPricingApi by lazy { build(BuildConfig.SEARCH_API_BASE) }
+    val hotelReservationsApi: HotelReservationsApi by lazy { build(BuildConfig.RESERVATIONS_API_BASE) }
     val reservationsApi: ReservationsApi by lazy { build(BuildConfig.RESERVATIONS_API_BASE) }
     val paymentsApi: PaymentsApi by lazy { build(BuildConfig.PAYMENTS_API_BASE) }
 
