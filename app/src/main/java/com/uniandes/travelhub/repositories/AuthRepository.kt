@@ -27,8 +27,10 @@ class AuthRepository(
 
     suspend fun verifyOtp(email: String, otpCode: String): Result<UserRole> = runCatching {
         val token = securityApi.verifyOtp(VerifyOtpRequest(email = email, otpCode = otpCode))
-        tokenStore.saveSession(token.accessToken, token.role, email = email)
-        token.role
+        val normalizedRole = UserRole.fromWire(token.role)
+            ?: throw AuthException("Rol no soportado: ${token.role}")
+        tokenStore.saveSession(token.accessToken, normalizedRole, email = email)
+        normalizedRole
     }.recoverFailure()
 
     suspend fun register(payload: RegisterRequest): Result<UserResponse> = runCatching {

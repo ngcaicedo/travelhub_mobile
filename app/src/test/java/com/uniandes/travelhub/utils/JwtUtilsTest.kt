@@ -41,6 +41,12 @@ class JwtUtilsTest {
     }
 
     @Test
+    fun `extracts HOTEL_PARTNER role from hotel alias claim`() {
+        val token = jwt("""{"sub":"u2","role":"hotel","exp":9999999999}""")
+        assertEquals(UserRole.HOTEL_PARTNER, JwtUtils.extractRoleFromToken(token))
+    }
+
+    @Test
     fun `extracts HOTEL_PARTNER from alternative names`() {
         assertEquals(
             UserRole.HOTEL_PARTNER,

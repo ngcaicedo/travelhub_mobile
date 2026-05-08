@@ -37,7 +37,7 @@ object JwtUtils {
 
     private fun mapToUserRole(role: String): UserRole? = when (role.lowercase()) {
         "traveler" -> UserRole.TRAVELER
-        "hotel_partner", "hotel-partner", "partner" -> UserRole.HOTEL_PARTNER
+        "hotel_partner", "hotel-partner", "hotel", "partner" -> UserRole.HOTEL_PARTNER
         "admin" -> UserRole.ADMIN
         else -> null
     }

@@ -11,5 +11,14 @@ enum class UserRole {
     HOTEL_PARTNER,
 
     @Json(name = "admin")
-    ADMIN
+    ADMIN;
+
+    companion object {
+        fun fromWire(value: String?): UserRole? = when (value?.trim()?.lowercase()) {
+            "traveler" -> TRAVELER
+            "hotel_partner", "hotel-partner", "hotel", "partner" -> HOTEL_PARTNER
+            "admin" -> ADMIN
+            else -> null
+        }
+    }
 }

@@ -95,7 +95,7 @@ class AuthRepositoryTest {
         } returns TokenResponse(
             accessToken = "jwt.payload.sig",
             tokenType = "bearer",
-            role = UserRole.HOTEL_PARTNER
+            role = "hotel_partner"
         )
 
         val result = repository.verifyOtp("ada@example.com", "123456")

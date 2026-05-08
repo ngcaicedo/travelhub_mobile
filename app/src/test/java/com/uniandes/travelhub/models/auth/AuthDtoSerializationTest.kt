@@ -82,7 +82,22 @@ class AuthDtoSerializationTest {
 
         assertEquals("eyJhbGciOiJIUzI1NiJ9.payload.sig", parsed?.accessToken)
         assertEquals("bearer", parsed?.tokenType)
-        assertEquals(UserRole.HOTEL_PARTNER, parsed?.role)
+        assertEquals("hotel_partner", parsed?.role)
+    }
+
+    @Test
+    fun `TokenResponse also parses hotel alias role from backend`() {
+        val raw = """
+            {
+              "access_token": "eyJhbGciOiJIUzI1NiJ9.payload.sig",
+              "token_type": "bearer",
+              "role": "hotel"
+            }
+        """.trimIndent()
+
+        val parsed = moshi.adapter(TokenResponse::class.java).fromJson(raw)
+
+        assertEquals("hotel", parsed?.role)
     }
 
     @Test

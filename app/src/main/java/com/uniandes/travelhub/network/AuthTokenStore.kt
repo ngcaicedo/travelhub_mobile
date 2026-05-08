@@ -18,7 +18,7 @@ class AuthTokenStore(private val dataStore: DataStore<Preferences>) {
     val tokenFlow: Flow<String?> = dataStore.data.map { it[KEY_TOKEN] }
 
     val roleFlow: Flow<UserRole?> = dataStore.data.map { prefs ->
-        prefs[KEY_ROLE]?.let { raw -> runCatching { UserRole.valueOf(raw) }.getOrNull() }
+        prefs[KEY_ROLE]?.let(UserRole::fromWire)
     }
 
     val localeFlow: Flow<String?> = dataStore.data.map { it[KEY_LOCALE] }
@@ -30,7 +30,7 @@ class AuthTokenStore(private val dataStore: DataStore<Preferences>) {
     suspend fun saveSession(token: String, role: UserRole, email: String? = null) {
         dataStore.edit { prefs ->
             prefs[KEY_TOKEN] = token
-            prefs[KEY_ROLE] = role.name
+            prefs[KEY_ROLE] = role.name.lowercase()
             if (!email.isNullOrBlank()) prefs[KEY_EMAIL] = email
         }
     }

@@ -1,7 +1,6 @@
 package com.uniandes.travelhub.network
 
 import com.squareup.moshi.Moshi
-import com.uniandes.travelhub.models.UserRole
 import com.uniandes.travelhub.models.auth.LoginRequest
 import com.uniandes.travelhub.models.auth.VerifyOtpRequest
 import kotlinx.coroutines.test.runTest
@@ -78,7 +77,35 @@ class SecurityApiTest {
 
         assertEquals("jwt.payload.sig", response.accessToken)
         assertEquals("bearer", response.tokenType)
-        assertEquals(UserRole.HOTEL_PARTNER, response.role)
+        assertEquals("hotel_partner", response.role)
+
+        val recorded = server.takeRequest()
+        assertEquals("/api/v1/auth/verify-otp", recorded.path)
+        val body = recorded.body.readUtf8()
+        assertTrue("body must use snake_case otp_code, was: $body", body.contains("\"otp_code\":\"123456\""))
+    }
+
+    @Test
+    fun `verifyOtp also accepts hotel alias role`() = runTest {
+        server.enqueue(
+            MockResponse()
+                .setResponseCode(200)
+                .setBody(
+                    """
+                    {
+                      "access_token":"jwt.payload.sig",
+                      "token_type":"bearer",
+                      "role":"hotel"
+                    }
+                    """.trimIndent()
+                )
+        )
+
+        val response = api.verifyOtp(
+            VerifyOtpRequest(email = "ada@example.com", otpCode = "123456")
+        )
+
+        assertEquals("hotel", response.role)
 
         val recorded = server.takeRequest()
         assertEquals("/api/v1/auth/verify-otp", recorded.path)
