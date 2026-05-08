@@ -1,4 +1,4 @@
-package com.uniandes.travelhub.ui.hotel
+﻿package com.uniandes.travelhub.ui.hotel
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.EventAvailable
 import androidx.compose.material.icons.filled.LocalOffer
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -36,6 +37,7 @@ import com.uniandes.travelhub.ui.theme.spacing
 @Composable
 fun PartnerHomeScreen(
     onOpenPricing: () -> Unit,
+    onOpenReservations: () -> Unit,
     onLogout: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -74,52 +76,78 @@ fun PartnerHomeScreen(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(onClick = onOpenPricing),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                ),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)),
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(MaterialTheme.spacing.lg),
-                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.md),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Box(
-                        modifier = Modifier.size(52.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.LocalOffer,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(28.dp),
-                        )
-                    }
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = stringResource(R.string.hotel_pricing_home_title),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                        )
-                        Text(
-                            text = stringResource(R.string.hotel_pricing_home_body),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    }
-                }
-            }
+            HomeModuleCard(
+                icon = Icons.Default.EventAvailable,
+                title = stringResource(R.string.hotel_reservations_home_title),
+                body = stringResource(R.string.hotel_reservations_home_body),
+                onClick = onOpenReservations,
+            )
 
+            HomeModuleCard(
+                icon = Icons.Default.LocalOffer,
+                title = stringResource(R.string.hotel_pricing_home_title),
+                body = stringResource(R.string.hotel_pricing_home_body),
+                onClick = onOpenPricing,
+            )
+
+            TravelHubPrimaryButton(
+                text = stringResource(R.string.hotel_reservations_home_cta),
+                onClick = onOpenReservations,
+            )
             TravelHubPrimaryButton(
                 text = stringResource(R.string.hotel_pricing_home_cta),
                 onClick = onOpenPricing,
             )
+        }
+    }
+}
+
+@Composable
+private fun HomeModuleCard(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    title: String,
+    body: String,
+    onClick: () -> Unit,
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        ),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(MaterialTheme.spacing.lg),
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.md),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(
+                modifier = Modifier.size(52.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(28.dp),
+                )
+            }
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    text = body,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
     }
 }

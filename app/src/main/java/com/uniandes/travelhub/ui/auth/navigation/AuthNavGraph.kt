@@ -1,4 +1,4 @@
-package com.uniandes.travelhub.ui.auth.navigation
+﻿package com.uniandes.travelhub.ui.auth.navigation
 
 import android.os.Build
 import androidx.compose.runtime.Composable
@@ -22,6 +22,7 @@ import com.uniandes.travelhub.models.properties.Property
 import com.uniandes.travelhub.network.AuthTokenStore
 import com.uniandes.travelhub.repositories.AuthRepository
 import com.uniandes.travelhub.repositories.HotelPricingRepository
+import com.uniandes.travelhub.repositories.HotelReservationsRepository
 import com.uniandes.travelhub.repositories.PaymentsRepository
 import com.uniandes.travelhub.repositories.PropertiesRepository
 import com.uniandes.travelhub.repositories.ReservationsRepository
@@ -29,6 +30,8 @@ import com.uniandes.travelhub.repositories.SearchRepository
 import com.uniandes.travelhub.ui.auth.components.RequireRole
 import com.uniandes.travelhub.ui.auth.home.PlaceholderHomeScreen
 import com.uniandes.travelhub.ui.hotel.HotelPricingScreen
+import com.uniandes.travelhub.ui.hotel.HotelReservationDetailScreen
+import com.uniandes.travelhub.ui.hotel.HotelReservationsScreen
 import com.uniandes.travelhub.ui.hotel.PartnerHomeScreen
 import com.uniandes.travelhub.ui.auth.login.LoginScreen
 import com.uniandes.travelhub.ui.auth.register.RegisterScreen
@@ -45,6 +48,8 @@ import com.uniandes.travelhub.viewmodels.CheckoutViewModel
 import com.uniandes.travelhub.viewmodels.CheckInQrViewModel
 import com.uniandes.travelhub.viewmodels.LoginViewModel
 import com.uniandes.travelhub.viewmodels.HotelPricingViewModel
+import com.uniandes.travelhub.viewmodels.HotelReservationDetailViewModel
+import com.uniandes.travelhub.viewmodels.HotelReservationsListViewModel
 import com.uniandes.travelhub.viewmodels.PaymentViewModel
 import com.uniandes.travelhub.viewmodels.PropertyDetailViewModel
 import com.uniandes.travelhub.viewmodels.RegisterViewModel
@@ -57,7 +62,7 @@ import kotlinx.coroutines.launch
 /**
  * Wires every destination together. Owns the [NavHostController] and the
  * [paymentConfirmationCache] used to pass the in-memory confirmation summary
- * from PaymentScreen → PaymentConfirmationScreen without serialising it.
+ * from PaymentScreen â†’ PaymentConfirmationScreen without serialising it.
  */
 @Composable
 fun AuthNavGraph(
@@ -65,6 +70,7 @@ fun AuthNavGraph(
     propertiesRepository: PropertiesRepository,
     searchRepository: SearchRepository,
     hotelPricingRepository: HotelPricingRepository,
+    hotelReservationsRepository: HotelReservationsRepository,
     reservationsRepository: ReservationsRepository,
     paymentsRepository: PaymentsRepository,
     tokenStore: AuthTokenStore,
@@ -285,7 +291,7 @@ fun AuthNavGraph(
             RequireRole(tokenStore = tokenStore, requiredRole = UserRole.TRAVELER, onUnauthorized = onUnauthorized) {
                 val confirmation = paymentConfirmationCache.value
                 if (confirmation == null) {
-                    // Cache lost (e.g. process death) — bounce to the reservations list.
+                    // Cache lost (e.g. process death) â€” bounce to the reservations list.
                     LaunchedEffect(Unit) {
                         navController.navigate(AuthRoute.ReservationsList.route) {
                             popUpTo(AuthRoute.Search.route) { inclusive = false }
@@ -365,6 +371,7 @@ fun AuthNavGraph(
             RequireRole(tokenStore = tokenStore, requiredRole = UserRole.HOTEL_PARTNER, onUnauthorized = onUnauthorized) {
                 PartnerHomeScreen(
                     onOpenPricing = { navController.navigate(AuthRoute.HotelPricing.route) },
+                    onOpenReservations = { navController.navigate(AuthRoute.HotelReservations.route) },
                     onLogout = {
                         scope.launch {
                             authRepository.logout()
@@ -396,6 +403,40 @@ fun AuthNavGraph(
             }
         }
 
+        composable(AuthRoute.HotelReservations.route) {
+            RequireRole(tokenStore = tokenStore, requiredRole = UserRole.HOTEL_PARTNER, onUnauthorized = onUnauthorized) {
+                val viewModel: HotelReservationsListViewModel = viewModel(
+                    factory = HotelReservationsListViewModel.Factory(hotelReservationsRepository)
+                )
+                HotelReservationsScreen(
+                    viewModel = viewModel,
+                    onBackClick = { navController.popBackStack() },
+                    onReservationClick = { reservationId ->
+                        navController.navigate(AuthRoute.HotelReservationDetail.build(reservationId))
+                    },
+                )
+            }
+        }
+
+        composable(
+            route = AuthRoute.HotelReservationDetail.route,
+            arguments = listOf(navArgument(AuthRoute.HotelReservationDetail.ARG_ID) { type = NavType.StringType }),
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString(AuthRoute.HotelReservationDetail.ARG_ID).orEmpty()
+            RequireRole(tokenStore = tokenStore, requiredRole = UserRole.HOTEL_PARTNER, onUnauthorized = onUnauthorized) {
+                val viewModel: HotelReservationDetailViewModel = viewModel(
+                    factory = HotelReservationDetailViewModel.Factory(
+                        reservationId = id,
+                        repository = hotelReservationsRepository,
+                        localeProvider = { currentLocale },
+                    )
+                )
+                HotelReservationDetailScreen(
+                    viewModel = viewModel,
+                    onBackClick = { navController.popBackStack() },
+                )
+            }
+        }
         composable(AuthRoute.AdminHome.route) {
             PlaceholderHomeScreen(
                 repository = authRepository,

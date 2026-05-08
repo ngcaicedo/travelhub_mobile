@@ -1,4 +1,4 @@
-package com.uniandes.travelhub.ui.auth.navigation
+﻿package com.uniandes.travelhub.ui.auth.navigation
 
 /**
  * Routes used by [AuthNavGraph]. Kept as a small sealed class so the
@@ -21,6 +21,11 @@ sealed class AuthRoute(val route: String) {
     data object PartnerHome : AuthRoute("partner_home")
     data object AdminHome : AuthRoute("admin_home")
     data object HotelPricing : AuthRoute("hotel_pricing")
+    data object HotelReservations : AuthRoute("hotel_reservations")
+    data object HotelReservationDetail : AuthRoute("hotel_reservations/{id}") {
+        const val ARG_ID = "id"
+        fun build(id: String): String = "hotel_reservations/$id"
+    }
 
     /** Property list and detail routes. */
     data object PropertyList : AuthRoute("property_list")
