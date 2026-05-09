@@ -274,6 +274,23 @@
     <!-- forbidden / role guard -->
     <string name="forbidden_title">Access denied</string>
     <string name="forbidden_subtitle">Your role does not have access to this section</string>
+
+    <string name="map_tab_list">List</string>
+    <string name="map_tab_map">Map</string>
+    <string name="map_permission_required_title">Enable your location</string>
+    <string name="map_permission_required_body">We need your location to show nearby hotels on the map.</string>
+    <string name="map_permission_cta">Allow location</string>
+    <string name="map_permission_denied_cta">Search by city</string>
+    <string name="map_search_in_this_area">Search this area</string>
+    <string name="map_loading_hotels">Loading hotels…</string>
+    <string name="map_locating_user">Getting your location…</string>
+    <string name="map_location_unavailable">Couldn\'t get your location. Pan the map and try again.</string>
+    <string name="map_no_results_in_area">No hotels in this area. Pan the map to explore other regions.</string>
+    <string name="map_marker_price_from">From %1$s %2$s</string>
+    <string name="map_marker_view_detail">View detail</string>
+    <string name="map_city_search_hint">Search city</string>
+    <string name="map_city_search_action">Go</string>
+    <string name="map_city_not_found">We couldn\'t find %1$s. Try a different name.</string>
 </resources>
 
 

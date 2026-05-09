@@ -274,5 +274,22 @@
     <!-- forbidden / role guard -->
     <string name="forbidden_title">Acesso negado</string>
     <string name="forbidden_subtitle">Seu perfil não tem acesso a esta seção</string>
+
+    <string name="map_tab_list">Lista</string>
+    <string name="map_tab_map">Mapa</string>
+    <string name="map_permission_required_title">Ative sua localização</string>
+    <string name="map_permission_required_body">Precisamos da sua localização para mostrar hotéis próximos no mapa.</string>
+    <string name="map_permission_cta">Permitir localização</string>
+    <string name="map_permission_denied_cta">Buscar por cidade</string>
+    <string name="map_search_in_this_area">Buscar nesta área</string>
+    <string name="map_loading_hotels">Carregando hotéis…</string>
+    <string name="map_locating_user">Obtendo sua localização…</string>
+    <string name="map_location_unavailable">Não foi possível obter sua localização. Mova o mapa e tente novamente.</string>
+    <string name="map_no_results_in_area">Não há hotéis nesta área. Mova o mapa para explorar outras regiões.</string>
+    <string name="map_marker_price_from">A partir de %1$s %2$s</string>
+    <string name="map_marker_view_detail">Ver detalhes</string>
+    <string name="map_city_search_hint">Buscar cidade</string>
+    <string name="map_city_search_action">Ir</string>
+    <string name="map_city_not_found">Não encontramos %1$s. Tente outro nome.</string>
 </resources>
 
