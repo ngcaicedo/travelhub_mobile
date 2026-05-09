@@ -43,6 +43,9 @@ import com.uniandes.travelhub.viewmodels.PropertyDetailViewModel
 import com.uniandes.travelhub.viewmodels.RegisterViewModel
 import com.uniandes.travelhub.viewmodels.ReservationDetailViewModel
 import com.uniandes.travelhub.viewmodels.ReservationsListViewModel
+import com.uniandes.travelhub.network.location.CityGeocoder
+import com.uniandes.travelhub.network.location.LocationProvider
+import com.uniandes.travelhub.viewmodels.MapSearchViewModel
 import com.uniandes.travelhub.viewmodels.SearchViewModel
 import com.uniandes.travelhub.viewmodels.VerifyOtpViewModel
 import kotlinx.coroutines.launch
@@ -60,6 +63,8 @@ fun AuthNavGraph(
     reservationsRepository: ReservationsRepository,
     paymentsRepository: PaymentsRepository,
     tokenStore: AuthTokenStore,
+    locationProvider: LocationProvider,
+    cityGeocoder: CityGeocoder,
     currentLocale: String,
     onLocaleChange: (String) -> Unit,
     navController: NavHostController = rememberNavController(),
@@ -170,8 +175,12 @@ fun AuthNavGraph(
         composable(AuthRoute.Search.route) {
             RequireRole(tokenStore = tokenStore, requiredRole = UserRole.TRAVELER, onUnauthorized = onUnauthorized) {
                 val viewModel: SearchViewModel = viewModel(factory = SearchViewModel.Factory(searchRepository))
+                val mapViewModel: MapSearchViewModel = viewModel(
+                    factory = MapSearchViewModel.Factory(searchRepository, locationProvider, cityGeocoder)
+                )
                 SearchScreen(
                     viewModel = viewModel,
+                    mapViewModel = mapViewModel,
                     onResultClick = { item ->
                         navController.navigate(AuthRoute.PropertyDetail.build(item.id))
                     },
@@ -185,6 +194,13 @@ fun AuthNavGraph(
                     },
                     onMyReservationsClick = {
                         navController.navigate(AuthRoute.ReservationsList.route)
+                    },
+                    onBackClick = {
+                        if (!navController.popBackStack()) {
+                            navController.navigate(AuthRoute.TravelerHome.route) {
+                                popUpTo(AuthRoute.Search.route) { inclusive = true }
+                            }
+                        }
                     },
                 )
             }
