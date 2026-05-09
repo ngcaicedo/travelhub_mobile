@@ -86,8 +86,17 @@ class SearchViewModel(
     fun onGuestsChange(value: Int) = _form.update { it.copy(guests = value.coerceAtLeast(1), validation = it.validation.copy(guestsError = null)) }
     fun onMinPriceChange(value: Int?) = _form.update { it.copy(minPrice = value) }
     fun onMaxPriceChange(value: Int?) = _form.update { it.copy(maxPrice = value) }
-    fun onOrderByChange(value: SearchOrderBy?) = _form.update { it.copy(orderBy = value) }
+    fun onOrderByChange(value: SearchOrderBy?) = _form.update {
+        it.copy(orderBy = value, orderDir = defaultDirFor(value))
+    }
     fun onOrderDirChange(value: SearchOrderDir?) = _form.update { it.copy(orderDir = value) }
+
+    private fun defaultDirFor(orderBy: SearchOrderBy?): SearchOrderDir? = when (orderBy) {
+        SearchOrderBy.PRICE -> SearchOrderDir.ASC   // cheapest first
+        SearchOrderBy.RATING -> SearchOrderDir.DESC // best first
+        SearchOrderBy.NAME -> SearchOrderDir.ASC    // A-Z
+        null -> null
+    }
 
     fun toggleAmenity(amenity: String) = _form.update {
         val updated = if (it.amenities.contains(amenity)) it.amenities - amenity else it.amenities + amenity
