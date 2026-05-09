@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kover)
+    alias(libs.plugins.google.services)
 }
 
 // Read backend base URLs from local.properties (with safe defaults for the Android emulator).
@@ -37,6 +38,10 @@ val paymentsApiBase: String = localProperties.getProperty(
     "TRAVELHUB_PAYMENTS_API_BASE",
     "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
 )
+val notificationsApiBase: String = localProperties.getProperty(
+    "TRAVELHUB_NOTIFICATIONS_API_BASE",
+    "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
+)
 val mapsApiKey: String = localProperties.getProperty("MAPS_API_KEY", "")
 
 android {
@@ -58,6 +63,7 @@ android {
         buildConfigField("String", "SEARCH_API_BASE", "\"$searchApiBase\"")
         buildConfigField("String", "RESERVATIONS_API_BASE", "\"$reservationsApiBase\"")
         buildConfigField("String", "PAYMENTS_API_BASE", "\"$paymentsApiBase\"")
+        buildConfigField("String", "NOTIFICATIONS_API_BASE", "\"$notificationsApiBase\"")
 
         manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
@@ -160,6 +166,9 @@ dependencies {
     implementation(libs.maps.compose)
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging.ktx)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
