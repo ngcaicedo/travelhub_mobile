@@ -43,6 +43,8 @@ data class SearchResultItem(
     @Json(name = "price_from") val priceFrom: String,
     @Json(name = "currency") val currency: String,
     @Json(name = "amenities") val amenities: List<String> = emptyList(),
+    @Json(name = "latitude") val latitude: Double? = null,
+    @Json(name = "longitude") val longitude: Double? = null,
 )
 
 @JsonClass(generateAdapter = true)

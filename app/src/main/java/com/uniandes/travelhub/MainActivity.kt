@@ -9,6 +9,10 @@ import androidx.core.os.LocaleListCompat
 import com.uniandes.travelhub.network.AuthTokenStore
 import com.uniandes.travelhub.network.DataStorePropertyCacheStore
 import com.uniandes.travelhub.network.RetrofitFactory
+import com.uniandes.travelhub.network.location.AndroidCityGeocoder
+import com.uniandes.travelhub.network.location.CityGeocoder
+import com.uniandes.travelhub.network.location.FusedLocationProvider
+import com.uniandes.travelhub.network.location.LocationProvider
 import com.uniandes.travelhub.repositories.AuthRepository
 import com.uniandes.travelhub.repositories.PaymentsRepository
 import com.uniandes.travelhub.repositories.PropertiesRepository
@@ -56,6 +60,14 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    private val locationProvider: LocationProvider by lazy {
+        FusedLocationProvider(applicationContext)
+    }
+
+    private val cityGeocoder: CityGeocoder by lazy {
+        AndroidCityGeocoder(applicationContext)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -74,6 +86,8 @@ class MainActivity : AppCompatActivity() {
                     reservationsRepository = reservationsRepository,
                     paymentsRepository = paymentsRepository,
                     tokenStore = tokenStore,
+                    locationProvider = locationProvider,
+                    cityGeocoder = cityGeocoder,
                     currentLocale = currentLocale,
                     onLocaleChange = { tag ->
                         AppCompatDelegate.setApplicationLocales(
