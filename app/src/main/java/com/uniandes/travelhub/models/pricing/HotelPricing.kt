@@ -15,7 +15,7 @@ data class HotelPricingTargetOption(
     @Json(name = "base_price") val basePrice: Double,
 ) {
     val displayName: String
-        get() = "$roomTypeName - $propertyName"
+        get() = "$propertyName · $roomTypeName · $ratePlanName"
 }
 
 enum class HotelDiscountType(val wire: String) {

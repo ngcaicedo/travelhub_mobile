@@ -39,6 +39,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -50,6 +51,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.uniandes.travelhub.R
@@ -130,6 +132,10 @@ fun HotelPricingScreen(
                 viewModel.apply(confirmationAcknowledged = false)
             }
         },
+        onRetryTargets = {
+            viewModel.clearMessage()
+            viewModel.refresh()
+        },
         onRevert = {
             viewModel.clearMessage()
             viewModel.revert(it)
@@ -176,6 +182,7 @@ fun HotelPricingScreenContent(
     onEndDateChange: (String) -> Unit,
     onPreview: () -> Unit,
     onApply: () -> Unit,
+    onRetryTargets: () -> Unit,
     onRevert: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -217,7 +224,11 @@ fun HotelPricingScreenContent(
 
             ExposedDropdownMenuBox(
                 expanded = targetExpanded,
-                onExpandedChange = { targetExpanded = !targetExpanded },
+                onExpandedChange = {
+                    if (uiState.targets.isNotEmpty() && !uiState.isLoading) {
+                        targetExpanded = !targetExpanded
+                    }
+                },
             ) {
                 OutlinedTextField(
                     value = selectedTarget?.displayName.orEmpty(),
@@ -226,10 +237,14 @@ fun HotelPricingScreenContent(
                     label = { Text(stringResource(R.string.hotel_pricing_target_label)) },
                     isError = form.validation.targetError != null,
                     supportingText = form.validation.targetError?.let { { Text(it.asString()) } },
+                    enabled = uiState.targets.isNotEmpty() && !uiState.isLoading,
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = targetExpanded) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .menuAnchor(),
+                        .menuAnchor(
+                            type = MenuAnchorType.PrimaryNotEditable,
+                            enabled = uiState.targets.isNotEmpty() && !uiState.isLoading,
+                        ),
                 )
                 ExposedDropdownMenu(
                     expanded = targetExpanded,
@@ -237,13 +252,43 @@ fun HotelPricingScreenContent(
                 ) {
                     uiState.targets.forEach { target ->
                         DropdownMenuItem(
-                            text = { Text(target.displayName) },
+                            text = {
+                                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                                    Text(
+                                        text = target.propertyName,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Medium,
+                                    )
+                                    Text(
+                                        text = "${target.roomTypeName} · ${target.ratePlanName}",
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                }
+                            },
                             onClick = {
                                 targetExpanded = false
                                 onTargetSelected(target.ratePlanId)
                             },
                         )
                     }
+                }
+            }
+
+            if (!uiState.isLoading && uiState.targets.isEmpty()) {
+                EmptyPanel(
+                    text = uiState.error?.asString()
+                        ?: stringResource(R.string.hotel_pricing_empty_targets)
+                )
+                OutlinedButton(
+                    onClick = onRetryTargets,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(stringResource(R.string.common_retry))
                 }
             }
 

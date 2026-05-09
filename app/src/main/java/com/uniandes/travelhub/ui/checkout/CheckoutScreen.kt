@@ -64,6 +64,7 @@ import com.uniandes.travelhub.utils.sanitizeDisplayText
 import com.uniandes.travelhub.utils.sortPropertyImages
 import com.uniandes.travelhub.viewmodels.CheckoutEvent
 import com.uniandes.travelhub.viewmodels.CheckoutFormState
+import com.uniandes.travelhub.viewmodels.CheckoutPricingState
 import com.uniandes.travelhub.viewmodels.CheckoutUiState
 import com.uniandes.travelhub.viewmodels.CheckoutViewModel
 import com.uniandes.travelhub.viewmodels.PriceSummary
@@ -77,7 +78,8 @@ fun CheckoutScreen(
     val form by viewModel.form.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
     val property by viewModel.property.collectAsState()
-    val summary = remember(form, property) { viewModel.computeSummary() }
+    val pricingState by viewModel.pricingState.collectAsState()
+    val summary = remember(form, property, pricingState) { viewModel.computeSummary() }
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
@@ -91,6 +93,7 @@ fun CheckoutScreen(
         form = form,
         uiState = uiState,
         summary = summary,
+        pricingState = pricingState,
         property = property,
         onCheckInChange = viewModel::onCheckInChange,
         onCheckOutChange = viewModel::onCheckOutChange,
@@ -106,6 +109,7 @@ fun CheckoutScreenContent(
     form: CheckoutFormState,
     uiState: CheckoutUiState,
     summary: PriceSummary?,
+    pricingState: CheckoutPricingState,
     property: Property?,
     onCheckInChange: (String) -> Unit,
     onCheckOutChange: (String) -> Unit,
@@ -181,6 +185,11 @@ fun CheckoutScreenContent(
 
             summary?.let {
                 SectionTitle(stringResource(R.string.checkout_summary_title))
+                EffectivePricingHint(
+                    property = property,
+                    pricingState = pricingState,
+                    summary = it,
+                )
                 PriceSummaryCard(it)
             }
 
@@ -193,6 +202,49 @@ fun CheckoutScreenContent(
 
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.sm))
         }
+    }
+}
+
+@Composable
+private fun EffectivePricingHint(
+    property: Property?,
+    pricingState: CheckoutPricingState,
+    summary: PriceSummary,
+) {
+    when (pricingState) {
+        CheckoutPricingState.Loading -> Text(
+            text = stringResource(R.string.checkout_price_verification_loading),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+
+        is CheckoutPricingState.Available -> {
+            val baseRate = property?.pricePerNight
+            if (baseRate != null && kotlin.math.abs(pricingState.nightlyRate - baseRate) > 0.009) {
+                Text(
+                    text = stringResource(
+                        R.string.checkout_price_adjusted_message,
+                        formatMoney(summary.nightlyRate, summary.currency),
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+            }
+        }
+
+        is CheckoutPricingState.Error -> Text(
+            text = pricingState.message.asString(),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.error,
+        )
+
+        is CheckoutPricingState.Unavailable -> Text(
+            text = pricingState.message.asString(),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.error,
+        )
+
+        CheckoutPricingState.Idle -> Unit
     }
 }
 

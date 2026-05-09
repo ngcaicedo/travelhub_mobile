@@ -6,6 +6,7 @@ import com.uniandes.travelhub.models.reservations.ReservationResponse
 import com.uniandes.travelhub.repositories.PropertiesRepository
 import com.uniandes.travelhub.repositories.ReservationException
 import com.uniandes.travelhub.repositories.ReservationsRepository
+import com.uniandes.travelhub.repositories.SearchRepository
 import com.uniandes.travelhub.testing.MainDispatcherRule
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -25,6 +26,9 @@ class CheckoutViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val reservationsRepository: ReservationsRepository = mockk()
+    private val searchRepository: SearchRepository = mockk {
+        coEvery { checkAvailability(any(), any(), any(), any()) } returns Result.failure(RuntimeException("not stubbed"))
+    }
     private val propertiesRepository: PropertiesRepository = mockk {
         // CheckoutViewModel.init triggers loadProperty(); stub both calls so the
         // VM doesn't crash before we exercise the form/submit logic.
@@ -38,6 +42,7 @@ class CheckoutViewModelTest {
             propertyId = "p-1",
             reservationsRepository = reservationsRepository,
             propertiesRepository = propertiesRepository,
+            searchRepository = searchRepository,
         )
         viewModel.onCheckInChange("2026-06-10")
         viewModel.onCheckOutChange("2026-06-08")
@@ -79,6 +84,7 @@ class CheckoutViewModelTest {
             propertyId = "p-1",
             reservationsRepository = reservationsRepository,
             propertiesRepository = propertiesRepository,
+            searchRepository = searchRepository,
         )
         viewModel.onCheckInChange("2026-06-10")
         viewModel.onCheckOutChange("2026-06-15")
@@ -104,6 +110,7 @@ class CheckoutViewModelTest {
             propertyId = "p-1",
             reservationsRepository = reservationsRepository,
             propertiesRepository = propertiesRepository,
+            searchRepository = searchRepository,
         )
         viewModel.onCheckInChange("2026-06-10")
         viewModel.onCheckOutChange("2026-06-15")
@@ -114,5 +121,28 @@ class CheckoutViewModelTest {
             ErrorMessage.Plain("hold expired"),
             (viewModel.uiState.value as CheckoutUiState.Error).message,
         )
+    }
+
+    @Test
+    fun `failed submit with unavailable room detail maps to localized descriptive message`() = runTest {
+        coEvery {
+            reservationsRepository.create(any(), any(), any(), any(), any(), any())
+        } returns Result.failure(ReservationException("Room abc is not available for the selected dates"))
+
+        val viewModel = CheckoutViewModel(
+            propertyId = "p-1",
+            reservationsRepository = reservationsRepository,
+            propertiesRepository = propertiesRepository,
+            searchRepository = searchRepository,
+        )
+        viewModel.onCheckInChange("2026-06-10")
+        viewModel.onCheckOutChange("2026-06-15")
+
+        viewModel.submit()
+        advanceUntilIdle()
+
+        val error = (viewModel.uiState.value as CheckoutUiState.Error).message as ErrorMessage.Resource
+        assertEquals(R.string.checkout_selected_dates_unavailable, error.id)
+        assertEquals(2, error.args.size)
     }
 }

@@ -1,5 +1,6 @@
 package com.uniandes.travelhub.repositories
 
+import com.uniandes.travelhub.models.search.PropertyAvailabilityResponse
 import com.uniandes.travelhub.models.search.SearchQuery
 import com.uniandes.travelhub.models.search.SearchResponse
 import com.uniandes.travelhub.network.ApiErrorParser
@@ -30,6 +31,20 @@ class SearchRepository(
         )
     }.onSuccess { response ->
         lastResult = query to response
+    }.recoverFailure()
+
+    suspend fun checkAvailability(
+        propertyId: String,
+        checkIn: String,
+        checkOut: String,
+        guests: Int,
+    ): Result<PropertyAvailabilityResponse> = runCatching {
+        searchApi.checkAvailability(
+            propertyId = propertyId,
+            checkIn = checkIn,
+            checkOut = checkOut,
+            guests = guests,
+        )
     }.recoverFailure()
 
     /**

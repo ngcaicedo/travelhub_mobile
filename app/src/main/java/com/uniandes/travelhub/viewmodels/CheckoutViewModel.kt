@@ -8,6 +8,7 @@ import com.uniandes.travelhub.models.properties.Property
 import com.uniandes.travelhub.models.reservations.ReservationResponse
 import com.uniandes.travelhub.repositories.PropertiesRepository
 import com.uniandes.travelhub.repositories.ReservationsRepository
+import com.uniandes.travelhub.repositories.SearchRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +18,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.time.temporal.ChronoUnit
+import java.util.Locale
 
 data class CheckoutFormState(
     val checkIn: String = "",
@@ -68,10 +71,19 @@ sealed interface CheckoutEvent {
     data class NavigateToPayment(val reservation: ReservationResponse) : CheckoutEvent
 }
 
+sealed interface CheckoutPricingState {
+    data object Idle : CheckoutPricingState
+    data object Loading : CheckoutPricingState
+    data class Available(val nightlyRate: Double, val currency: String) : CheckoutPricingState
+    data class Unavailable(val message: ErrorMessage) : CheckoutPricingState
+    data class Error(val message: ErrorMessage) : CheckoutPricingState
+}
+
 class CheckoutViewModel(
     private val propertyId: String,
     private val reservationsRepository: ReservationsRepository,
     private val propertiesRepository: PropertiesRepository,
+    private val searchRepository: SearchRepository,
     initialCheckIn: String? = null,
     initialCheckOut: String? = null,
     initialGuests: Int? = null,
@@ -94,11 +106,15 @@ class CheckoutViewModel(
     private val _uiState = MutableStateFlow<CheckoutUiState>(CheckoutUiState.Idle)
     val uiState: StateFlow<CheckoutUiState> = _uiState.asStateFlow()
 
+    private val _pricingState = MutableStateFlow<CheckoutPricingState>(CheckoutPricingState.Idle)
+    val pricingState: StateFlow<CheckoutPricingState> = _pricingState.asStateFlow()
+
     private val _events = Channel<CheckoutEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
     init {
         loadProperty()
+        refreshEffectivePricing()
     }
 
     private fun loadProperty() {
@@ -111,13 +127,25 @@ class CheckoutViewModel(
             propertiesRepository.getPropertyDetail(propertyId).onSuccess { fresh ->
                 _property.value = fresh
                 _form.update { f -> f.copy(currency = fresh.currency.ifBlank { f.currency }) }
+                refreshEffectivePricing()
             }
         }
     }
 
-    fun onCheckInChange(value: String) = _form.update { it.copy(checkIn = value, checkInError = null) }
-    fun onCheckOutChange(value: String) = _form.update { it.copy(checkOut = value, checkOutError = null) }
-    fun onGuestsChange(value: Int) = _form.update { it.copy(guests = value.coerceAtLeast(1), guestsError = null) }
+    fun onCheckInChange(value: String) {
+        _form.update { it.copy(checkIn = value, checkInError = null) }
+        refreshEffectivePricing()
+    }
+
+    fun onCheckOutChange(value: String) {
+        _form.update { it.copy(checkOut = value, checkOutError = null) }
+        refreshEffectivePricing()
+    }
+
+    fun onGuestsChange(value: Int) {
+        _form.update { it.copy(guests = value.coerceAtLeast(1), guestsError = null) }
+        refreshEffectivePricing()
+    }
 
     /**
      * Canonical breakdown — mirrors `services/reservations/.../create_reservation.py`
@@ -134,8 +162,10 @@ class CheckoutViewModel(
         val f = _form.value
         val nights = nightsBetween(f.checkIn, f.checkOut) ?: return null
         if (nights <= 0) return null
+        if (pricingState.value is CheckoutPricingState.Unavailable) return null
         val guests = f.guests.coerceAtLeast(1)
-        val nightlyRate = p.pricePerNight
+        val activeQuote = pricingState.value as? CheckoutPricingState.Available
+        val nightlyRate = activeQuote?.nightlyRate ?: p.pricePerNight
         val accommodation = nightlyRate * nights * guests
         val cleaning = p.cleaningFee
         val serviceFee = accommodation * PriceSummary.SERVICE_FEE_RATE
@@ -150,8 +180,45 @@ class CheckoutViewModel(
             taxes = taxes,
             cleaningFee = cleaning,
             total = subtotal + taxes,
-            currency = p.currency.ifBlank { f.currency },
+            currency = activeQuote?.currency ?: p.currency.ifBlank { f.currency },
         )
+    }
+
+    private fun refreshEffectivePricing() {
+        val current = _form.value
+        val datesAreValid = current.checkIn.isNotBlank() &&
+            current.checkOut.isNotBlank() &&
+            nightsBetween(current.checkIn, current.checkOut)?.let { it > 0 } == true
+
+        if (!datesAreValid) {
+            _pricingState.value = CheckoutPricingState.Idle
+            return
+        }
+
+        viewModelScope.launch {
+            _pricingState.value = CheckoutPricingState.Loading
+            searchRepository.checkAvailability(
+                propertyId = propertyId,
+                checkIn = current.checkIn,
+                checkOut = current.checkOut,
+                guests = current.guests.coerceAtLeast(1),
+            ).onSuccess { availability ->
+                _pricingState.value = if (availability.available && availability.priceFrom != null) {
+                    CheckoutPricingState.Available(
+                        nightlyRate = availability.priceFrom,
+                        currency = availability.currency ?: current.currency,
+                    )
+                } else if (!availability.available) {
+                    CheckoutPricingState.Unavailable(buildUnavailableMessage(current.checkIn, current.checkOut))
+                } else {
+                    CheckoutPricingState.Idle
+                }
+            }.onFailure {
+                _pricingState.value = CheckoutPricingState.Error(
+                    ErrorMessage.Resource(R.string.checkout_price_verification_error)
+                )
+            }
+        }
     }
 
     fun submit() {
@@ -176,12 +243,46 @@ class CheckoutViewModel(
                 _events.send(CheckoutEvent.NavigateToPayment(reservation))
             }.onFailure { error ->
                 _uiState.value = CheckoutUiState.Error(
-                    error.message?.let { ErrorMessage.Plain(it) }
-                        ?: ErrorMessage.Resource(R.string.checkout_error_generic)
+                    mapSubmitError(
+                        detail = error.message,
+                        checkIn = current.checkIn,
+                        checkOut = current.checkOut,
+                    )
                 )
             }
         }
     }
+
+    private fun mapSubmitError(
+        detail: String?,
+        checkIn: String,
+        checkOut: String,
+    ): ErrorMessage {
+        val normalizedDetail = detail?.trim()?.lowercase(Locale.ROOT).orEmpty()
+        return if ("not available" in normalizedDetail) {
+            buildUnavailableMessage(checkIn, checkOut)
+        } else {
+            detail?.takeIf { it.isNotBlank() }?.let(ErrorMessage::Plain)
+                ?: ErrorMessage.Resource(R.string.checkout_error_generic)
+        }
+    }
+
+    private fun buildUnavailableMessage(checkIn: String, checkOut: String): ErrorMessage =
+        ErrorMessage.Resource(
+            id = R.string.checkout_selected_dates_unavailable,
+            args = listOf(
+                formatDisplayDate(checkIn),
+                formatDisplayDate(checkOut),
+            ),
+        )
+
+    private fun formatDisplayDate(rawDate: String): String = runCatching {
+        LocalDate.parse(rawDate, DateTimeFormatter.ISO_LOCAL_DATE)
+            .format(
+                DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+                    .withLocale(Locale.getDefault())
+            )
+    }.getOrDefault(rawDate)
 
     private fun validate(form: CheckoutFormState): CheckoutFormState = form.copy(
         checkInError = if (form.checkIn.isBlank()) ErrorMessage.Resource(R.string.checkout_error_check_in_required) else null,
@@ -205,6 +306,7 @@ class CheckoutViewModel(
         private val propertyId: String,
         private val reservationsRepository: ReservationsRepository,
         private val propertiesRepository: PropertiesRepository,
+        private val searchRepository: SearchRepository,
         private val initialCheckIn: String? = null,
         private val initialCheckOut: String? = null,
         private val initialGuests: Int? = null,
@@ -215,6 +317,7 @@ class CheckoutViewModel(
             propertyId,
             reservationsRepository,
             propertiesRepository,
+            searchRepository,
             initialCheckIn,
             initialCheckOut,
             initialGuests,

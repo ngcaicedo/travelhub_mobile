@@ -234,6 +234,7 @@ fun AuthNavGraph(
                         propertyId = propertyId,
                         reservationsRepository = reservationsRepository,
                         propertiesRepository = propertiesRepository,
+                        searchRepository = searchRepository,
                     )
                 )
                 CheckoutScreen(
@@ -321,9 +322,6 @@ fun AuthNavGraph(
                     onReservationClick = { reservation ->
                         navController.navigate(AuthRoute.ReservationDetail.build(reservation.id))
                     },
-                    onCheckInClick = { reservation ->
-                        navController.navigate(AuthRoute.CheckInQr.build(reservation.id))
-                    },
                     onBackClick = { navController.popBackStack() },
                     onSearchClick = {
                         navController.navigate(AuthRoute.Search.route) {
@@ -346,7 +344,6 @@ fun AuthNavGraph(
                 ReservationDetailScreen(
                     viewModel = viewModel,
                     onBackClick = { navController.popBackStack() },
-                    onOpenCheckInQr = { navController.navigate(AuthRoute.CheckInQr.build(id)) },
                 )
             }
         }

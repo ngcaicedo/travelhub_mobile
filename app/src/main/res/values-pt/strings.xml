@@ -169,6 +169,10 @@
     <string name="checkout_summary_total">Total a pagar</string>
     <string name="checkout_continue">Continuar</string>
     <string name="checkout_nights_summary">%1$d noites</string>
+    <string name="checkout_price_verification_loading">Validando a tarifa vigente para estas datas…</string>
+    <string name="checkout_price_adjusted_message">Tarifa atualizada para estas datas: %1$s por noite</string>
+    <string name="checkout_price_verification_error">Não foi possível verificar a tarifa atual para estas datas</string>
+    <string name="checkout_selected_dates_unavailable">As datas de %1$s a %2$s não estão mais disponíveis para esta propriedade. Escolha outras datas para continuar.</string>
     <string name="payment_method_title">Método de pagamento</string>
     <string name="payment_method_card">Cartão de crédito ou débito</string>
     <string name="payment_method_card_subtitle">Visa, Mastercard, Amex</string>
@@ -234,6 +238,7 @@
     <string name="reservation_detail_stay_section">Sua estadia</string>
     <string name="reservation_detail_pricing_section">Resumo de custos</string>
     <string name="reservation_detail_info_section">Informações da reserva</string>
+    <string name="reservation_detail_created_label">Criada</string>
     <string name="reservation_card_dates">%1$s → %2$s</string>
     <string name="reservation_card_view_details">Ver detalhes</string>
     <string name="reservations_section_next_trip">Próxima viagem</string>
@@ -330,6 +335,7 @@
     <string name="hotel_pricing_confirm_title">Confirmação de segurança</string>
     <string name="hotel_pricing_confirm_body">Esta alteração afeta várias datas ou tem alto impacto. Confirme para aplicá-la neste dispositivo.</string>
     <string name="hotel_pricing_error_load_targets">Não foi possível carregar as tarifas do hotel</string>
+    <string name="hotel_pricing_empty_targets">Ainda não há propriedades ou tarifas ativas disponíveis para este hotel.</string>
     <string name="hotel_pricing_error_load_history">Não foi possível carregar o histórico</string>
     <string name="hotel_pricing_error_preview">Não foi possível calcular o impacto</string>
     <string name="hotel_pricing_error_apply">Não foi possível aplicar o ajuste de tarifa</string>

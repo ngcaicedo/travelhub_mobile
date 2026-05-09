@@ -1,7 +1,9 @@
 package com.uniandes.travelhub.network
 
+import com.uniandes.travelhub.models.search.PropertyAvailabilityResponse
 import com.uniandes.travelhub.models.search.SearchResponse
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface SearchApi {
@@ -20,4 +22,12 @@ interface SearchApi {
         @Query("page") page: Int? = null,
         @Query("page_size") pageSize: Int? = null,
     ): SearchResponse
+
+    @GET("api/v1/search/properties/{propertyId}/availability")
+    suspend fun checkAvailability(
+        @Path("propertyId") propertyId: String,
+        @Query("check_in") checkIn: String,
+        @Query("check_out") checkOut: String,
+        @Query("guests") guests: Int,
+    ): PropertyAvailabilityResponse
 }

@@ -169,6 +169,10 @@
     <string name="checkout_summary_total">Total due</string>
     <string name="checkout_continue">Continue</string>
     <string name="checkout_nights_summary">%1$d nights</string>
+    <string name="checkout_price_verification_loading">Checking the live rate for these dates…</string>
+    <string name="checkout_price_adjusted_message">Updated rate for these dates: %1$s per night</string>
+    <string name="checkout_price_verification_error">We could not verify the current rate for these dates</string>
+    <string name="checkout_selected_dates_unavailable">The dates from %1$s to %2$s are no longer available for this property. Choose different dates to continue.</string>
     <string name="payment_method_title">Payment method</string>
     <string name="payment_method_card">Credit or debit card</string>
     <string name="payment_method_card_subtitle">Visa, Mastercard, Amex</string>
@@ -234,6 +238,7 @@
     <string name="reservation_detail_stay_section">Your stay</string>
     <string name="reservation_detail_pricing_section">Cost summary</string>
     <string name="reservation_detail_info_section">Reservation info</string>
+    <string name="reservation_detail_created_label">Created</string>
     <string name="reservation_card_dates">%1$s → %2$s</string>
     <string name="reservation_card_view_details">View details</string>
     <string name="reservations_section_next_trip">Next trip</string>
@@ -330,6 +335,7 @@
     <string name="hotel_pricing_confirm_title">Security confirmation</string>
     <string name="hotel_pricing_confirm_body">This change affects multiple dates or has a high impact. Confirm to apply it from this device.</string>
     <string name="hotel_pricing_error_load_targets">Unable to load hotel rates</string>
+    <string name="hotel_pricing_empty_targets">There are no active properties or rates available for this hotel yet.</string>
     <string name="hotel_pricing_error_load_history">Unable to load change history</string>
     <string name="hotel_pricing_error_preview">Unable to calculate the impact</string>
     <string name="hotel_pricing_error_apply">Unable to apply the rate change</string>

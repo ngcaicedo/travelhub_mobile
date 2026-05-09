@@ -3,6 +3,7 @@ package com.uniandes.travelhub.viewmodels
 import com.uniandes.travelhub.models.properties.Property
 import com.uniandes.travelhub.repositories.PropertiesRepository
 import com.uniandes.travelhub.repositories.ReservationsRepository
+import com.uniandes.travelhub.repositories.SearchRepository
 import com.uniandes.travelhub.testing.MainDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -12,6 +13,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
@@ -36,6 +38,9 @@ class CheckoutPriceSummaryTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val reservationsRepository: ReservationsRepository = mockk()
+    private val searchRepository: SearchRepository = mockk {
+        coEvery { checkAvailability(any(), any(), any(), any()) } returns Result.failure(RuntimeException("not stubbed"))
+    }
 
     private val mansion = Property(
         id = "p-1",
@@ -63,6 +68,7 @@ class CheckoutPriceSummaryTest {
                 coEvery { getCachedProperty("p-1") } returns mansion
                 coEvery { getPropertyDetail("p-1") } returns Result.success(mansion)
             },
+            searchRepository = searchRepository,
             initialCheckIn = initialCheckIn,
             initialCheckOut = initialCheckOut,
             initialGuests = guests,
@@ -127,5 +133,54 @@ class CheckoutPriceSummaryTest {
         val one = oneNight.computeSummary()!!.accommodation
         val two = twoNights.computeSummary()!!.accommodation
         assertEquals(one * 2.0, two, 0.001)
+    }
+
+    @Test
+    fun `computeSummary uses effective nightly rate when search availability provides one`() = runTest {
+        coEvery {
+            searchRepository.checkAvailability("p-1", "2026-05-03", "2026-05-05", 2)
+        } returns Result.success(
+            com.uniandes.travelhub.models.search.PropertyAvailabilityResponse(
+                propertyId = "p-1",
+                checkIn = "2026-05-03",
+                checkOut = "2026-05-05",
+                guests = 2,
+                available = true,
+                priceFrom = 1000.0,
+                currency = "COP",
+            )
+        )
+
+        val vm = newViewModel(initialCheckIn = "2026-05-03", initialCheckOut = "2026-05-05", guests = 2)
+        advanceUntilIdle()
+
+        val summary = vm.computeSummary()
+
+        assertNotNull(summary)
+        assertEquals(1000.0, summary!!.nightlyRate, 0.001)
+        assertEquals(4000.0, summary.accommodation, 0.001)
+    }
+
+    @Test
+    fun `computeSummary returns null when availability precheck marks selected dates unavailable`() = runTest {
+        coEvery {
+            searchRepository.checkAvailability("p-1", "2026-05-03", "2026-05-05", 2)
+        } returns Result.success(
+            com.uniandes.travelhub.models.search.PropertyAvailabilityResponse(
+                propertyId = "p-1",
+                checkIn = "2026-05-03",
+                checkOut = "2026-05-05",
+                guests = 2,
+                available = false,
+                priceFrom = null,
+                currency = "COP",
+            )
+        )
+
+        val vm = newViewModel(initialCheckIn = "2026-05-03", initialCheckOut = "2026-05-05", guests = 2)
+        advanceUntilIdle()
+
+        assertNull(vm.computeSummary())
+        assertTrue(vm.pricingState.value is CheckoutPricingState.Unavailable)
     }
 }

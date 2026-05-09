@@ -74,6 +74,7 @@ import com.uniandes.travelhub.ui.reservations.components.formatReservationDate
 import com.uniandes.travelhub.ui.reservations.components.policyTypeLabel
 import com.uniandes.travelhub.ui.reservations.components.refundTypeLabel
 import com.uniandes.travelhub.ui.reservations.components.reservationStatusLabel
+import com.uniandes.travelhub.ui.theme.TravelhubPillShape
 import com.uniandes.travelhub.ui.theme.spacing
 import com.uniandes.travelhub.viewmodels.CancelActionState
 import com.uniandes.travelhub.viewmodels.ModifyActionState
@@ -400,7 +401,7 @@ private fun InfoCard(reservation: ReservationResponse) {
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                 InfoLine(
                     icon = Icons.Filled.CalendarMonth,
-                    label = "Creada",
+                    label = stringResource(R.string.reservation_detail_created_label),
                     value = formatReservationDate(it),
                 )
             }
@@ -521,10 +522,10 @@ private fun ReservationActionsBar(
             ) {
                 OutlinedButton(
                     onClick = onModifyClick,
-                    shape = RoundedCornerShape(12.dp),
+                    shape = TravelhubPillShape,
                     modifier = Modifier
                         .weight(1f)
-                        .height(48.dp),
+                        .height(56.dp),
                 ) {
                     Text(
                         text = stringResource(R.string.reservation_action_modify),
@@ -533,14 +534,14 @@ private fun ReservationActionsBar(
                 }
                 Button(
                     onClick = onCancelClick,
-                    shape = RoundedCornerShape(12.dp),
+                    shape = TravelhubPillShape,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.errorContainer,
                         contentColor = MaterialTheme.colorScheme.onErrorContainer,
                     ),
                     modifier = Modifier
                         .weight(1f)
-                        .height(48.dp),
+                        .height(56.dp),
                 ) {
                     Text(
                         text = stringResource(R.string.reservation_action_cancel),
@@ -645,17 +646,26 @@ private fun ModifyBottomSheet(
             ) {
                 OutlinedButton(
                     onClick = onClose,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(56.dp),
+                    shape = TravelhubPillShape,
                 ) { Text(stringResource(R.string.common_close)) }
                 if (state is ModifyActionState.Preview && state.data.changeAllowed) {
                     Button(
                         onClick = { onConfirm(checkIn, checkOut, guests) },
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(56.dp),
+                        shape = TravelhubPillShape,
                     ) { Text(stringResource(R.string.reservation_action_modify_confirm)) }
                 } else {
                     Button(
                         onClick = { onPreview(checkIn, checkOut, guests) },
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(56.dp),
+                        shape = TravelhubPillShape,
                     ) { Text(stringResource(R.string.reservation_action_preview)) }
                 }
             }

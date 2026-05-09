@@ -66,6 +66,17 @@ data class SearchResponse(
     @Json(name = "empty_state") val emptyState: List<SearchEmptyStateItem> = emptyList(),
 )
 
+@JsonClass(generateAdapter = true)
+data class PropertyAvailabilityResponse(
+    @Json(name = "property_id") val propertyId: String,
+    @Json(name = "check_in") val checkIn: String,
+    @Json(name = "check_out") val checkOut: String,
+    @Json(name = "guests") val guests: Int,
+    @Json(name = "available") val available: Boolean,
+    @Json(name = "price_from") val priceFrom: Double? = null,
+    @Json(name = "currency") val currency: String? = null,
+)
+
 object Amenities {
     const val WIFI = "wifi"
     const val POOL = "pool"
