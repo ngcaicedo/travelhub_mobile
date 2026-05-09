@@ -95,7 +95,10 @@ fun SearchResultCard(
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Text(
-                        text = " ${sanitizeDisplayText(item.city)}, ${sanitizeDisplayText(item.country)}",
+                        text = " " + listOf(item.city, item.country)
+                            .map(::sanitizeDisplayText)
+                            .filter { it.isNotBlank() }
+                            .joinToString(", "),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,

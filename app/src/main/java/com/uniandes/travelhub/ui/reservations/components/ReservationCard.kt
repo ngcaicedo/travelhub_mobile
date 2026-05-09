@@ -19,8 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -41,7 +39,6 @@ import coil.compose.AsyncImage
 import com.uniandes.travelhub.R
 import com.uniandes.travelhub.models.reservations.ReservationStatus
 import com.uniandes.travelhub.models.reservations.ReservationWithDetailsResponse
-import com.uniandes.travelhub.models.reservations.isCheckInEligible
 import com.uniandes.travelhub.ui.theme.spacing
 import com.uniandes.travelhub.utils.sanitizeDisplayText
 
@@ -49,7 +46,6 @@ import com.uniandes.travelhub.utils.sanitizeDisplayText
 fun ReservationCard(
     reservation: ReservationWithDetailsResponse,
     onClick: () -> Unit,
-    onCheckInClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     val r = reservation.reservation
@@ -63,106 +59,85 @@ fun ReservationCard(
         ),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(MaterialTheme.spacing.sm),
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.sm),
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.sm),
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.sm),
+            Box(
+                modifier = Modifier
+                    .size(96.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(MaterialTheme.colorScheme.outlineVariant),
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(96.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(MaterialTheme.colorScheme.outlineVariant),
-                ) {
-                    reservation.propertyCoverImageUrl?.let { url ->
-                        AsyncImage(
-                            model = url,
-                            contentDescription = sanitizeDisplayText(reservation.propertyName.orEmpty()),
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop,
-                        )
-                    }
-                }
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(96.dp),
-                    verticalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.Top,
-                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.xs),
-                    ) {
-                        Text(
-                            text = sanitizeDisplayText(reservation.propertyName.orEmpty()),
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.weight(1f),
-                        )
-                        StatusPill(status = r.status)
-                    }
-                    Text(
-                        text = stringResource(
-                            R.string.reservation_card_dates,
-                            formatReservationDate(r.checkInDate),
-                            formatReservationDate(r.checkOutDate),
-                        ),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
+                reservation.propertyCoverImageUrl?.let { url ->
+                    AsyncImage(
+                        model = url,
+                        contentDescription = sanitizeDisplayText(reservation.propertyName.orEmpty()),
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop,
                     )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
+                }
+            }
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(96.dp),
+                verticalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.xs),
+                ) {
+                    Text(
+                        text = sanitizeDisplayText(reservation.propertyName.orEmpty()),
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f),
+                    )
+                    StatusPill(status = r.status)
+                }
+                Text(
+                    text = stringResource(
+                        R.string.reservation_card_dates,
+                        formatReservationDate(r.checkInDate),
+                        formatReservationDate(r.checkOutDate),
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = "${r.totalPrice} ${r.currency}",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = "${r.totalPrice} ${r.currency}",
-                            style = MaterialTheme.typography.titleSmall,
+                            text = stringResource(R.string.reservation_card_view_details),
+                            style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary,
                         )
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = stringResource(R.string.reservation_card_view_details),
-                                style = MaterialTheme.typography.labelMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary,
-                            )
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp),
-                                tint = MaterialTheme.colorScheme.primary,
-                            )
-                        }
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
                     }
-                }
-            }
-            if (r.isCheckInEligible() && onCheckInClick != null) {
-                Button(
-                    onClick = onCheckInClick,
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(14.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
-                        contentColor = MaterialTheme.colorScheme.primary,
-                    ),
-                ) {
-                    Text(
-                        text = stringResource(R.string.checkin_qr_cta),
-                        fontWeight = FontWeight.Bold,
-                    )
                 }
             }
         }
@@ -173,7 +148,6 @@ fun ReservationCard(
 fun NextTripHighlightCard(
     reservation: ReservationWithDetailsResponse,
     onClick: () -> Unit,
-    onCheckInClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     val r = reservation.reservation
@@ -264,19 +238,6 @@ fun NextTripHighlightCard(
                             contentDescription = null,
                             modifier = Modifier.size(18.dp),
                             tint = MaterialTheme.colorScheme.primary,
-                        )
-                    }
-                }
-                if (r.isCheckInEligible() && onCheckInClick != null) {
-                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.sm))
-                    Button(
-                        onClick = onCheckInClick,
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(14.dp),
-                    ) {
-                        Text(
-                            text = stringResource(R.string.checkin_qr_cta),
-                            fontWeight = FontWeight.Bold,
                         )
                     }
                 }

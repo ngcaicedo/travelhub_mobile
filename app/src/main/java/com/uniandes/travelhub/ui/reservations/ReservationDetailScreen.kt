@@ -27,7 +27,6 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.HourglassTop
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.QrCode2
 import androidx.compose.material.icons.filled.Receipt
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
@@ -66,10 +65,8 @@ import androidx.compose.ui.unit.dp
 import com.uniandes.travelhub.R
 import com.uniandes.travelhub.models.reservations.ReservationCancellationPreviewResponse
 import com.uniandes.travelhub.models.reservations.ReservationModificationPreviewResponse
-import com.uniandes.travelhub.models.reservations.ReservationPriceBreakdown
 import com.uniandes.travelhub.models.reservations.ReservationResponse
 import com.uniandes.travelhub.models.reservations.ReservationStatus
-import com.uniandes.travelhub.models.reservations.isCheckInEligible
 import com.uniandes.travelhub.ui.auth.components.DatePickerField
 import com.uniandes.travelhub.ui.auth.components.TravelHubPrimaryButton
 import com.uniandes.travelhub.ui.auth.components.asString
@@ -87,7 +84,6 @@ import com.uniandes.travelhub.viewmodels.ReservationDetailViewModel
 fun ReservationDetailScreen(
     viewModel: ReservationDetailViewModel,
     onBackClick: () -> Unit,
-    onOpenCheckInQr: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val cancelState by viewModel.cancelState.collectAsState()
@@ -99,7 +95,6 @@ fun ReservationDetailScreen(
         modifyState = modifyState,
         onRetry = viewModel::load,
         onBackClick = onBackClick,
-        onOpenCheckInQr = onOpenCheckInQr,
         onStartCancel = viewModel::startCancel,
         onConfirmCancel = { viewModel.confirmCancel() },
         onDismissCancel = viewModel::dismissCancel,
@@ -117,7 +112,6 @@ fun ReservationDetailScreenContent(
     modifyState: ModifyActionState,
     onRetry: () -> Unit,
     onBackClick: () -> Unit,
-    onOpenCheckInQr: () -> Unit,
     onStartCancel: () -> Unit,
     onConfirmCancel: () -> Unit,
     onDismissCancel: () -> Unit,
@@ -126,8 +120,8 @@ fun ReservationDetailScreenContent(
     onDismissModify: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val reservation = (uiState as? ReservationDetailUiState.Success)?.reservation
-    val canManage = reservation?.status == ReservationStatus.CONFIRMED
+    val canManage = (uiState as? ReservationDetailUiState.Success)
+        ?.reservation?.status == ReservationStatus.CONFIRMED
     var modifyOpen by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
@@ -166,7 +160,6 @@ fun ReservationDetailScreenContent(
             when (uiState) {
                 is ReservationDetailUiState.Loading ->
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-
                 is ReservationDetailUiState.Error -> {
                     Column(
                         modifier = Modifier
@@ -179,12 +172,8 @@ fun ReservationDetailScreenContent(
                         TravelHubPrimaryButton(stringResource(R.string.property_retry), onClick = onRetry)
                     }
                 }
-
                 is ReservationDetailUiState.Success -> {
-                    ReservationDetailBody(
-                        reservation = uiState.reservation,
-                        onOpenCheckInQr = onOpenCheckInQr,
-                    )
+                    ReservationDetailBody(reservation = uiState.reservation)
                     if (cancelState !is CancelActionState.Idle) {
                         CancelDialog(
                             state = cancelState,
@@ -197,11 +186,11 @@ fun ReservationDetailScreenContent(
         }
     }
 
-    if (modifyOpen && reservation != null) {
+    if (modifyOpen && uiState is ReservationDetailUiState.Success) {
         ModifyBottomSheet(
-            initialCheckIn = reservation.checkInDate.take(10),
-            initialCheckOut = reservation.checkOutDate.take(10),
-            initialGuests = reservation.numberOfGuests ?: 1,
+            initialCheckIn = uiState.reservation.checkInDate.take(10),
+            initialCheckOut = uiState.reservation.checkOutDate.take(10),
+            initialGuests = uiState.reservation.numberOfGuests ?: 1,
             state = modifyState,
             onPreview = onPreviewModify,
             onConfirm = onConfirmModify,
@@ -211,10 +200,7 @@ fun ReservationDetailScreenContent(
 }
 
 @Composable
-private fun ReservationDetailBody(
-    reservation: ReservationResponse,
-    onOpenCheckInQr: () -> Unit,
-) {
+private fun ReservationDetailBody(reservation: ReservationResponse) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = androidx.compose.foundation.layout.PaddingValues(
@@ -226,11 +212,6 @@ private fun ReservationDetailBody(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.lg),
     ) {
         item { StatusHero(reservation) }
-        if (reservation.isCheckInEligible()) {
-            item {
-                CheckInQrCard(onOpenCheckInQr = onOpenCheckInQr)
-            }
-        }
         item {
             Section(title = stringResource(R.string.reservation_detail_stay_section)) {
                 StayDetailsCard(reservation)
@@ -247,59 +228,6 @@ private fun ReservationDetailBody(
             Section(title = stringResource(R.string.reservation_detail_info_section)) {
                 InfoCard(reservation)
             }
-        }
-    }
-}
-
-@Composable
-private fun CheckInQrCard(onOpenCheckInQr: () -> Unit) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f),
-        ),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(MaterialTheme.spacing.md),
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.sm),
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.sm),
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(44.dp)
-                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f), CircleShape),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.QrCode2,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                    )
-                }
-                Column {
-                    Text(
-                        text = stringResource(R.string.checkin_qr_cta),
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Text(
-                        text = stringResource(R.string.checkin_qr_scan_hint),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-            }
-            TravelHubPrimaryButton(
-                text = stringResource(R.string.checkin_qr_cta),
-                onClick = onOpenCheckInQr,
-            )
         }
     }
 }
@@ -398,7 +326,7 @@ private fun StayDetailsCard(reservation: ReservationResponse) {
 @Composable
 private fun PricingCard(
     reservation: ReservationResponse,
-    bd: ReservationPriceBreakdown,
+    bd: com.uniandes.travelhub.models.reservations.ReservationPriceBreakdown,
 ) {
     SurfaceCard {
         Column(
@@ -698,19 +626,16 @@ private fun ModifyBottomSheet(
                     ) {
                         CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                     }
-
                 is ModifyActionState.Error -> Text(
                     text = state.message.asString(),
                     color = MaterialTheme.colorScheme.error,
                 )
-
                 is ModifyActionState.Preview -> ModifyPreviewSummary(state.data)
                 is ModifyActionState.Done -> Text(
                     text = stringResource(R.string.reservation_action_modify_done),
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.SemiBold,
                 )
-
                 ModifyActionState.Idle -> Unit
             }
 
@@ -834,6 +759,12 @@ private fun InlineField(label: String, value: String) {
         Text(value, style = MaterialTheme.typography.bodyLarge)
     }
 }
+
+private data class StatusVisuals(
+    val container: Color,
+    val content: Color,
+    val icon: ImageVector,
+)
 
 @Composable
 private fun statusVisuals(status: String): Triple<Color, Color, ImageVector> = when (status) {
