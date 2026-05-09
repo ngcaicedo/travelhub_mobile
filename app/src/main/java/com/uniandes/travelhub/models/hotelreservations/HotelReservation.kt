@@ -36,6 +36,14 @@ data class HotelReservationListItem(
 )
 
 @JsonClass(generateAdapter = true)
+data class HotelReservationsPage(
+    @Json(name = "items") val items: List<HotelReservationListItem>,
+    @Json(name = "total") val total: Int,
+    @Json(name = "page") val page: Int,
+    @Json(name = "page_size") val pageSize: Int,
+)
+
+@JsonClass(generateAdapter = true)
 data class HotelGuestInfo(
     @Json(name = "id") val id: String,
     @Json(name = "full_name") val fullName: String? = null,

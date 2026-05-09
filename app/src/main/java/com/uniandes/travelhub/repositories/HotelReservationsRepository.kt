@@ -21,8 +21,30 @@ class HotelReservationsRepository(
 ) {
 
     suspend fun listProperties(): Result<List<HotelReservationPropertyOption>> = runCatching {
-        pricingApi.listTargets()
-            .map { HotelReservationPropertyOption(it.propertyId, it.propertyName) }
+        val hostItems = api.listHostReservations(pageSize = 100).items
+        val targetNames = runCatching {
+            pricingApi.listTargets().associate { it.propertyId to it.propertyName }
+        }.getOrDefault(emptyMap())
+
+        val hostOptions = hostItems
+            .groupBy { it.idProperty }
+            .map { (propertyId, reservations) ->
+                val roomName = reservations
+                    .firstNotNullOfOrNull { it.roomType?.trim()?.takeIf(String::isNotBlank) }
+                HotelReservationPropertyOption(
+                    propertyId = propertyId,
+                    propertyName = targetNames[propertyId]
+                        ?: roomName
+                        ?: fallbackPropertyName(propertyId),
+                )
+            }
+
+        val fallbackOptions = targetNames
+            .map { (propertyId, propertyName) ->
+                HotelReservationPropertyOption(propertyId = propertyId, propertyName = propertyName)
+            }
+
+        (hostOptions.ifEmpty { fallbackOptions })
             .distinctBy { it.propertyId }
             .sortedBy { it.propertyName.lowercase() }
     }.recoverFailure()
@@ -31,7 +53,13 @@ class HotelReservationsRepository(
         propertyId: String,
         status: HotelReservationStatusFilter = HotelReservationStatusFilter.ALL,
     ): Result<List<HotelReservationListItem>> = runCatching {
-        api.listReservations(propertyId = propertyId, status = status.wire)
+        api.listHostReservations(
+            statuses = status.wire?.let(::listOf),
+            page = 1,
+            pageSize = 100,
+        ).items.filter { reservation ->
+            propertyId.isBlank() || reservation.idProperty == propertyId
+        }
     }.recoverFailure()
 
     suspend fun getReservationDetail(reservationId: String): Result<HotelReservationDetailResponse> = runCatching {
@@ -69,4 +97,7 @@ class HotelReservationsRepository(
         onSuccess = { this },
         onFailure = { Result.failure(HotelReservationsException(parseDetail(it), it)) },
     )
+
+    private fun fallbackPropertyName(propertyId: String): String =
+        "P-${propertyId.takeLast(6).uppercase()}"
 }

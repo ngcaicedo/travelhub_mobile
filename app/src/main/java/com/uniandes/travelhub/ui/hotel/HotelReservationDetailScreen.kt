@@ -6,18 +6,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Hotel
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -48,6 +52,7 @@ import com.uniandes.travelhub.ui.auth.components.TravelHubPrimaryButton
 import com.uniandes.travelhub.ui.auth.components.asString
 import com.uniandes.travelhub.ui.reservations.components.formatReservationDate
 import com.uniandes.travelhub.ui.reservations.components.reservationStatusLabel
+import com.uniandes.travelhub.ui.theme.TravelhubPillShape
 import com.uniandes.travelhub.ui.theme.spacing
 import com.uniandes.travelhub.viewmodels.HotelReservationActionState
 import com.uniandes.travelhub.viewmodels.HotelReservationDetailUiState
@@ -209,7 +214,7 @@ fun HotelReservationDetailScreenContent(
                             DetailRow(Icons.Default.CalendarMonth, "${formatReservationDate(reservation.checkInDate)} • ${formatReservationDate(reservation.checkOutDate)}")
                             DetailRow(Icons.Default.Person, (reservation.numberOfGuests ?: 1).toString())
                             Text(
-                                text = NumberFormat.getCurrencyInstance(Locale("es", "CO")).format(reservation.totalPrice.toDoubleOrNull() ?: 0.0),
+                                text = NumberFormat.getCurrencyInstance(Locale.getDefault()).format(reservation.totalPrice.toDoubleOrNull() ?: 0.0),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                             )
@@ -230,7 +235,10 @@ fun HotelReservationDetailScreenContent(
                     }
 
                     if (canConfirm || canCancel) {
-                        Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.md)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.md),
+                        ) {
                             if (canConfirm) {
                                 TravelHubPrimaryButton(
                                     text = stringResource(R.string.hotel_reservations_action_confirm),
@@ -242,8 +250,15 @@ fun HotelReservationDetailScreenContent(
                             if (canCancel) {
                                 OutlinedButton(
                                     onClick = onCancelClick,
-                                    modifier = Modifier.weight(1f),
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .height(56.dp),
                                     enabled = actionState !is HotelReservationActionState.Working,
+                                    shape = TravelhubPillShape,
+                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.35f)),
+                                    colors = ButtonDefaults.outlinedButtonColors(
+                                        contentColor = MaterialTheme.colorScheme.primary,
+                                    ),
                                 ) {
                                     Text(stringResource(R.string.hotel_reservations_action_cancel))
                                 }
@@ -268,8 +283,49 @@ private fun CancelReasonChooser(
             HotelReservationCancellationReason.HOTEL_POLICY to R.string.hotel_reservations_reason_policy,
             HotelReservationCancellationReason.OTHER to R.string.hotel_reservations_reason_other,
         ).forEach { (reason, labelRes) ->
-            OutlinedButton(onClick = { onSelected(reason) }, modifier = Modifier.fillMaxWidth()) {
-                Text(stringResource(labelRes))
+            val isSelected = selected == reason
+            OutlinedButton(
+                onClick = { onSelected(reason) },
+                modifier = Modifier.fillMaxWidth(),
+                border = BorderStroke(
+                    width = 1.dp,
+                    color = if (isSelected) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.outline
+                    },
+                ),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = if (isSelected) {
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.10f)
+                    } else {
+                        MaterialTheme.colorScheme.surface
+                    },
+                    contentColor = if (isSelected) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    },
+                ),
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(labelRes),
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                    )
+                    if (isSelected) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(18.dp),
+                        )
+                    }
+                }
             }
         }
     }

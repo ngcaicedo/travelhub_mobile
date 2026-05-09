@@ -3,7 +3,9 @@
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -42,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.uniandes.travelhub.R
 import com.uniandes.travelhub.models.hotelreservations.HotelReservationListItem
@@ -74,7 +77,7 @@ fun HotelReservationsScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun HotelReservationsScreenContent(
     uiState: HotelReservationsListUiState,
@@ -138,7 +141,11 @@ fun HotelReservationsScreenContent(
             }
 
             SectionHeader(icon = Icons.Default.Hotel, title = stringResource(R.string.hotel_reservations_status_section))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
                 listOf(
                     HotelReservationStatusFilter.ALL to R.string.hotel_reservations_status_all,
                     HotelReservationStatusFilter.PENDING_PAYMENT to R.string.hotel_reservations_status_pending,
@@ -147,7 +154,13 @@ fun HotelReservationsScreenContent(
                 ).forEach { (status, labelRes) ->
                     AssistChip(
                         onClick = { onStatusSelected(status) },
-                        label = { Text(stringResource(labelRes)) },
+                        label = {
+                            Text(
+                                text = stringResource(labelRes),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        },
                     )
                 }
             }
@@ -210,7 +223,7 @@ private fun HotelReservationCard(
             DetailRow(icon = Icons.Default.CalendarMonth, text = "${formatReservationDate(reservation.checkInDate)} • ${formatReservationDate(reservation.checkOutDate)}")
             DetailRow(icon = Icons.Default.Person, text = reservation.numberOfGuests.toString())
             Text(
-                text = NumberFormat.getCurrencyInstance(Locale("es", "CO")).format(reservation.totalPrice.toDoubleOrNull() ?: 0.0),
+                text = NumberFormat.getCurrencyInstance(Locale.getDefault()).format(reservation.totalPrice.toDoubleOrNull() ?: 0.0),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
             )
