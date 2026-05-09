@@ -6,7 +6,15 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kover)
-    alias(libs.plugins.google.services)
+}
+
+// Aplicar el plugin de google-services solo si existe el archivo de configuración.
+// Esto permite compilar y correr unit tests en CI / dev sin Firebase configurado.
+// Para que las push notifications funcionen en runtime hay que descargar
+// google-services.json del Firebase Console (ver SETUP_HU020.md).
+val googleServicesFile = file("google-services.json")
+if (googleServicesFile.exists()) {
+    apply(plugin = libs.plugins.google.services.get().pluginId)
 }
 
 // Read backend base URLs from local.properties (with safe defaults for the Android emulator).

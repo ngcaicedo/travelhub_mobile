@@ -291,6 +291,39 @@
     <string name="map_city_search_hint">Search city</string>
     <string name="map_city_search_action">Go</string>
     <string name="map_city_not_found">We couldn\'t find %1$s. Try a different name.</string>
+
+    <!-- HU020: notifications, profile, notification settings -->
+    <string name="notifications_topbar_alerts_cd">Alerts</string>
+    <string name="notifications_topbar_profile_cd">Profile</string>
+    <string name="notifications_back">Back</string>
+    <string name="notifications_title">Notifications</string>
+    <string name="notifications_settings_action">Preferences</string>
+    <string name="notifications_filter_all">All</string>
+    <string name="notifications_filter_unread">Unread</string>
+    <string name="notifications_empty">No notifications</string>
+    <string name="notifications_error">Error: %1$s</string>
+    <string name="notifications_relative_now">Just now</string>
+    <string name="notifications_relative_minutes">%1$d min ago</string>
+    <string name="notifications_relative_hours">%1$d h ago</string>
+    <string name="notifications_relative_days">%1$d d ago</string>
+
+    <string name="profile_title">My profile</string>
+    <string name="profile_back">Back</string>
+    <string name="profile_notifications_title">Notifications</string>
+    <string name="profile_notifications_subtitle">Booking changes and reminders</string>
+    <string name="profile_logout">Log out</string>
+
+    <string name="notification_settings_title">Notifications</string>
+    <string name="notification_settings_status_title">Booking changes</string>
+    <string name="notification_settings_status_subtitle">Confirmations, modifications, cancellations, check-in and check-out</string>
+    <string name="notification_settings_arrival_title">Arrival reminders</string>
+    <string name="notification_settings_arrival_subtitle">Reminder before your check-in</string>
+
+    <string name="notification_channel_status_name">Booking changes</string>
+    <string name="notification_channel_status_desc">Confirmations, modifications, cancellations and check-in/out.</string>
+    <string name="notification_channel_arrival_name">Arrival reminders</string>
+    <string name="notification_channel_arrival_desc">Reminders before your check-in.</string>
+    <string name="notification_fallback_title">TravelHub</string>
 </resources>
 
 

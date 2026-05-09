@@ -291,5 +291,38 @@
     <string name="map_city_search_hint">Buscar ciudad</string>
     <string name="map_city_search_action">Ir</string>
     <string name="map_city_not_found">No encontramos %1$s. Intenta con otro nombre.</string>
+
+    <!-- HU020: notifications, profile, notification settings -->
+    <string name="notifications_topbar_alerts_cd">Alertas</string>
+    <string name="notifications_topbar_profile_cd">Perfil</string>
+    <string name="notifications_back">Volver</string>
+    <string name="notifications_title">Notificaciones</string>
+    <string name="notifications_settings_action">Preferencias</string>
+    <string name="notifications_filter_all">Todo</string>
+    <string name="notifications_filter_unread">No leídas</string>
+    <string name="notifications_empty">No hay notificaciones</string>
+    <string name="notifications_error">Error: %1$s</string>
+    <string name="notifications_relative_now">Ahora</string>
+    <string name="notifications_relative_minutes">Hace %1$d min</string>
+    <string name="notifications_relative_hours">Hace %1$d h</string>
+    <string name="notifications_relative_days">Hace %1$d d</string>
+
+    <string name="profile_title">Mi perfil</string>
+    <string name="profile_back">Volver</string>
+    <string name="profile_notifications_title">Notificaciones</string>
+    <string name="profile_notifications_subtitle">Cambios de reserva y recordatorios</string>
+    <string name="profile_logout">Cerrar sesión</string>
+
+    <string name="notification_settings_title">Notificaciones</string>
+    <string name="notification_settings_status_title">Cambios de reserva</string>
+    <string name="notification_settings_status_subtitle">Confirmaciones, modificaciones, cancelaciones, check-in y check-out</string>
+    <string name="notification_settings_arrival_title">Recordatorios de llegada</string>
+    <string name="notification_settings_arrival_subtitle">Aviso antes de tu check-in</string>
+
+    <string name="notification_channel_status_name">Cambios de reserva</string>
+    <string name="notification_channel_status_desc">Confirmaciones, modificaciones, cancelaciones y check-in/out.</string>
+    <string name="notification_channel_arrival_name">Recordatorios de llegada</string>
+    <string name="notification_channel_arrival_desc">Avisos antes de tu check-in.</string>
+    <string name="notification_fallback_title">TravelHub</string>
 </resources>
 
