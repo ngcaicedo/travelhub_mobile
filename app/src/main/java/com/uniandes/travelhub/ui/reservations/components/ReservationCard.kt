@@ -23,6 +23,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +40,7 @@ import coil.compose.AsyncImage
 import com.uniandes.travelhub.R
 import com.uniandes.travelhub.models.reservations.ReservationStatus
 import com.uniandes.travelhub.models.reservations.ReservationWithDetailsResponse
+import com.uniandes.travelhub.models.reservations.isCheckInEligible
 import com.uniandes.travelhub.ui.theme.spacing
 import com.uniandes.travelhub.utils.sanitizeDisplayText
 
@@ -46,9 +48,11 @@ import com.uniandes.travelhub.utils.sanitizeDisplayText
 fun ReservationCard(
     reservation: ReservationWithDetailsResponse,
     onClick: () -> Unit,
+    onCheckInQrClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     val r = reservation.reservation
+    val showCheckInQr = onCheckInQrClick != null && r.isCheckInEligible()
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -83,7 +87,7 @@ fun ReservationCard(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .height(96.dp),
+                    .height(if (showCheckInQr) 118.dp else 96.dp),
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
                 Row(
@@ -139,6 +143,17 @@ fun ReservationCard(
                         )
                     }
                 }
+                if (showCheckInQr) {
+                    TextButton(
+                        onClick = onCheckInQrClick ?: {},
+                        modifier = Modifier.align(Alignment.End),
+                    ) {
+                        Text(
+                            text = stringResource(R.string.checkin_qr_cta),
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
+                }
             }
         }
     }
@@ -148,9 +163,11 @@ fun ReservationCard(
 fun NextTripHighlightCard(
     reservation: ReservationWithDetailsResponse,
     onClick: () -> Unit,
+    onCheckInQrClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     val r = reservation.reservation
+    val showCheckInQr = onCheckInQrClick != null && r.isCheckInEligible()
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -238,6 +255,14 @@ fun NextTripHighlightCard(
                             contentDescription = null,
                             modifier = Modifier.size(18.dp),
                             tint = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+                }
+                if (showCheckInQr) {
+                    TextButton(onClick = onCheckInQrClick ?: {}) {
+                        Text(
+                            text = stringResource(R.string.checkin_qr_cta),
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                 }

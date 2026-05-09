@@ -43,6 +43,7 @@ import com.uniandes.travelhub.viewmodels.ReservationsListViewModel
 fun ReservationsListScreen(
     viewModel: ReservationsListViewModel,
     onReservationClick: (ReservationWithDetailsResponse) -> Unit,
+    onCheckInQrClick: (ReservationWithDetailsResponse) -> Unit,
     onBackClick: () -> Unit,
     onSearchClick: () -> Unit,
 ) {
@@ -54,6 +55,7 @@ fun ReservationsListScreen(
         selectedGroup = selectedGroup,
         onSelectGroup = viewModel::selectGroup,
         onReservationClick = onReservationClick,
+        onCheckInQrClick = onCheckInQrClick,
         onBackClick = onBackClick,
         onSearchClick = onSearchClick,
         onRetry = viewModel::load,
@@ -74,6 +76,7 @@ fun ReservationsListScreenContent(
     selectedGroup: ReservationStatusGroup?,
     onSelectGroup: (ReservationStatusGroup?) -> Unit,
     onReservationClick: (ReservationWithDetailsResponse) -> Unit,
+    onCheckInQrClick: (ReservationWithDetailsResponse) -> Unit,
     onBackClick: () -> Unit,
     onSearchClick: () -> Unit,
     onRetry: () -> Unit,
@@ -169,6 +172,7 @@ fun ReservationsListScreenContent(
                                 reservations = uiState.reservations,
                                 showHero = selectedGroup == ReservationStatusGroup.ACTIVE,
                                 onReservationClick = onReservationClick,
+                                onCheckInQrClick = onCheckInQrClick,
                             )
                         }
                     }
@@ -183,6 +187,7 @@ private fun ReservationsList(
     reservations: List<ReservationWithDetailsResponse>,
     showHero: Boolean,
     onReservationClick: (ReservationWithDetailsResponse) -> Unit,
+    onCheckInQrClick: (ReservationWithDetailsResponse) -> Unit,
 ) {
     val hero = if (showHero) reservations.firstOrNull() else null
     val rest = if (hero != null) reservations.drop(1) else reservations
@@ -200,6 +205,7 @@ private fun ReservationsList(
                 NextTripHighlightCard(
                     reservation = hero,
                     onClick = { onReservationClick(hero) },
+                    onCheckInQrClick = { onCheckInQrClick(hero) },
                 )
             }
             if (rest.isNotEmpty()) {
@@ -212,6 +218,7 @@ private fun ReservationsList(
             ReservationCard(
                 reservation = reservation,
                 onClick = { onReservationClick(reservation) },
+                onCheckInQrClick = { onCheckInQrClick(reservation) },
             )
         }
     }

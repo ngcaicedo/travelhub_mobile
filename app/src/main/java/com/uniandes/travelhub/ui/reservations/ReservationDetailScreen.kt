@@ -67,6 +67,7 @@ import com.uniandes.travelhub.models.reservations.ReservationCancellationPreview
 import com.uniandes.travelhub.models.reservations.ReservationModificationPreviewResponse
 import com.uniandes.travelhub.models.reservations.ReservationResponse
 import com.uniandes.travelhub.models.reservations.ReservationStatus
+import com.uniandes.travelhub.models.reservations.isCheckInEligible
 import com.uniandes.travelhub.ui.auth.components.DatePickerField
 import com.uniandes.travelhub.ui.auth.components.TravelHubPrimaryButton
 import com.uniandes.travelhub.ui.auth.components.asString
@@ -85,6 +86,7 @@ import com.uniandes.travelhub.viewmodels.ReservationDetailViewModel
 fun ReservationDetailScreen(
     viewModel: ReservationDetailViewModel,
     onBackClick: () -> Unit,
+    onCheckInQrClick: (String) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val cancelState by viewModel.cancelState.collectAsState()
@@ -96,6 +98,7 @@ fun ReservationDetailScreen(
         modifyState = modifyState,
         onRetry = viewModel::load,
         onBackClick = onBackClick,
+        onCheckInQrClick = onCheckInQrClick,
         onStartCancel = viewModel::startCancel,
         onConfirmCancel = { viewModel.confirmCancel() },
         onDismissCancel = viewModel::dismissCancel,
@@ -113,6 +116,7 @@ fun ReservationDetailScreenContent(
     modifyState: ModifyActionState,
     onRetry: () -> Unit,
     onBackClick: () -> Unit,
+    onCheckInQrClick: (String) -> Unit,
     onStartCancel: () -> Unit,
     onConfirmCancel: () -> Unit,
     onDismissCancel: () -> Unit,
@@ -174,7 +178,10 @@ fun ReservationDetailScreenContent(
                     }
                 }
                 is ReservationDetailUiState.Success -> {
-                    ReservationDetailBody(reservation = uiState.reservation)
+                    ReservationDetailBody(
+                        reservation = uiState.reservation,
+                        onCheckInQrClick = onCheckInQrClick,
+                    )
                     if (cancelState !is CancelActionState.Idle) {
                         CancelDialog(
                             state = cancelState,
@@ -201,7 +208,10 @@ fun ReservationDetailScreenContent(
 }
 
 @Composable
-private fun ReservationDetailBody(reservation: ReservationResponse) {
+private fun ReservationDetailBody(
+    reservation: ReservationResponse,
+    onCheckInQrClick: (String) -> Unit,
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = androidx.compose.foundation.layout.PaddingValues(
@@ -213,6 +223,22 @@ private fun ReservationDetailBody(reservation: ReservationResponse) {
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.lg),
     ) {
         item { StatusHero(reservation) }
+        if (reservation.isCheckInEligible()) {
+            item {
+                OutlinedButton(
+                    onClick = { onCheckInQrClick(reservation.id) },
+                    shape = TravelhubPillShape,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                ) {
+                    Text(
+                        text = stringResource(R.string.checkin_qr_cta),
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+            }
+        }
         item {
             Section(title = stringResource(R.string.reservation_detail_stay_section)) {
                 StayDetailsCard(reservation)
