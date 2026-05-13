@@ -8,6 +8,15 @@ plugins {
     alias(libs.plugins.kover)
 }
 
+// Aplicar el plugin de google-services solo si existe el archivo de configuración.
+// Esto permite compilar y correr unit tests en CI / dev sin Firebase configurado.
+// Para que las push notifications funcionen en runtime hay que descargar
+// google-services.json del Firebase Console (ver SETUP_HU020.md).
+val googleServicesFile = file("google-services.json")
+if (googleServicesFile.exists()) {
+    apply(plugin = libs.plugins.google.services.get().pluginId)
+}
+
 // Read backend base URLs from local.properties (with safe defaults for the Android emulator).
 val localProperties = Properties().apply {
     val file = rootProject.file("local.properties")
@@ -37,6 +46,11 @@ val paymentsApiBase: String = localProperties.getProperty(
     "TRAVELHUB_PAYMENTS_API_BASE",
     "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
 )
+val notificationsApiBase: String = localProperties.getProperty(
+    "TRAVELHUB_NOTIFICATIONS_API_BASE",
+    "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
+)
+val mapsApiKey: String = localProperties.getProperty("MAPS_API_KEY", "")
 
 android {
     namespace = "com.uniandes.travelhub"
@@ -57,6 +71,9 @@ android {
         buildConfigField("String", "SEARCH_API_BASE", "\"$searchApiBase\"")
         buildConfigField("String", "RESERVATIONS_API_BASE", "\"$reservationsApiBase\"")
         buildConfigField("String", "PAYMENTS_API_BASE", "\"$paymentsApiBase\"")
+        buildConfigField("String", "NOTIFICATIONS_API_BASE", "\"$notificationsApiBase\"")
+
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     buildTypes {
@@ -153,6 +170,13 @@ dependencies {
 
     implementation(libs.coil.compose)
     implementation(libs.stripe.android)
+
+    implementation(libs.maps.compose)
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging.ktx)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)

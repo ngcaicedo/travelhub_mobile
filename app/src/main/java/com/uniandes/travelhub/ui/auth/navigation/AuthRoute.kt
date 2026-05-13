@@ -53,4 +53,9 @@ sealed class AuthRoute(val route: String) {
         const val ARG_ID = "id"
         fun build(id: String): String = "reservation/$id"
     }
+
+    data object Notifications : AuthRoute("notifications")
+    data object Profile : AuthRoute("profile")
+    data object NotificationSettings : AuthRoute("profile/notifications")
 }
+

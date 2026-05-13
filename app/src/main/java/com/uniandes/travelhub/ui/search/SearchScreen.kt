@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material3.CircularProgressIndicator
@@ -18,11 +19,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -36,35 +43,147 @@ import com.uniandes.travelhub.ui.auth.components.asString
 import com.uniandes.travelhub.ui.search.components.SearchFilters
 import com.uniandes.travelhub.ui.search.components.SearchResultCard
 import com.uniandes.travelhub.ui.theme.spacing
+import com.uniandes.travelhub.viewmodels.MapSearchViewModel
 import com.uniandes.travelhub.viewmodels.SearchFormState
 import com.uniandes.travelhub.viewmodels.SearchResultsState
 import com.uniandes.travelhub.viewmodels.SearchViewModel
 
+enum class SearchTab { LIST, MAP }
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel,
+    mapViewModel: MapSearchViewModel,
+    onResultClick: (SearchResultItem) -> Unit,
+    onLoggedOut: () -> Unit,
+    onMyReservationsClick: () -> Unit,
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val form by viewModel.form.collectAsState()
+    val results by viewModel.results.collectAsState()
+    var selectedTab by rememberSaveable { mutableStateOf(SearchTab.LIST) }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(R.string.search_title),
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.property_detail_back),
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onMyReservationsClick) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.List,
+                            contentDescription = stringResource(R.string.search_my_reservations),
+                        )
+                    }
+                    IconButton(onClick = onLoggedOut) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Logout,
+                            contentDescription = stringResource(R.string.home_placeholder_logout),
+                        )
+                    }
+                },
+            )
+        },
+    ) { innerPadding ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+        ) {
+            SingleChoiceSegmentedButtonRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.spacing.md, vertical = MaterialTheme.spacing.sm),
+            ) {
+                SegmentedButton(
+                    selected = selectedTab == SearchTab.LIST,
+                    onClick = { selectedTab = SearchTab.LIST },
+                    shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
+                ) { Text(stringResource(R.string.map_tab_list)) }
+                SegmentedButton(
+                    selected = selectedTab == SearchTab.MAP,
+                    onClick = { selectedTab = SearchTab.MAP },
+                    shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
+                ) { Text(stringResource(R.string.map_tab_map)) }
+            }
+            when (selectedTab) {
+                SearchTab.LIST -> ListSearchContent(
+                    form = form,
+                    results = results,
+                    onCityChange = viewModel::onCityChange,
+                    onCheckInChange = viewModel::onCheckInChange,
+                    onCheckOutChange = viewModel::onCheckOutChange,
+                    onGuestsChange = viewModel::onGuestsChange,
+                    onMinPriceChange = viewModel::onMinPriceChange,
+                    onMaxPriceChange = viewModel::onMaxPriceChange,
+                    onAmenityToggle = viewModel::toggleAmenity,
+                    onOrderByChange = viewModel::onOrderByChange,
+                    onOrderDirChange = viewModel::onOrderDirChange,
+                    onSubmit = viewModel::submit,
+                    onLoadMore = viewModel::loadNextPage,
+                    onResultClick = onResultClick,
+                )
+                SearchTab.MAP -> MapSearchContent(
+                    viewModel = mapViewModel,
+                    onResultClick = onResultClick,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun SearchScreenContent(
+    form: SearchFormState,
+    results: SearchResultsState,
+    onCityChange: (String) -> Unit,
+    onCheckInChange: (String) -> Unit,
+    onCheckOutChange: (String) -> Unit,
+    onGuestsChange: (Int) -> Unit,
+    onMinPriceChange: (Int?) -> Unit,
+    onMaxPriceChange: (Int?) -> Unit,
+    onAmenityToggle: (String) -> Unit,
+    onOrderByChange: (SearchOrderBy?) -> Unit,
+    onOrderDirChange: (SearchOrderDir?) -> Unit,
+    onSubmit: () -> Unit,
+    onLoadMore: () -> Unit,
     onResultClick: (SearchResultItem) -> Unit,
     onLoggedOut: () -> Unit,
     onMyReservationsClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val form by viewModel.form.collectAsState()
-    val results by viewModel.results.collectAsState()
-
-    SearchScreenContent(
+    // Backwards-compatible single-pane layout, retained so existing tests of
+    // SearchScreenContent keep working. The interactive screen above wraps the
+    // list contents into ListSearchContent and adds the Map tab.
+    SearchScreenLegacyContent(
         form = form,
         results = results,
-        onCityChange = viewModel::onCityChange,
-        onCheckInChange = viewModel::onCheckInChange,
-        onCheckOutChange = viewModel::onCheckOutChange,
-        onGuestsChange = viewModel::onGuestsChange,
-        onMinPriceChange = viewModel::onMinPriceChange,
-        onMaxPriceChange = viewModel::onMaxPriceChange,
-        onAmenityToggle = viewModel::toggleAmenity,
-        onOrderByChange = viewModel::onOrderByChange,
-        onOrderDirChange = viewModel::onOrderDirChange,
-        onSubmit = viewModel::submit,
-        onLoadMore = viewModel::loadNextPage,
+        onCityChange = onCityChange,
+        onCheckInChange = onCheckInChange,
+        onCheckOutChange = onCheckOutChange,
+        onGuestsChange = onGuestsChange,
+        onMinPriceChange = onMinPriceChange,
+        onMaxPriceChange = onMaxPriceChange,
+        onAmenityToggle = onAmenityToggle,
+        onOrderByChange = onOrderByChange,
+        onOrderDirChange = onOrderDirChange,
+        onSubmit = onSubmit,
+        onLoadMore = onLoadMore,
         onResultClick = onResultClick,
         onLoggedOut = onLoggedOut,
         onMyReservationsClick = onMyReservationsClick,
@@ -74,7 +193,7 @@ fun SearchScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchScreenContent(
+fun SearchScreenLegacyContent(
     form: SearchFormState,
     results: SearchResultsState,
     onCityChange: (String) -> Unit,
@@ -204,6 +323,113 @@ fun SearchScreenContent(
                                     modifier = Modifier.fillMaxWidth(),
                                 )
                             }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ListSearchContent(
+    form: SearchFormState,
+    results: SearchResultsState,
+    onCityChange: (String) -> Unit,
+    onCheckInChange: (String) -> Unit,
+    onCheckOutChange: (String) -> Unit,
+    onGuestsChange: (Int) -> Unit,
+    onMinPriceChange: (Int?) -> Unit,
+    onMaxPriceChange: (Int?) -> Unit,
+    onAmenityToggle: (String) -> Unit,
+    onOrderByChange: (SearchOrderBy?) -> Unit,
+    onOrderDirChange: (SearchOrderDir?) -> Unit,
+    onSubmit: () -> Unit,
+    onLoadMore: () -> Unit,
+    onResultClick: (SearchResultItem) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(MaterialTheme.spacing.md),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.md),
+    ) {
+        item("filters") {
+            SearchFilters(
+                form = form,
+                onCityChange = onCityChange,
+                onCheckInChange = onCheckInChange,
+                onCheckOutChange = onCheckOutChange,
+                onGuestsChange = onGuestsChange,
+                onMinPriceChange = onMinPriceChange,
+                onMaxPriceChange = onMaxPriceChange,
+                onAmenityToggle = onAmenityToggle,
+                onOrderByChange = onOrderByChange,
+                onOrderDirChange = onOrderDirChange,
+            )
+        }
+        item("submit") {
+            TravelHubPrimaryButton(
+                text = stringResource(R.string.search_button),
+                onClick = onSubmit,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+        when (results) {
+            is SearchResultsState.Idle -> Unit
+            is SearchResultsState.Loading -> item("loading") {
+                Box(modifier = Modifier.fillMaxWidth().padding(MaterialTheme.spacing.lg)) {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                }
+            }
+            is SearchResultsState.Error -> item("error") {
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(MaterialTheme.spacing.lg),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.sm),
+                ) {
+                    Text(
+                        text = results.message.asString(),
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                    TravelHubPrimaryButton(
+                        text = stringResource(R.string.property_retry),
+                        onClick = onSubmit,
+                    )
+                }
+            }
+            is SearchResultsState.Success -> {
+                val items = results.response.items
+                if (items.isEmpty()) {
+                    item("empty") {
+                        Column(
+                            modifier = Modifier.fillMaxWidth().padding(MaterialTheme.spacing.lg),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            Text(
+                                text = stringResource(R.string.search_empty_title),
+                                style = MaterialTheme.typography.titleMedium,
+                            )
+                            results.response.emptyState.firstOrNull()?.let { hint ->
+                                Text(
+                                    text = hint.message,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                )
+                            }
+                        }
+                    }
+                } else {
+                    items(items, key = { it.id }) { item ->
+                        SearchResultCard(item = item, onClick = { onResultClick(item) })
+                    }
+                    val pagination = results.response.pagination
+                    if (pagination.page < pagination.totalPages) {
+                        item("loadMore") {
+                            TravelHubPrimaryButton(
+                                text = stringResource(R.string.search_load_more),
+                                onClick = onLoadMore,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
                         }
                     }
                 }
