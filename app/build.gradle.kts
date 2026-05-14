@@ -29,6 +29,10 @@ val searchApiBase: String = localProperties.getProperty(
     "TRAVELHUB_SEARCH_API_BASE",
     "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
 )
+val inventoryApiBase: String = localProperties.getProperty(
+    "TRAVELHUB_INVENTORY_API_BASE",
+    "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
+)
 val reservationsApiBase: String = localProperties.getProperty(
     "TRAVELHUB_RESERVATIONS_API_BASE",
     "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
@@ -55,6 +59,7 @@ android {
         buildConfigField("String", "USERS_API_BASE", "\"$usersApiBase\"")
         buildConfigField("String", "PROPERTIES_API_BASE", "\"$propertiesApiBase\"")
         buildConfigField("String", "SEARCH_API_BASE", "\"$searchApiBase\"")
+        buildConfigField("String", "INVENTORY_API_BASE", "\"$inventoryApiBase\"")
         buildConfigField("String", "RESERVATIONS_API_BASE", "\"$reservationsApiBase\"")
         buildConfigField("String", "PAYMENTS_API_BASE", "\"$paymentsApiBase\"")
     }

@@ -48,7 +48,8 @@ class HotelPricingRepositoryTest {
     @Test
     fun `apply forwards device metadata`() = runTest {
         val captured = slot<HotelPricingApplyRequest>()
-        coEvery { api.apply(capture(captured)) } returns HotelPricingApplyResponse(
+        val capturedChecksum = slot<String>()
+        coEvery { api.apply(capture(capturedChecksum), capture(captured)) } returns HotelPricingApplyResponse(
             preview = HotelPricingPreviewResponse(
                 propertyId = "p-1",
                 propertyName = "Hotel Riviera",
@@ -118,7 +119,52 @@ class HotelPricingRepositoryTest {
         assertTrue(result.isSuccess)
         assertEquals("Pixel 9", captured.captured.deviceLabel)
         assertEquals("Android API 36", captured.captured.devicePlatform)
-        coVerify(exactly = 1) { api.apply(any()) }
+        assertTrue(capturedChecksum.captured.isNotBlank())
+        coVerify(exactly = 1) { api.apply(any(), any()) }
+    }
+
+    @Test
+    fun `preview sends checksum header`() = runTest {
+        val payload = HotelPricingPreviewRequest(
+            propertyId = "p-1",
+            ratePlanId = "rp-1",
+            startDate = "2026-11-24",
+            endDate = "2026-11-30",
+            proposedBasePrice = 230.0,
+            discountType = "percentage",
+            discountValue = 20.0,
+            ruleName = "Black Friday",
+        )
+        val capturedChecksum = slot<String>()
+        coEvery { api.preview(capture(capturedChecksum), payload) } returns HotelPricingPreviewResponse(
+            propertyId = "p-1",
+            propertyName = "Hotel Riviera",
+            roomTypeId = "rt-1",
+            roomTypeName = "Suite Presidencial",
+            ratePlanId = "rp-1",
+            ratePlanName = "Torre A",
+            currency = "USD",
+            startDate = "2026-11-24",
+            endDate = "2026-11-30",
+            daysAffected = 7,
+            currentBasePrice = 245.0,
+            proposedBasePrice = 230.0,
+            discountType = "percentage",
+            discountValue = 20.0,
+            finalPrice = 184.0,
+            projectedRevenueBefore = 2205.0,
+            projectedRevenueAfter = 1656.0,
+            projectedRevenueDelta = -549.0,
+            sellableUnits = 3,
+            requiresConfirmation = true,
+            impactSummary = "Impact summary",
+        )
+
+        val result = HotelPricingRepository(api).preview(payload)
+
+        assertTrue(result.isSuccess)
+        assertTrue(capturedChecksum.captured.isNotBlank())
+        coVerify(exactly = 1) { api.preview(any(), payload) }
     }
 
     @Test
