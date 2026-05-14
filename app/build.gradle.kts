@@ -29,10 +29,13 @@ val searchApiBase: String = localProperties.getProperty(
     "TRAVELHUB_SEARCH_API_BASE",
     "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
 )
-val inventoryApiBase: String = localProperties.getProperty(
-    "TRAVELHUB_INVENTORY_API_BASE",
-    "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
-)
+val inventoryApiBase: String = localProperties.getProperty("TRAVELHUB_INVENTORY_API_BASE")
+    ?: when {
+        searchApiBase.startsWith("http://10.0.2.2:8006") -> "http://10.0.2.2:8007/"
+        searchApiBase.startsWith("http://localhost:8006") -> "http://localhost:8007/"
+        searchApiBase.startsWith("http://127.0.0.1:8006") -> "http://127.0.0.1:8007/"
+        else -> "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
+    }
 val reservationsApiBase: String = localProperties.getProperty(
     "TRAVELHUB_RESERVATIONS_API_BASE",
     "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
