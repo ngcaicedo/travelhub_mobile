@@ -55,6 +55,7 @@ object RetrofitFactory {
     val hotelReservationsApi: HotelReservationsApi by lazy { build(BuildConfig.RESERVATIONS_API_BASE) }
     val reservationsApi: ReservationsApi by lazy { build(BuildConfig.RESERVATIONS_API_BASE) }
     val paymentsApi: PaymentsApi by lazy { build(BuildConfig.PAYMENTS_API_BASE) }
+    val notificationsApi: NotificationsApi by lazy { build(BuildConfig.NOTIFICATIONS_API_BASE) }
 
     private inline fun <reified T> build(baseUrl: String): T =
         Retrofit.Builder()

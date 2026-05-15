@@ -1,6 +1,7 @@
 package com.uniandes.travelhub.repositories
 
 import com.uniandes.travelhub.models.search.PropertyAvailabilityResponse
+import com.uniandes.travelhub.models.search.SearchBounds
 import com.uniandes.travelhub.models.search.SearchQuery
 import com.uniandes.travelhub.models.search.SearchResponse
 import com.uniandes.travelhub.network.ApiErrorParser
@@ -44,6 +45,30 @@ class SearchRepository(
             checkIn = checkIn,
             checkOut = checkOut,
             guests = guests,
+        )
+    }.recoverFailure()
+
+    /**
+     * Search the hotels visible inside [bounds]. Used by the mobile map view.
+     * `city` and dates are intentionally omitted — the backend will return all
+     * properties in the bbox without filtering by availability when dates are absent.
+     */
+    suspend fun searchByBounds(
+        bounds: SearchBounds,
+        guests: Int = 1,
+        pageSize: Int = 100,
+    ): Result<SearchResponse> = runCatching {
+        searchApi.search(
+            city = null,
+            checkIn = null,
+            checkOut = null,
+            guests = guests,
+            minLat = bounds.minLat,
+            maxLat = bounds.maxLat,
+            minLng = bounds.minLng,
+            maxLng = bounds.maxLng,
+            page = 1,
+            pageSize = pageSize,
         )
     }.recoverFailure()
 

@@ -15,18 +15,26 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.uniandes.travelhub.R
 import com.uniandes.travelhub.models.UserRole
 import com.uniandes.travelhub.models.payments.PaymentConfirmationSummary
 import com.uniandes.travelhub.models.properties.Property
 import com.uniandes.travelhub.network.AuthTokenStore
+import com.uniandes.travelhub.network.RetrofitFactory
 import com.uniandes.travelhub.repositories.AuthRepository
 import com.uniandes.travelhub.repositories.HotelPricingRepository
 import com.uniandes.travelhub.repositories.HotelReservationsRepository
+import com.uniandes.travelhub.repositories.NotificationsRepository
 import com.uniandes.travelhub.repositories.PaymentsRepository
 import com.uniandes.travelhub.repositories.PropertiesRepository
 import com.uniandes.travelhub.repositories.ReservationsRepository
 import com.uniandes.travelhub.repositories.SearchRepository
+import com.uniandes.travelhub.ui.notifications.NotificationsListScreen
+import com.uniandes.travelhub.ui.profile.NotificationSettingsScreen
+import com.uniandes.travelhub.ui.profile.ProfileScreen
+import com.uniandes.travelhub.viewmodels.NotificationPreferencesViewModel
+import com.uniandes.travelhub.viewmodels.NotificationsViewModel
 import com.uniandes.travelhub.ui.auth.components.RequireRole
 import com.uniandes.travelhub.ui.auth.home.PlaceholderHomeScreen
 import com.uniandes.travelhub.ui.hotel.HotelPricingScreen
@@ -55,6 +63,9 @@ import com.uniandes.travelhub.viewmodels.PropertyDetailViewModel
 import com.uniandes.travelhub.viewmodels.RegisterViewModel
 import com.uniandes.travelhub.viewmodels.ReservationDetailViewModel
 import com.uniandes.travelhub.viewmodels.ReservationsListViewModel
+import com.uniandes.travelhub.network.location.CityGeocoder
+import com.uniandes.travelhub.network.location.LocationProvider
+import com.uniandes.travelhub.viewmodels.MapSearchViewModel
 import com.uniandes.travelhub.viewmodels.SearchViewModel
 import com.uniandes.travelhub.viewmodels.VerifyOtpViewModel
 import kotlinx.coroutines.launch
@@ -74,6 +85,8 @@ fun AuthNavGraph(
     reservationsRepository: ReservationsRepository,
     paymentsRepository: PaymentsRepository,
     tokenStore: AuthTokenStore,
+    locationProvider: LocationProvider,
+    cityGeocoder: CityGeocoder,
     currentLocale: String,
     onLocaleChange: (String) -> Unit,
     navController: NavHostController = rememberNavController(),
@@ -83,6 +96,9 @@ fun AuthNavGraph(
 
     val paymentConfirmationCache = remember { mutableStateOf<PaymentConfirmationSummary?>(null) }
     val bookingCoverUrlCache = remember { mutableStateOf<String?>(null) }
+    val notificationsRepository = remember {
+        NotificationsRepository(RetrofitFactory.notificationsApi)
+    }
 
     val onUnauthorized: () -> Unit = {
         navController.navigate(AuthRoute.Login.route) {
@@ -169,6 +185,8 @@ fun AuthNavGraph(
                     },
                     onSearchClick = { navController.navigate(AuthRoute.Search.route) },
                     onMyReservationsClick = { navController.navigate(AuthRoute.ReservationsList.route) },
+                    onNotificationsClick = { navController.navigate(AuthRoute.Notifications.route) },
+                    onProfileClick = { navController.navigate(AuthRoute.Profile.route) },
                     onLoggedOut = {
                         scope.launch {
                             authRepository.logout()
@@ -184,8 +202,12 @@ fun AuthNavGraph(
         composable(AuthRoute.Search.route) {
             RequireRole(tokenStore = tokenStore, requiredRole = UserRole.TRAVELER, onUnauthorized = onUnauthorized) {
                 val viewModel: SearchViewModel = viewModel(factory = SearchViewModel.Factory(searchRepository))
+                val mapViewModel: MapSearchViewModel = viewModel(
+                    factory = MapSearchViewModel.Factory(searchRepository, locationProvider, cityGeocoder)
+                )
                 SearchScreen(
                     viewModel = viewModel,
+                    mapViewModel = mapViewModel,
                     onResultClick = { item ->
                         navController.navigate(AuthRoute.PropertyDetail.build(item.id))
                     },
@@ -199,6 +221,13 @@ fun AuthNavGraph(
                     },
                     onMyReservationsClick = {
                         navController.navigate(AuthRoute.ReservationsList.route)
+                    },
+                    onBackClick = {
+                        if (!navController.popBackStack()) {
+                            navController.navigate(AuthRoute.TravelerHome.route) {
+                                popUpTo(AuthRoute.Search.route) { inclusive = true }
+                            }
+                        }
                     },
                 )
             }
@@ -338,6 +367,10 @@ fun AuthNavGraph(
         composable(
             route = AuthRoute.ReservationDetail.route,
             arguments = listOf(navArgument(AuthRoute.ReservationDetail.ARG_ID) { type = NavType.StringType }),
+            deepLinks = listOf(
+                navDeepLink { uriPattern = "https://travelhub.app/reservations/{id}" },
+                navDeepLink { uriPattern = "travelhub://reservation/{id}" },
+            ),
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getString(AuthRoute.ReservationDetail.ARG_ID).orEmpty()
             RequireRole(tokenStore = tokenStore, requiredRole = UserRole.TRAVELER, onUnauthorized = onUnauthorized) {
@@ -364,6 +397,53 @@ fun AuthNavGraph(
                     factory = CheckInQrViewModel.Factory(id, reservationsRepository)
                 )
                 CheckInQrScreen(
+                    viewModel = viewModel,
+                    onBackClick = { navController.popBackStack() },
+                )
+            }
+        }
+
+        composable(AuthRoute.Notifications.route) {
+            RequireRole(tokenStore = tokenStore, requiredRole = UserRole.TRAVELER, onUnauthorized = onUnauthorized) {
+                val viewModel: NotificationsViewModel = viewModel(
+                    factory = NotificationsViewModel.Factory(notificationsRepository)
+                )
+                NotificationsListScreen(
+                    viewModel = viewModel,
+                    onBackClick = { navController.popBackStack() },
+                    onSettingsClick = { navController.navigate(AuthRoute.NotificationSettings.route) },
+                    onItemClick = { item ->
+                        if (item.entity_type == "reservation") {
+                            navController.navigate(AuthRoute.ReservationDetail.build(item.entity_id))
+                        }
+                    },
+                )
+            }
+        }
+
+        composable(AuthRoute.Profile.route) {
+            RequireRole(tokenStore = tokenStore, requiredRole = UserRole.TRAVELER, onUnauthorized = onUnauthorized) {
+                ProfileScreen(
+                    displayName = "Viajero",
+                    email = "",
+                    onBackClick = { navController.popBackStack() },
+                    onNotificationsClick = { navController.navigate(AuthRoute.NotificationSettings.route) },
+                    onLogout = {
+                        scope.launch {
+                            authRepository.logout()
+                            navController.navigate(AuthRoute.Login.route) { popUpTo(0) { inclusive = true } }
+                        }
+                    },
+                )
+            }
+        }
+
+        composable(AuthRoute.NotificationSettings.route) {
+            RequireRole(tokenStore = tokenStore, requiredRole = UserRole.TRAVELER, onUnauthorized = onUnauthorized) {
+                val viewModel: NotificationPreferencesViewModel = viewModel(
+                    factory = NotificationPreferencesViewModel.Factory(notificationsRepository)
+                )
+                NotificationSettingsScreen(
                     viewModel = viewModel,
                     onBackClick = { navController.popBackStack() },
                 )
