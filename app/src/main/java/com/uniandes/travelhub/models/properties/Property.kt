@@ -6,12 +6,15 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class Property(
     @Json(name = "id") val id: String,
+    @Json(name = "id_owner") val idOwner: String? = null,
     @Json(name = "name") val name: String,
     @Json(name = "description") val description: String,
     @Json(name = "location") val location: String,
     @Json(name = "latitude") val latitude: Double? = null,
     @Json(name = "longitude") val longitude: Double? = null,
     @Json(name = "price_per_night") val pricePerNight: Double,
+    @Json(name = "base_price_per_night") val basePricePerNight: Double? = null,
+    @Json(name = "has_seasonal_discount") val hasSeasonalDiscount: Boolean = false,
     @Json(name = "currency") val currency: String = "USD",
     @Json(name = "rating") val rating: Double = 0.0,
     @Json(name = "review_count") val reviewCount: Int = 0,

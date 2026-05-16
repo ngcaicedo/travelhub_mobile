@@ -29,7 +29,7 @@ class CheckoutViewModelTest {
         // CheckoutViewModel.init triggers loadProperty(); stub both calls so the
         // VM doesn't crash before we exercise the form/submit logic.
         coEvery { getCachedProperty(any()) } returns null
-        coEvery { getPropertyDetail(any()) } returns Result.failure(RuntimeException("not stubbed"))
+        coEvery { getPropertyDetail(any(), any(), any()) } returns Result.failure(RuntimeException("not stubbed"))
     }
 
     @Test

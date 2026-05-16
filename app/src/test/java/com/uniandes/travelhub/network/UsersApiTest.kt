@@ -114,6 +114,6 @@ class UsersApiTest {
         val recorded = server.takeRequest()
         val body = recorded.body.readUtf8()
         assertTrue(body.contains("\"hotel_name\":\"Hotel Plaza\""))
-        assertTrue(body.contains("\"role\":\"hotel_partner\""))
+        assertTrue(body.contains("\"role\":\"hotel\""))
     }
 }

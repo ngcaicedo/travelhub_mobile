@@ -57,5 +57,15 @@ sealed class AuthRoute(val route: String) {
     data object Notifications : AuthRoute("notifications")
     data object Profile : AuthRoute("profile")
     data object NotificationSettings : AuthRoute("profile/notifications")
+
+    /** Partner: seasonal pricing management */
+    data object PartnerPricing : AuthRoute("partner/pricing")
+    data object PartnerPricingRules : AuthRoute("partner/pricing/rules")
+    data object PartnerPricingEditRule : AuthRoute("partner/pricing/{propertyId}/rules/{ruleId}") {
+        const val ARG_PROPERTY_ID = "propertyId"
+        const val ARG_RULE_ID = "ruleId"
+        fun build(propertyId: String, ruleId: String): String =
+            "partner/pricing/$propertyId/rules/$ruleId"
+    }
 }
 

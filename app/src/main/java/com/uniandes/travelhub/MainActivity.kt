@@ -27,6 +27,7 @@ import com.uniandes.travelhub.repositories.PaymentsRepository
 import com.uniandes.travelhub.repositories.PropertiesRepository
 import com.uniandes.travelhub.repositories.ReservationsRepository
 import com.uniandes.travelhub.repositories.SearchRepository
+import com.uniandes.travelhub.repositories.SeasonalPricingRepository
 import com.uniandes.travelhub.ui.auth.navigation.AuthNavGraph
 import com.uniandes.travelhub.ui.theme.TravelhubTheme
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -78,6 +79,10 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    private val seasonalPricingRepository: SeasonalPricingRepository by lazy {
+        SeasonalPricingRepository(api = RetrofitFactory.propertiesApi)
+    }
+
     private val locationProvider: LocationProvider by lazy {
         FusedLocationProvider(applicationContext)
     }
@@ -105,6 +110,7 @@ class MainActivity : AppCompatActivity() {
                     searchRepository = searchRepository,
                     reservationsRepository = reservationsRepository,
                     paymentsRepository = paymentsRepository,
+                    seasonalPricingRepository = seasonalPricingRepository,
                     tokenStore = tokenStore,
                     locationProvider = locationProvider,
                     cityGeocoder = cityGeocoder,

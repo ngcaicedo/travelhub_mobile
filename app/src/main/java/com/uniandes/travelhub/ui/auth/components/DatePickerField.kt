@@ -1,5 +1,7 @@
 package com.uniandes.travelhub.ui.auth.components
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
@@ -7,8 +9,9 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -28,13 +31,18 @@ import java.time.format.DateTimeFormatter
 private val ISO_DATE: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE
 
 /**
- * Read-only text field that opens a [DatePickerDialog] when tapped (or via the
- * trailing calendar icon). Emits dates back to the caller as ISO YYYY-MM-DD,
- * which is what the search and reservation endpoints expect.
+ * Read-only text field that opens a [DatePickerDialog] when tapped (anywhere on
+ * the surface, not just the trailing icon). Emits dates back to the caller as
+ * ISO YYYY-MM-DD, which is what the search, reservation and pricing endpoints
+ * expect.
+ *
+ * The field is rendered with `enabled = false` so that touch events flow up to
+ * the wrapping Box; the disabled colours are restored to look enabled.
  *
  * @param value Current ISO date (YYYY-MM-DD) or empty when not set.
- * @param minDate Earliest selectable date. Defaults to today, so users can't
- *  pick check-in/check-out in the past.
+ * @param minDate Earliest selectable date. Defaults to today (good for booking
+ *  flows). Pass `LocalDate.MIN` (or any past date) when the use case allows
+ *  picking historical ranges — e.g. seasonal pricing demos.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,26 +57,34 @@ fun DatePickerField(
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
-    OutlinedTextField(
-        value = value,
-        onValueChange = {},
-        readOnly = true,
-        label = { Text(label) },
-        placeholder = { Text("YYYY-MM-DD") },
-        isError = isError,
-        supportingText = supportingText,
-        trailingIcon = {
-            IconButton(onClick = { showDialog = true }) {
-                Icon(Icons.Default.DateRange, contentDescription = label)
-            }
-        },
+    Box(
         modifier = modifier
             .fillMaxWidth()
-            .let { mod ->
-                // Surface a click anywhere on the field, not only on the trailing icon.
-                mod
-            },
-    )
+            .clickable { showDialog = true },
+    ) {
+        OutlinedTextField(
+            value = value,
+            onValueChange = {},
+            // Disabled so the click is intercepted by the surrounding Box; the
+            // colours below mask that the field is not "enabled" in the visual sense.
+            enabled = false,
+            singleLine = true,
+            label = { Text(label) },
+            placeholder = { Text("YYYY-MM-DD") },
+            isError = isError,
+            supportingText = supportingText,
+            trailingIcon = { Icon(Icons.Default.DateRange, contentDescription = label) },
+            colors = OutlinedTextFieldDefaults.colors(
+                disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                disabledBorderColor = MaterialTheme.colorScheme.outline,
+                disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                disabledSupportingTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            ),
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
 
     if (showDialog) {
         val initialMillis = runCatching { LocalDate.parse(value, ISO_DATE) }

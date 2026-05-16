@@ -61,7 +61,7 @@ class CheckoutPriceSummaryTest {
             reservationsRepository = reservationsRepository,
             propertiesRepository = mockk {
                 coEvery { getCachedProperty("p-1") } returns mansion
-                coEvery { getPropertyDetail("p-1") } returns Result.success(mansion)
+                coEvery { getPropertyDetail("p-1", any(), any()) } returns Result.success(mansion)
             },
             initialCheckIn = initialCheckIn,
             initialCheckOut = initialCheckOut,

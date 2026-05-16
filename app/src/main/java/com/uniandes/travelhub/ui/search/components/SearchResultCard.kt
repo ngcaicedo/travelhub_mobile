@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -106,12 +107,44 @@ fun SearchResultCard(
                     )
                 }
                 Spacer(Modifier.height(MaterialTheme.spacing.sm))
+                val basePrice = item.basePriceFrom?.toDoubleOrNull()
+                val price = item.priceFrom.toDoubleOrNull() ?: 0.0
+                val hasDiscount = item.hasSeasonalDiscount && basePrice != null && basePrice > price
+                val discountPct = if (hasDiscount && basePrice != null && basePrice > 0.0) {
+                    kotlin.math.round((1.0 - price / basePrice) * 100.0).toInt()
+                } else 0
+                if (hasDiscount) {
+                    androidx.compose.material3.Surface(
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(50),
+                        color = androidx.compose.ui.graphics.Color(0xFFE6F4EA),
+                    ) {
+                        Text(
+                            text = "-${discountPct}% " + stringResource(R.string.search_seasonal_discount_badge),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = androidx.compose.ui.graphics.Color(0xFF1E7E34),
+                            fontWeight = FontWeight.ExtraBold,
+                            maxLines = 1,
+                            softWrap = false,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                        )
+                    }
+                    Spacer(Modifier.height(MaterialTheme.spacing.xs))
+                }
                 Row(verticalAlignment = Alignment.Bottom) {
                     Text(
                         text = formatSearchPrice(item.priceFrom, item.currency, locale),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.ExtraBold,
                     )
+                    if (hasDiscount && item.basePriceFrom != null) {
+                        Spacer(Modifier.width(MaterialTheme.spacing.xs))
+                        Text(
+                            text = formatSearchPrice(item.basePriceFrom, item.currency, locale),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textDecoration = androidx.compose.ui.text.style.TextDecoration.LineThrough,
+                        )
+                    }
                     Text(
                         text = " / " + stringResource(R.string.property_detail_price_per_night),
                         style = MaterialTheme.typography.bodyMedium,
