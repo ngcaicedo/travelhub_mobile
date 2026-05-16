@@ -2,6 +2,7 @@ package com.uniandes.travelhub.repositories
 
 import com.uniandes.travelhub.models.reservations.CreateReservationRequest
 import com.uniandes.travelhub.models.reservations.CachedCheckInQr
+import com.uniandes.travelhub.models.reservations.CheckInQrResponse
 import com.uniandes.travelhub.models.reservations.ReservationCancellationConfirmRequest
 import com.uniandes.travelhub.models.reservations.ReservationCancellationPreviewResponse
 import com.uniandes.travelhub.models.reservations.ReservationConfirmResponse
@@ -172,7 +173,7 @@ class ReservationsRepositoryTest {
     }
 
     @Test
-    fun `listForCurrentUser primes offline checkin cache for eligible reservations`() = runTest {
+    fun `listForCurrentUser returns reservations without mutating checkin cache`() = runTest {
         every { tokenStore.userIdFlow } returns flowOf("user-42")
         every { tokenStore.emailFlow } returns flowOf("ada@example.com")
         val reservations = listOf(
@@ -184,19 +185,15 @@ class ReservationsRepositoryTest {
             )
         )
         coEvery { api.listForUser("user-42", any()) } returns reservations
-        coEvery { checkInQrCacheStore.get("r-1") } returns null
-        coEvery { checkInQrCacheStore.put(any()) } returns Unit
 
         val result = ReservationsRepository(api, tokenStore, checkInQrCacheStore).listForCurrentUser()
 
         assertTrue(result.isSuccess)
-        coVerify(exactly = 1) { checkInQrCacheStore.put(any()) }
+        coVerify(exactly = 0) { checkInQrCacheStore.put(any()) }
     }
 
     @Test
     fun `getCheckInQr returns cached artifact offline when refresh fails`() = runTest {
-        every { tokenStore.userIdFlow } returns flowOf("user-42")
-        every { tokenStore.emailFlow } returns flowOf("ada@example.com")
         val cached = CachedCheckInQr(
             reservationId = "r-1",
             reservationStatus = "confirmed",
@@ -212,12 +209,39 @@ class ReservationsRepositoryTest {
             travelerId = "user-42",
         )
         coEvery { checkInQrCacheStore.get("r-1") } returns cached
-        coEvery { api.getById("r-1") } throws RuntimeException("offline")
+        coEvery { api.getCheckInQr("r-1") } throws RuntimeException("offline")
 
         val result = ReservationsRepository(api, tokenStore, checkInQrCacheStore).getCheckInQr("r-1")
 
         assertTrue(result.isSuccess)
         assertTrue(result.getOrNull()?.isOffline == true)
+    }
+
+    @Test
+    fun `getCheckInQr caches the backend payload when available`() = runTest {
+        coEvery { checkInQrCacheStore.get("r-1") } returns null
+        coEvery { api.getCheckInQr("r-1") } returns CheckInQrResponse(
+            reservationId = "r-1",
+            reservationStatus = "confirmed",
+            reservationFingerprint = "confirmed|2026-06-10|2026-06-12|2",
+            propertyName = "Grand Hotel Riviera",
+            propertyCoverImageUrl = "https://example.com/hotel.jpg",
+            checkInDate = "2026-06-10",
+            checkOutDate = "2026-06-12",
+            numberOfGuests = 2,
+            holderEmail = "ada@example.com",
+            holderFullName = "Ada Lovelace",
+            travelerId = "user-42",
+            encryptedPayload = "thci1.fake",
+            issuedAtEpochMs = 123L,
+        )
+        coEvery { checkInQrCacheStore.put(any()) } returns Unit
+
+        val result = ReservationsRepository(api, tokenStore, checkInQrCacheStore).getCheckInQr("r-1")
+
+        assertTrue(result.isSuccess)
+        assertTrue(result.getOrNull()?.isOffline == false)
+        coVerify(exactly = 1) { checkInQrCacheStore.put(any()) }
     }
 
     private fun confirmResponse() = ReservationConfirmResponse(

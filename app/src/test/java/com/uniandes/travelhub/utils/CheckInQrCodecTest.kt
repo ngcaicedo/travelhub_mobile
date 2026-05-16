@@ -13,6 +13,7 @@ class CheckInQrCodecTest {
             reservationId = "res-123",
             travelerId = "traveler-42",
             holderEmail = "ada@example.com",
+            holderFullName = "Ada Lovelace",
             issuedAtEpochMs = 42L,
         )
 

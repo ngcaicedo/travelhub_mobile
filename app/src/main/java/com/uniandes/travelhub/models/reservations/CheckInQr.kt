@@ -8,6 +8,24 @@ data class CheckInQrPayload(
     @Json(name = "reservation_id") val reservationId: String,
     @Json(name = "traveler_id") val travelerId: String,
     @Json(name = "holder_email") val holderEmail: String,
+    @Json(name = "holder_full_name") val holderFullName: String? = null,
+    @Json(name = "issued_at_epoch_ms") val issuedAtEpochMs: Long,
+)
+
+@JsonClass(generateAdapter = true)
+data class CheckInQrResponse(
+    @Json(name = "reservation_id") val reservationId: String,
+    @Json(name = "reservation_status") val reservationStatus: String,
+    @Json(name = "reservation_fingerprint") val reservationFingerprint: String,
+    @Json(name = "property_name") val propertyName: String? = null,
+    @Json(name = "property_cover_image_url") val propertyCoverImageUrl: String? = null,
+    @Json(name = "check_in_date") val checkInDate: String,
+    @Json(name = "check_out_date") val checkOutDate: String,
+    @Json(name = "number_of_guests") val numberOfGuests: Int,
+    @Json(name = "holder_email") val holderEmail: String,
+    @Json(name = "holder_full_name") val holderFullName: String? = null,
+    @Json(name = "traveler_id") val travelerId: String,
+    @Json(name = "encrypted_payload") val encryptedPayload: String,
     @Json(name = "issued_at_epoch_ms") val issuedAtEpochMs: Long,
 )
 
