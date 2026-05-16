@@ -30,6 +30,7 @@ data class RegisterFormState(
     val hotelName: String = "",
     val email: String = "",
     val phone: String = "",
+    val countryCode: String = "CO",
     val password: String = "",
     val agreedToTerms: Boolean = false,
     val role: UserRole = UserRole.TRAVELER
@@ -53,6 +54,7 @@ class RegisterViewModel(
     fun onHotelNameChange(value: String) = update { it.copy(hotelName = value) }
     fun onEmailChange(value: String) = update { it.copy(email = value) }
     fun onPhoneChange(value: String) = update { it.copy(phone = value) }
+    fun onCountryCodeChange(value: String) = update { it.copy(countryCode = value.uppercase().take(2)) }
     fun onPasswordChange(value: String) = update { it.copy(password = value) }
     fun onTermsChange(value: Boolean) = update { it.copy(agreedToTerms = value) }
 
@@ -75,6 +77,7 @@ class RegisterViewModel(
             password = current.password,
             fullName = current.fullName.trim(),
             hotelName = current.hotelName.trim().takeIf { current.role == UserRole.HOTEL_PARTNER && it.isNotEmpty() },
+            countryCode = current.countryCode.trim().uppercase(),
             role = current.role
         )
 
@@ -107,6 +110,9 @@ class RegisterViewModel(
         }
         if (!AuthValidators.isValidPhone(state.phone)) {
             return ErrorMessage.Resource(R.string.auth_register_phone_invalid)
+        }
+        if (state.countryCode.trim().length != 2) {
+            return ErrorMessage.Resource(R.string.auth_register_country_invalid)
         }
         if (!AuthValidators.isStrongEnough(state.password)) {
             return ErrorMessage.Resource(R.string.auth_register_password_weak)

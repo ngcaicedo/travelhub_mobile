@@ -34,6 +34,7 @@ object RetrofitFactory {
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
+            .addInterceptor(SecureTransportInterceptor())
             .addInterceptor(AuthInterceptor { authTokenStoreRef })
             .authenticator(UnauthorizedAuthenticator { authTokenStoreRef })
 
@@ -57,9 +58,14 @@ object RetrofitFactory {
 
     private inline fun <reified T> build(baseUrl: String): T =
         Retrofit.Builder()
-            .baseUrl(baseUrl)
+            .baseUrl(normalizeBaseUrl(baseUrl))
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(T::class.java)
+
+    internal fun normalizeBaseUrl(baseUrl: String): String {
+        val trimmed = baseUrl.trim()
+        return if (trimmed.endsWith("/")) trimmed else "$trimmed/"
+    }
 }

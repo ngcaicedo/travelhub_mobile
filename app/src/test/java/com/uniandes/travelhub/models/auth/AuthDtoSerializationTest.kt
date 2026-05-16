@@ -36,6 +36,7 @@ class AuthDtoSerializationTest {
         assertEquals("+573001234567", json["phone"])
         assertEquals("Sup3rSecret!", json["password"])
         assertEquals("Ada Lovelace", json["full_name"])
+        assertEquals("CO", json["country_code"])
         assertEquals("traveler", json["role"])
         assertFalse(json.containsKey("hotel_name"))
     }
@@ -54,6 +55,7 @@ class AuthDtoSerializationTest {
         val json = toMap(moshi.adapter(RegisterRequest::class.java).toJson(payload))
 
         assertEquals("Hotel Plaza", json["hotel_name"])
+        assertEquals("CO", json["country_code"])
         assertEquals("hotel", json["role"])
         assertEquals("Front Desk", json["full_name"])
     }
@@ -93,6 +95,8 @@ class AuthDtoSerializationTest {
               "email": "ada@example.com",
               "phone": "+573001234567",
               "full_name": "Ada Lovelace",
+              "country_code": "BR",
+              "data_region": "aws-sa-east-1",
               "status": 0
             }
         """.trimIndent()
@@ -101,6 +105,8 @@ class AuthDtoSerializationTest {
 
         assertEquals("Ada Lovelace", parsed?.fullName)
         assertNull(parsed?.hotelName)
+        assertEquals("BR", parsed?.countryCode)
+        assertEquals("aws-sa-east-1", parsed?.dataRegion)
         assertEquals(0, parsed?.status)
     }
 }

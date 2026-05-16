@@ -62,6 +62,7 @@ class RegisterViewModelTest {
         val state = viewModel.form.value
         assertEquals("", state.fullName)
         assertEquals("", state.email)
+        assertEquals("CO", state.countryCode)
         assertEquals(UserRole.TRAVELER, state.role)
         assertEquals(false, state.agreedToTerms)
         assertEquals(RegisterUiState.Idle, viewModel.uiState.value)
@@ -144,6 +145,7 @@ class RegisterViewModelTest {
         val payload = captured.captured
         assertEquals(UserRole.TRAVELER, payload.role)
         assertEquals("Ada Lovelace", payload.fullName)
+        assertEquals("CO", payload.countryCode)
         assertNull(payload.hotelName)
     }
 
@@ -179,6 +181,7 @@ class RegisterViewModelTest {
         assertEquals(UserRole.HOTEL_PARTNER, payload.role)
         assertEquals("Hotel Plaza", payload.hotelName)
         assertEquals("Front Desk", payload.fullName)
+        assertEquals("CO", payload.countryCode)
     }
 
     @Test

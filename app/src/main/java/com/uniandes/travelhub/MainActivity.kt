@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
 import com.uniandes.travelhub.network.AuthTokenStore
 import com.uniandes.travelhub.network.DataStorePropertyCacheStore
@@ -137,6 +138,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun registerFcmDeviceWhenAuthenticated() {
+        if (FirebaseApp.getApps(applicationContext).isEmpty()) {
+            Log.w(FCM_TAG, "FirebaseApp is not initialized; skipping FCM registration")
+            return
+        }
         val notificationsRepository = NotificationsRepository(RetrofitFactory.notificationsApi)
         lifecycleScope.launch {
             tokenStore.tokenFlow

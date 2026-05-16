@@ -3,6 +3,7 @@ package com.uniandes.travelhub.network
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertSame
 import org.junit.Test
+import org.junit.Assert.assertEquals
 
 class RetrofitFactoryTest {
 
@@ -31,5 +32,12 @@ class RetrofitFactoryTest {
         val users: Any = RetrofitFactory.usersApi
 
         assert(security !== users)
+    }
+
+    @Test
+    fun `normalizeBaseUrl always returns trailing slash`() {
+        assertEquals("https://example.com/", RetrofitFactory.normalizeBaseUrl("https://example.com"))
+        assertEquals("https://example.com/", RetrofitFactory.normalizeBaseUrl("https://example.com/"))
+        assertEquals("https://example.com/", RetrofitFactory.normalizeBaseUrl("  https://example.com  "))
     }
 }

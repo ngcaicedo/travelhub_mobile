@@ -72,6 +72,7 @@ class UsersApiTest {
         assertEquals("/api/v1/users", recorded.path)
         val body = recorded.body.readUtf8()
         assertTrue(body.contains("\"full_name\":\"Ada Lovelace\""))
+        assertTrue(body.contains("\"country_code\":\"CO\""))
         assertTrue(body.contains("\"role\":\"traveler\""))
         assertTrue(
             "Moshi must omit null hotel_name from the wire (was: $body)",

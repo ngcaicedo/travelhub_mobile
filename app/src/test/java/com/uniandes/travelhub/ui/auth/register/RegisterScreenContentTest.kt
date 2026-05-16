@@ -34,6 +34,7 @@ class RegisterScreenContentTest {
         onFullNameChange: (String) -> Unit = {},
         onHotelNameChange: (String) -> Unit = {},
         onEmailChange: (String) -> Unit = {},
+        onCountryCodeChange: (String) -> Unit = {},
         onSubmit: () -> Unit = {},
         onNavigateToLogin: () -> Unit = {},
     ) {
@@ -48,6 +49,7 @@ class RegisterScreenContentTest {
                     onHotelNameChange = onHotelNameChange,
                     onEmailChange = onEmailChange,
                     onPhoneChange = {},
+                    onCountryCodeChange = onCountryCodeChange,
                     onPasswordChange = {},
                     onTermsChange = {},
                     onSubmit = onSubmit,
