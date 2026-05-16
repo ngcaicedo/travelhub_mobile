@@ -24,31 +24,31 @@ val localProperties = Properties().apply {
 }
 val securityApiBase: String = localProperties.getProperty(
     "TRAVELHUB_SECURITY_API_BASE",
-    "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
+    "https://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
 )
 val usersApiBase: String = localProperties.getProperty(
     "TRAVELHUB_USERS_API_BASE",
-    "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
+    "https://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
 )
 val propertiesApiBase: String = localProperties.getProperty(
     "TRAVELHUB_PROPERTIES_API_BASE",
-    "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
+    "https://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
 )
 val searchApiBase: String = localProperties.getProperty(
     "TRAVELHUB_SEARCH_API_BASE",
-    "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
+    "https://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
 )
 val reservationsApiBase: String = localProperties.getProperty(
     "TRAVELHUB_RESERVATIONS_API_BASE",
-    "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
+    "https://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
 )
 val paymentsApiBase: String = localProperties.getProperty(
     "TRAVELHUB_PAYMENTS_API_BASE",
-    "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
+    "https://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
 )
 val notificationsApiBase: String = localProperties.getProperty(
     "TRAVELHUB_NOTIFICATIONS_API_BASE",
-    "http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
+    "https://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/"
 )
 val mapsApiKey: String = localProperties.getProperty("MAPS_API_KEY", "")
 

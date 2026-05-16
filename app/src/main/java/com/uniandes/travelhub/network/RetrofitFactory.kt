@@ -34,6 +34,7 @@ object RetrofitFactory {
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
+            .addInterceptor(SecureTransportInterceptor())
             .addInterceptor(AuthInterceptor { authTokenStoreRef })
             .authenticator(UnauthorizedAuthenticator { authTokenStoreRef })
 
