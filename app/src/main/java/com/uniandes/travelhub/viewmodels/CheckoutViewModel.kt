@@ -103,20 +103,36 @@ class CheckoutViewModel(
 
     private fun loadProperty() {
         viewModelScope.launch {
-            // Prefer cache for instant render; fall back to network.
-            propertiesRepository.getCachedProperty(propertyId)?.let {
-                _property.value = it
-                _form.update { f -> f.copy(currency = it.currency.ifBlank { f.currency }) }
+            val current = _form.value
+            val checkIn = current.checkIn.takeIf { it.isNotBlank() }
+            val checkOut = current.checkOut.takeIf { it.isNotBlank() }
+            // Cache holds the canonical (no-range) property; only show it when
+            // the user hasn't picked dates yet so we don't flash the base price
+            // before the seasonal-aware fetch resolves.
+            if (checkIn == null || checkOut == null) {
+                propertiesRepository.getCachedProperty(propertyId)?.let {
+                    _property.value = it
+                    _form.update { f -> f.copy(currency = it.currency.ifBlank { f.currency }) }
+                }
             }
-            propertiesRepository.getPropertyDetail(propertyId).onSuccess { fresh ->
+            propertiesRepository.getPropertyDetail(propertyId, checkIn, checkOut).onSuccess { fresh ->
                 _property.value = fresh
                 _form.update { f -> f.copy(currency = fresh.currency.ifBlank { f.currency }) }
             }
         }
     }
 
-    fun onCheckInChange(value: String) = _form.update { it.copy(checkIn = value, checkInError = null) }
-    fun onCheckOutChange(value: String) = _form.update { it.copy(checkOut = value, checkOutError = null) }
+    fun onCheckInChange(value: String) {
+        _form.update { it.copy(checkIn = value, checkInError = null) }
+        // Re-fetch the property with the new range so any seasonal override
+        // applicable to it is reflected in the price breakdown.
+        if (value.isNotBlank() && _form.value.checkOut.isNotBlank()) loadProperty()
+    }
+
+    fun onCheckOutChange(value: String) {
+        _form.update { it.copy(checkOut = value, checkOutError = null) }
+        if (value.isNotBlank() && _form.value.checkIn.isNotBlank()) loadProperty()
+    }
     fun onGuestsChange(value: Int) = _form.update { it.copy(guests = value.coerceAtLeast(1), guestsError = null) }
 
     /**

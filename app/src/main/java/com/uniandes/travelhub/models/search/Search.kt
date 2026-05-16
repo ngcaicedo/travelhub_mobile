@@ -41,6 +41,8 @@ data class SearchResultItem(
     @Json(name = "main_image_url") val mainImageUrl: String? = null,
     @Json(name = "rating") val rating: Double = 0.0,
     @Json(name = "price_from") val priceFrom: String,
+    @Json(name = "base_price_from") val basePriceFrom: String? = null,
+    @Json(name = "has_seasonal_discount") val hasSeasonalDiscount: Boolean = false,
     @Json(name = "currency") val currency: String,
     @Json(name = "amenities") val amenities: List<String> = emptyList(),
     @Json(name = "latitude") val latitude: Double? = null,
