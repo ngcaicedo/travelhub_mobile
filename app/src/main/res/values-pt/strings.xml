@@ -50,6 +50,8 @@
     <string name="auth_register_email_placeholder">seu@email.com</string>
     <string name="auth_register_phone">Telefone</string>
     <string name="auth_register_phone_placeholder">+55 11 90000 0000</string>
+    <string name="auth_register_country">País de residência</string>
+    <string name="auth_register_country_placeholder">BR</string>
     <string name="auth_register_password">Senha</string>
     <string name="auth_register_password_placeholder">••••••••</string>
     <string name="auth_register_terms">Aceito os termos e condições</string>
@@ -60,6 +62,7 @@
     <string name="auth_register_full_name_required">O nome é obrigatório</string>
     <string name="auth_register_hotel_name_required">O nome do hotel é obrigatório</string>
     <string name="auth_register_phone_invalid">Número de telefone inválido</string>
+    <string name="auth_register_country_invalid">Informe um código de país válido com 2 letras</string>
     <string name="auth_register_password_weak">A senha deve ter pelo menos 8 caracteres, maiúscula, número e símbolo</string>
     <string name="auth_register_terms_required">Você deve aceitar os termos e condições</string>
     <string name="auth_register_default_error">Não foi possível criar a conta</string>

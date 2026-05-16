@@ -50,6 +50,8 @@
     <string name="auth_register_email_placeholder">your@email.com</string>
     <string name="auth_register_phone">Phone</string>
     <string name="auth_register_phone_placeholder">+1 555 000 0000</string>
+    <string name="auth_register_country">Country of residence</string>
+    <string name="auth_register_country_placeholder">US</string>
     <string name="auth_register_password">Password</string>
     <string name="auth_register_password_placeholder">••••••••</string>
     <string name="auth_register_terms">I accept the terms and conditions</string>
@@ -60,6 +62,7 @@
     <string name="auth_register_full_name_required">Name is required</string>
     <string name="auth_register_hotel_name_required">Hotel name is required</string>
     <string name="auth_register_phone_invalid">Invalid phone number</string>
+    <string name="auth_register_country_invalid">Enter a valid 2-letter country code</string>
     <string name="auth_register_password_weak">Password must be at least 8 characters and contain uppercase, number and symbol</string>
     <string name="auth_register_terms_required">You must accept the terms and conditions</string>
     <string name="auth_register_default_error">Unable to create the account</string>

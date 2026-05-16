@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Public
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Checkbox
@@ -53,6 +54,7 @@ fun RegisterForm(
     onHotelNameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
     onPhoneChange: (String) -> Unit,
+    onCountryCodeChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onTermsChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -112,6 +114,18 @@ fun RegisterForm(
                 Icon(Icons.Filled.Phone, contentDescription = null, tint = Slate400)
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            isError = isError,
+        )
+
+        TravelHubTextField(
+            value = state.countryCode,
+            onValueChange = onCountryCodeChange,
+            label = stringResource(R.string.auth_register_country),
+            placeholder = stringResource(R.string.auth_register_country_placeholder),
+            leadingIcon = {
+                Icon(Icons.Filled.Public, contentDescription = null, tint = Slate400)
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             isError = isError,
         )
 
