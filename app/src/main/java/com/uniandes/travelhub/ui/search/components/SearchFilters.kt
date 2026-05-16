@@ -7,15 +7,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -116,21 +114,11 @@ fun SearchFilters(
             }
         }
 
-        Row(
+        OrderByDropdown(
+            value = form.orderBy,
+            onChange = onOrderByChange,
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.sm),
-        ) {
-            OrderByDropdown(
-                value = form.orderBy,
-                onChange = onOrderByChange,
-                modifier = Modifier.weight(1f),
-            )
-            OrderDirDropdown(
-                value = form.orderDir,
-                onChange = onOrderDirChange,
-                modifier = Modifier.weight(1f),
-            )
-        }
+        )
     }
 }
 
@@ -155,77 +143,44 @@ private fun OrderByDropdown(
     modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
-    OutlinedTextField(
-        value = orderByLabel(value),
-        onValueChange = {},
-        readOnly = true,
-        label = { Text(stringResource(R.string.search_field_order_by)) },
-        trailingIcon = {
-            IconButton(onClick = { expanded = !expanded }) {
-                Icon(Icons.Default.ArrowDropDown, null)
-            }
-        },
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
         modifier = modifier,
-    )
-    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-        DropdownMenuItem(
-            text = { Text(stringResource(R.string.search_order_none)) },
-            onClick = { onChange(null); expanded = false },
+    ) {
+        OutlinedTextField(
+            value = orderByLabel(value),
+            onValueChange = {},
+            readOnly = true,
+            label = { Text(stringResource(R.string.search_field_order_by)) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            modifier = Modifier
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                .fillMaxWidth(),
         )
-        SearchOrderBy.values().forEach { option ->
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+        ) {
             DropdownMenuItem(
-                text = { Text(orderByLabel(option)) },
-                onClick = { onChange(option); expanded = false },
+                text = { Text(stringResource(R.string.search_order_none)) },
+                onClick = { onChange(null); expanded = false },
             )
+            SearchOrderBy.values().forEach { option ->
+                DropdownMenuItem(
+                    text = { Text(orderByLabel(option)) },
+                    onClick = { onChange(option); expanded = false },
+                )
+            }
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun OrderDirDropdown(
-    value: SearchOrderDir?,
-    onChange: (SearchOrderDir?) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    var expanded by remember { mutableStateOf(false) }
-    OutlinedTextField(
-        value = orderDirLabel(value),
-        onValueChange = {},
-        readOnly = true,
-        label = { Text(stringResource(R.string.search_field_order_dir)) },
-        trailingIcon = {
-            IconButton(onClick = { expanded = !expanded }) {
-                Icon(Icons.Default.ArrowDropDown, null)
-            }
-        },
-        modifier = modifier,
-    )
-    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-        DropdownMenuItem(
-            text = { Text(stringResource(R.string.search_order_none)) },
-            onClick = { onChange(null); expanded = false },
-        )
-        SearchOrderDir.values().forEach { option ->
-            DropdownMenuItem(
-                text = { Text(orderDirLabel(option)) },
-                onClick = { onChange(option); expanded = false },
-            )
-        }
-    }
-}
-
-@Composable
 private fun orderByLabel(value: SearchOrderBy?): String = when (value) {
     SearchOrderBy.PRICE -> stringResource(R.string.search_order_by_price)
     SearchOrderBy.RATING -> stringResource(R.string.search_order_by_rating)
     SearchOrderBy.NAME -> stringResource(R.string.search_order_by_name)
-    null -> stringResource(R.string.search_order_none)
-}
-
-@Composable
-private fun orderDirLabel(value: SearchOrderDir?): String = when (value) {
-    SearchOrderDir.ASC -> stringResource(R.string.search_order_dir_asc)
-    SearchOrderDir.DESC -> stringResource(R.string.search_order_dir_desc)
     null -> stringResource(R.string.search_order_none)
 }

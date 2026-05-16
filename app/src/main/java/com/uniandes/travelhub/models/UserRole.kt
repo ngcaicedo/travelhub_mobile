@@ -7,7 +7,7 @@ enum class UserRole {
     @Json(name = "traveler")
     TRAVELER,
 
-    @Json(name = "hotel_partner")
+    @Json(name = "hotel")
     HOTEL_PARTNER,
 
     @Json(name = "admin")

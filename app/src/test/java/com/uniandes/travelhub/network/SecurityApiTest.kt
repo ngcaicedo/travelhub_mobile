@@ -66,7 +66,7 @@ class SecurityApiTest {
                     {
                       "access_token":"jwt.payload.sig",
                       "token_type":"bearer",
-                      "role":"hotel_partner"
+                      "role":"hotel"
                     }
                     """.trimIndent()
                 )

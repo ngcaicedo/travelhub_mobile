@@ -54,7 +54,7 @@ class AuthDtoSerializationTest {
         val json = toMap(moshi.adapter(RegisterRequest::class.java).toJson(payload))
 
         assertEquals("Hotel Plaza", json["hotel_name"])
-        assertEquals("hotel_partner", json["role"])
+        assertEquals("hotel", json["role"])
         assertEquals("Front Desk", json["full_name"])
     }
 
@@ -74,7 +74,7 @@ class AuthDtoSerializationTest {
             {
               "access_token": "eyJhbGciOiJIUzI1NiJ9.payload.sig",
               "token_type": "bearer",
-              "role": "hotel_partner"
+              "role": "hotel"
             }
         """.trimIndent()
 

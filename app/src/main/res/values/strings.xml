@@ -291,5 +291,106 @@
     <!-- forbidden / role guard -->
     <string name="forbidden_title">Acceso denegado</string>
     <string name="forbidden_subtitle">Tu rol no tiene permisos para esta sección</string>
+
+    <string name="map_tab_list">Lista</string>
+    <string name="map_tab_map">Mapa</string>
+    <string name="map_permission_required_title">Activa tu ubicación</string>
+    <string name="map_permission_required_body">Necesitamos tu ubicación para mostrarte hoteles cercanos en el mapa.</string>
+    <string name="map_permission_cta">Permitir ubicación</string>
+    <string name="map_permission_denied_cta">Buscar por ciudad</string>
+    <string name="map_search_in_this_area">Buscar en esta zona</string>
+    <string name="map_loading_hotels">Buscando hoteles…</string>
+    <string name="map_locating_user">Obteniendo tu ubicación…</string>
+    <string name="map_location_unavailable">No pudimos obtener tu ubicación. Mueve el mapa y vuelve a intentar.</string>
+    <string name="map_no_results_in_area">No hay hoteles en esta zona. Mueve el mapa para explorar otras áreas.</string>
+    <string name="map_marker_price_from">Desde %1$s %2$s</string>
+    <string name="map_marker_view_detail">Ver detalle</string>
+    <string name="map_city_search_hint">Buscar ciudad</string>
+    <string name="map_city_search_action">Ir</string>
+    <string name="map_city_not_found">No encontramos %1$s. Intenta con otro nombre.</string>
+
+    <!-- HU020: notifications, profile, notification settings -->
+    <string name="notifications_topbar_alerts_cd">Alertas</string>
+    <string name="notifications_topbar_profile_cd">Perfil</string>
+    <string name="notifications_back">Volver</string>
+    <string name="notifications_title">Notificaciones</string>
+    <string name="notifications_settings_action">Preferencias</string>
+    <string name="notifications_filter_all">Todo</string>
+    <string name="notifications_filter_unread">No leídas</string>
+    <string name="notifications_empty">No hay notificaciones</string>
+    <string name="notifications_error">Error: %1$s</string>
+    <string name="notifications_relative_now">Ahora</string>
+    <string name="notifications_relative_minutes">Hace %1$d min</string>
+    <string name="notifications_relative_hours">Hace %1$d h</string>
+    <string name="notifications_relative_days">Hace %1$d d</string>
+
+    <string name="profile_title">Mi perfil</string>
+    <string name="profile_back">Volver</string>
+    <string name="profile_notifications_title">Notificaciones</string>
+    <string name="profile_notifications_subtitle">Cambios de reserva y recordatorios</string>
+    <string name="profile_logout">Cerrar sesión</string>
+
+    <string name="notification_settings_title">Notificaciones</string>
+    <string name="notification_settings_status_title">Cambios de reserva</string>
+    <string name="notification_settings_status_subtitle">Confirmaciones, modificaciones, cancelaciones, check-in y check-out</string>
+    <string name="notification_settings_arrival_title">Recordatorios de llegada</string>
+    <string name="notification_settings_arrival_subtitle">Aviso antes de tu check-in</string>
+
+    <string name="notification_channel_status_name">Cambios de reserva</string>
+    <string name="notification_channel_status_desc">Confirmaciones, modificaciones, cancelaciones y check-in/out.</string>
+    <string name="notification_channel_arrival_name">Recordatorios de llegada</string>
+    <string name="notification_channel_arrival_desc">Avisos antes de tu check-in.</string>
+    <string name="notification_fallback_title">TravelHub</string>
+
+    <!-- Partner: Seasonal Pricing Management (MPF-40) -->
+    <string name="partner_pricing_title">Gestión de Tarifas</string>
+    <string name="partner_pricing_nav_home">Inicio</string>
+    <string name="partner_pricing_nav_rules">Reglas</string>
+    <string name="partner_pricing_section_property">PROPIEDAD O HABITACIÓN</string>
+    <string name="partner_pricing_section_base_rate">AJUSTAR TARIFA BASE</string>
+    <string name="partner_pricing_section_new_discount">NUEVO DESCUENTO</string>
+    <string name="partner_pricing_section_preview">VISTA PREVIA</string>
+    <string name="partner_pricing_field_property">Selecciona una propiedad</string>
+    <string name="partner_pricing_field_base_rate_label">Precio por noche (%1$s)</string>
+    <string name="partner_pricing_field_name">Nombre de la regla</string>
+    <string name="partner_pricing_field_name_hint">Ej: Black Friday</string>
+    <string name="partner_pricing_field_percent">Porcentaje</string>
+    <string name="partner_pricing_field_date_range">Rango de fechas</string>
+    <string name="partner_pricing_field_date_range_hint">Selecciona fechas</string>
+    <string name="partner_pricing_field_season_start">Inicio</string>
+    <string name="partner_pricing_field_season_end">Fin</string>
+    <string name="partner_pricing_action_create_rule">Crear Regla</string>
+    <string name="partner_pricing_action_save">Guardar cambios</string>
+    <string name="partner_pricing_action_cancel">Cancelar</string>
+    <string name="partner_pricing_preview_final_rate">Tarifa Final Calculada</string>
+    <string name="partner_pricing_preview_savings_format">-%1$d%% AHORRO</string>
+    <string name="partner_pricing_preview_no_discount">Sin descuento</string>
+    <string name="partner_pricing_high_impact_title">Confirmar cambio significativo</string>
+    <string name="partner_pricing_high_impact_message">Estás aplicando un descuento de %1$d%% — un cambio de alto impacto. ¿Confirmas?</string>
+    <string name="partner_pricing_high_impact_confirm">Confirmar</string>
+    <string name="partner_pricing_integrity_normal">Normal</string>
+    <string name="partner_pricing_integrity_locked">Bloqueada</string>
+    <string name="partner_pricing_integrity_compromised">Comprometida</string>
+    <string name="partner_pricing_locked_warning">Esta regla está bloqueada por una falla de integridad. Comunícate con soporte para desbloquearla.</string>
+    <string name="partner_pricing_rules_title">Reglas de tarifa</string>
+    <string name="partner_pricing_rules_range">%1$s — %2$s</string>
+    <string name="partner_pricing_rules_final_price">Precio final: %1$s</string>
+    <string name="partner_pricing_rules_base_price">Tarifa base: %1$s</string>
+    <string name="partner_pricing_edit_title">Editar regla</string>
+    <string name="partner_pricing_empty_no_properties">No tienes propiedades asociadas. Contacta a soporte para agregar una.</string>
+    <string name="partner_pricing_empty_no_rules">Aún no has creado reglas. Usa la pantalla de inicio para crear la primera.</string>
+    <string name="partner_pricing_error_no_admin">No pudimos identificar tu sesión de administrador. Inicia sesión de nuevo.</string>
+    <string name="partner_pricing_error_load_properties">No pudimos cargar tus propiedades.</string>
+    <string name="partner_pricing_error_load_rules">No pudimos cargar las reglas de tarifa.</string>
+    <string name="partner_pricing_error_rule_not_found">No encontramos la regla solicitada.</string>
+    <string name="partner_pricing_error_submit">No pudimos guardar los cambios. Intenta de nuevo.</string>
+    <string name="partner_pricing_error_locked">Esta regla está bloqueada y no puede modificarse.</string>
+    <string name="partner_pricing_validation_invalid_percent">El porcentaje debe estar entre 1 y 99.</string>
+    <string name="partner_pricing_validation_invalid_date_range">El rango de fechas no es válido.</string>
+    <string name="partner_pricing_validation_no_changes">No hay cambios para guardar.</string>
+    <string name="partner_pricing_success_created">Regla creada correctamente.</string>
+    <string name="partner_pricing_success_updated">Cambios guardados correctamente.</string>
+    <string name="search_seasonal_discount_badge">AHORRO</string>
+    <string name="search_seasonal_discount_tooltip">Tarifa especial para tus fechas</string>
 </resources>
 

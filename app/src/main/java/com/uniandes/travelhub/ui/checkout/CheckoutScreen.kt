@@ -276,6 +276,52 @@ private fun PropertySummaryCard(property: Property) {
                         overflow = TextOverflow.Ellipsis,
                     )
                 }
+                // Per-night price line — surfaces the seasonal discount when one
+                // applies, so the user immediately sees what we're charging vs
+                // the listed base rate.
+                val basePrice = property.basePricePerNight
+                val hasDiscount = property.hasSeasonalDiscount
+                    && basePrice != null
+                    && basePrice > property.pricePerNight
+                val pct = if (hasDiscount && basePrice != null && basePrice > 0.0) {
+                    kotlin.math.round((1.0 - property.pricePerNight / basePrice) * 100.0).toInt()
+                } else 0
+                if (hasDiscount) {
+                    androidx.compose.material3.Surface(
+                        shape = RoundedCornerShape(50),
+                        color = androidx.compose.ui.graphics.Color(0xFFE6F4EA),
+                    ) {
+                        Text(
+                            text = "-${pct}% " + stringResource(R.string.search_seasonal_discount_badge),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = androidx.compose.ui.graphics.Color(0xFF1E7E34),
+                            fontWeight = FontWeight.ExtraBold,
+                            maxLines = 1,
+                            softWrap = false,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                        )
+                    }
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "$ %.2f %s".format(property.pricePerNight, property.currency),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1,
+                        softWrap = false,
+                    )
+                    if (hasDiscount && basePrice != null) {
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "$ %.2f".format(basePrice),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textDecoration = androidx.compose.ui.text.style.TextDecoration.LineThrough,
+                            maxLines = 1,
+                            softWrap = false,
+                        )
+                    }
+                }
             }
         }
     }

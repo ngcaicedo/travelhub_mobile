@@ -18,10 +18,22 @@ class PropertiesRepository(
         properties.forEach { cacheProperty(it) }
     }.recoverFailure()
 
-    suspend fun getPropertyDetail(id: String): Result<Property> = runCatching {
-        propertiesApi.getPropertyDetail(id)
+    suspend fun getPropertiesByOwner(ownerId: String): Result<List<Property>> = runCatching {
+        propertiesApi.getPropertiesByOwner(ownerId)
+    }.onSuccess { properties ->
+        properties.forEach { cacheProperty(it) }
+    }.recoverFailure()
+
+    suspend fun getPropertyDetail(
+        id: String,
+        checkIn: String? = null,
+        checkOut: String? = null,
+    ): Result<Property> = runCatching {
+        propertiesApi.getPropertyDetail(id, checkIn, checkOut)
     }.onSuccess { property ->
-        cacheProperty(property)
+        // Only cache the canonical (no-range) response so range-specific prices
+        // don't poison the cache for other ranges.
+        if (checkIn == null && checkOut == null) cacheProperty(property)
     }.recoverFailure()
 
     fun primePropertyPreview(property: Property) {

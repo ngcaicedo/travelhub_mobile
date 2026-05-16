@@ -22,3 +22,8 @@ TRAVELHUB_PROPERTIES_API_BASE=http://travelhub-dev-alb-932523405.us-east-1.elb.a
 TRAVELHUB_SEARCH_API_BASE=http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/
 TRAVELHUB_RESERVATIONS_API_BASE=http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/
 TRAVELHUB_PAYMENTS_API_BASE=http://travelhub-dev-alb-932523405.us-east-1.elb.amazonaws.com/
+
+# Google Maps Android API key for the map-based hotel search.
+# See docs/maps-key-setup.md for how to obtain a restricted key.
+# Must be present (any non-empty value) for the debug build to succeed.
+MAPS_API_KEY=
