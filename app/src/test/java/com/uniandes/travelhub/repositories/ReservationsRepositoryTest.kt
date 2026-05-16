@@ -22,10 +22,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ReservationsRepositoryTest {
@@ -209,12 +211,38 @@ class ReservationsRepositoryTest {
             travelerId = "user-42",
         )
         coEvery { checkInQrCacheStore.get("r-1") } returns cached
-        coEvery { api.getCheckInQr("r-1") } throws RuntimeException("offline")
+        coEvery { api.getCheckInQr("r-1") } throws IOException("offline")
 
         val result = ReservationsRepository(api, tokenStore, checkInQrCacheStore).getCheckInQr("r-1")
 
         assertTrue(result.isSuccess)
         assertTrue(result.getOrNull()?.isOffline == true)
+        assertFalse(result.getOrNull()?.requiresRefresh == true)
+    }
+
+    @Test
+    fun `getCheckInQr fails when refresh returns unexpected error`() = runTest {
+        val cached = CachedCheckInQr(
+            reservationId = "r-1",
+            reservationStatus = "confirmed",
+            propertyName = "Grand Hotel Riviera",
+            propertyCoverImageUrl = null,
+            checkInDate = "2026-06-10",
+            checkOutDate = "2026-06-12",
+            numberOfGuests = 2,
+            reservationFingerprint = "confirmed|2026-06-10|2026-06-12|2",
+            encryptedPayload = "thci1.fake",
+            cachedAtEpochMs = 123L,
+            holderEmail = "ada@example.com",
+            travelerId = "user-42",
+        )
+        coEvery { checkInQrCacheStore.get("r-1") } returns cached
+        coEvery { api.getCheckInQr("r-1") } throws RuntimeException("boom")
+
+        val result = ReservationsRepository(api, tokenStore, checkInQrCacheStore).getCheckInQr("r-1")
+
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull() is ReservationException)
     }
 
     @Test

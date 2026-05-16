@@ -31,8 +31,8 @@ class CheckInQrViewModel(
     }
 
     fun load() {
+        _uiState.value = CheckInQrUiState.Loading
         viewModelScope.launch {
-            _uiState.value = CheckInQrUiState.Loading
             repository.getCheckInQr(reservationId)
                 .onSuccess { artifact ->
                     _uiState.value = if (artifact.requiresRefresh) {

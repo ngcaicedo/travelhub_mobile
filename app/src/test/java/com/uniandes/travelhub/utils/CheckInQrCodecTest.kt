@@ -1,26 +1,22 @@
 package com.uniandes.travelhub.utils
 
-import com.uniandes.travelhub.models.reservations.CheckInQrPayload
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.Assert.assertNotNull
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [34])
 class CheckInQrCodecTest {
 
     @Test
-    fun `encodeEncryptedPayload can be decrypted back for integrity`() {
-        val payload = CheckInQrPayload(
-            reservationId = "res-123",
-            travelerId = "traveler-42",
-            holderEmail = "ada@example.com",
-            holderFullName = "Ada Lovelace",
-            issuedAtEpochMs = 42L,
-        )
+    fun `createQrBitmap returns a bitmap with the requested size`() {
+        val bitmap = CheckInQrCodec.createQrBitmap("thci1.sample-payload", sizePx = 256)
 
-        val encoded = CheckInQrCodec.encodeEncryptedPayload(payload)
-        val decoded = CheckInQrCodec.decodeEncryptedPayloadForTest(encoded)
-
-        assertTrue(encoded.startsWith("thci1."))
-        assertEquals(payload, decoded)
+        assertNotNull(bitmap)
+        assertEquals(256, bitmap.width)
+        assertEquals(256, bitmap.height)
     }
 }

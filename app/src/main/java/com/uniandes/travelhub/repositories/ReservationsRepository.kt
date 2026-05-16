@@ -124,23 +124,25 @@ class ReservationsRepository(
 
         if (cached != null) {
             val refreshResult = runCatching { reservationsApi.getCheckInQr(reservationId) }
-            val refresh = refreshResult.getOrNull()
-            if (refresh == null) {
-                val refreshError = refreshResult.exceptionOrNull()
-                if (refreshError is HttpException && refreshError.code() == 409) {
-                    checkInQrCacheStore.remove(reservationId)
-                    return Result.success(
-                        CheckInQrArtifact(
-                            cache = cached,
-                            isOffline = false,
-                            requiresRefresh = true,
+            val refresh = refreshResult.getOrElse { refreshError ->
+                return when (refreshError) {
+                    is HttpException -> if (refreshError.code() == 409) {
+                        checkInQrCacheStore.remove(reservationId)
+                        Result.success(
+                            CheckInQrArtifact(
+                                cache = cached,
+                                isOffline = false,
+                                requiresRefresh = true,
+                            )
                         )
+                    } else {
+                        Result.failure(ReservationException(parseDetail(refreshError), refreshError))
+                    }
+                    is IOException -> Result.success(
+                        CheckInQrArtifact(cache = cached, isOffline = true)
                     )
+                    else -> Result.failure(ReservationException(parseDetail(refreshError), refreshError))
                 }
-                if (refreshError is IOException) {
-                    return Result.success(CheckInQrArtifact(cache = cached, isOffline = true))
-                }
-                return Result.success(CheckInQrArtifact(cache = cached, isOffline = true))
             }
             if (refresh.reservationFingerprint != cached.reservationFingerprint) {
                 checkInQrCacheStore.remove(reservationId)

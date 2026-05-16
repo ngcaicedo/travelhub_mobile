@@ -144,20 +144,7 @@ fun ReservationCard(
                     }
                 }
                 if (r.isCheckInEligible() && onCheckInClick != null) {
-                    Button(
-                        onClick = onCheckInClick,
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(14.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
-                            contentColor = MaterialTheme.colorScheme.primary,
-                        ),
-                    ) {
-                        Text(
-                            text = stringResource(R.string.checkin_qr_cta),
-                            fontWeight = FontWeight.Bold,
-                        )
-                    }
+                    CheckInQrButton(onClick = onCheckInClick)
                 }
             }
         }
@@ -264,23 +251,28 @@ fun NextTripHighlightCard(
                 }
                 if (r.isCheckInEligible() && onCheckInClick != null) {
                     Spacer(modifier = Modifier.height(MaterialTheme.spacing.sm))
-                    Button(
-                        onClick = onCheckInClick,
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(14.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
-                            contentColor = MaterialTheme.colorScheme.primary,
-                        ),
-                    ) {
-                        Text(
-                            text = stringResource(R.string.checkin_qr_cta),
-                            fontWeight = FontWeight.Bold,
-                        )
-                    }
+                    CheckInQrButton(onClick = onCheckInClick)
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun CheckInQrButton(onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(14.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+            contentColor = MaterialTheme.colorScheme.primary,
+        ),
+    ) {
+        Text(
+            text = stringResource(R.string.checkin_qr_cta),
+            fontWeight = FontWeight.Bold,
+        )
     }
 }
 

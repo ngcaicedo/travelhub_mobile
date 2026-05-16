@@ -20,8 +20,9 @@ interface CheckInQrCacheStore {
 
 class DataStoreCheckInQrCacheStore(
     private val dataStore: DataStore<Preferences>,
+    moshi: Moshi = Moshi.Builder().build(),
 ) : CheckInQrCacheStore {
-    private val adapter = Moshi.Builder().build().adapter(CachedCheckInQr::class.java)
+    private val adapter = moshi.adapter(CachedCheckInQr::class.java)
 
     override suspend fun get(reservationId: String): CachedCheckInQr? {
         val payload = dataStore.data.first()[key(reservationId)] ?: return null
