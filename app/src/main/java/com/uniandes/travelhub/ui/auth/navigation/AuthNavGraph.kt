@@ -27,7 +27,11 @@ import com.uniandes.travelhub.repositories.PaymentsRepository
 import com.uniandes.travelhub.repositories.PropertiesRepository
 import com.uniandes.travelhub.repositories.ReservationsRepository
 import com.uniandes.travelhub.repositories.SearchRepository
+import com.uniandes.travelhub.repositories.SeasonalPricingRepository
 import com.uniandes.travelhub.ui.notifications.NotificationsListScreen
+import com.uniandes.travelhub.ui.partner.pricing.EditRuleScreen
+import com.uniandes.travelhub.ui.partner.pricing.PartnerPricingScreen
+import com.uniandes.travelhub.ui.partner.pricing.RulesListScreen
 import com.uniandes.travelhub.ui.profile.NotificationSettingsScreen
 import com.uniandes.travelhub.ui.profile.ProfileScreen
 import com.uniandes.travelhub.viewmodels.NotificationPreferencesViewModel
@@ -51,6 +55,9 @@ import com.uniandes.travelhub.viewmodels.PropertyDetailViewModel
 import com.uniandes.travelhub.viewmodels.RegisterViewModel
 import com.uniandes.travelhub.viewmodels.ReservationDetailViewModel
 import com.uniandes.travelhub.viewmodels.ReservationsListViewModel
+import com.uniandes.travelhub.viewmodels.EditRuleViewModel
+import com.uniandes.travelhub.viewmodels.PartnerPricingViewModel
+import com.uniandes.travelhub.viewmodels.RulesListViewModel
 import com.uniandes.travelhub.network.location.CityGeocoder
 import com.uniandes.travelhub.network.location.LocationProvider
 import com.uniandes.travelhub.viewmodels.MapSearchViewModel
@@ -70,6 +77,7 @@ fun AuthNavGraph(
     searchRepository: SearchRepository,
     reservationsRepository: ReservationsRepository,
     paymentsRepository: PaymentsRepository,
+    seasonalPricingRepository: SeasonalPricingRepository,
     tokenStore: AuthTokenStore,
     locationProvider: LocationProvider,
     cityGeocoder: CityGeocoder,
@@ -414,13 +422,112 @@ fun AuthNavGraph(
         }
 
         composable(AuthRoute.PartnerHome.route) {
-            PlaceholderHomeScreen(
-                repository = authRepository,
-                titleRes = R.string.home_partner_dashboard_title,
-                onLoggedOut = {
-                    navController.navigate(AuthRoute.Login.route) { popUpTo(0) { inclusive = true } }
+            // Partner landing redirects straight into pricing management (MPF-40):
+            // no dashboard / KPIs are in scope.
+            LaunchedEffect(Unit) {
+                navController.navigate(AuthRoute.PartnerPricing.route) {
+                    popUpTo(AuthRoute.PartnerHome.route) { inclusive = true }
+                }
+            }
+        }
+
+        composable(AuthRoute.PartnerPricing.route) {
+            RequireRole(
+                tokenStore = tokenStore,
+                requiredRole = UserRole.HOTEL_PARTNER,
+                onUnauthorized = onUnauthorized,
+            ) {
+                val pricingViewModel: PartnerPricingViewModel = viewModel(
+                    factory = PartnerPricingViewModel.Factory(
+                        propertiesRepository = propertiesRepository,
+                        seasonalPricingRepository = seasonalPricingRepository,
+                        tokenStore = tokenStore,
+                    )
+                )
+                PartnerPricingScreen(
+                    viewModel = pricingViewModel,
+                    onRulesTabClick = {
+                        navController.navigate(AuthRoute.PartnerPricingRules.route) {
+                            popUpTo(AuthRoute.PartnerPricing.route) { inclusive = false }
+                        }
+                    },
+                    onBackClick = { navController.popBackStack() },
+                    onLogout = {
+                        scope.launch {
+                            authRepository.logout()
+                            navController.navigate(AuthRoute.Login.route) {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        }
+                    },
+                )
+            }
+        }
+
+        composable(AuthRoute.PartnerPricingRules.route) {
+            RequireRole(
+                tokenStore = tokenStore,
+                requiredRole = UserRole.HOTEL_PARTNER,
+                onUnauthorized = onUnauthorized,
+            ) {
+                val rulesViewModel: RulesListViewModel = viewModel(
+                    factory = RulesListViewModel.Factory(
+                        propertiesRepository = propertiesRepository,
+                        seasonalPricingRepository = seasonalPricingRepository,
+                        tokenStore = tokenStore,
+                    )
+                )
+                RulesListScreen(
+                    viewModel = rulesViewModel,
+                    onPricingTabClick = {
+                        navController.navigate(AuthRoute.PartnerPricing.route) {
+                            popUpTo(AuthRoute.PartnerPricing.route) { inclusive = false }
+                        }
+                    },
+                    onRuleClick = { propertyId, ruleId ->
+                        navController.navigate(
+                            AuthRoute.PartnerPricingEditRule.build(propertyId, ruleId)
+                        )
+                    },
+                    onBackClick = { navController.popBackStack() },
+                )
+            }
+        }
+
+        composable(
+            route = AuthRoute.PartnerPricingEditRule.route,
+            arguments = listOf(
+                navArgument(AuthRoute.PartnerPricingEditRule.ARG_PROPERTY_ID) {
+                    type = NavType.StringType
                 },
-            )
+                navArgument(AuthRoute.PartnerPricingEditRule.ARG_RULE_ID) {
+                    type = NavType.StringType
+                },
+            ),
+        ) { backStackEntry ->
+            val propertyId = backStackEntry.arguments
+                ?.getString(AuthRoute.PartnerPricingEditRule.ARG_PROPERTY_ID).orEmpty()
+            val ruleId = backStackEntry.arguments
+                ?.getString(AuthRoute.PartnerPricingEditRule.ARG_RULE_ID).orEmpty()
+            RequireRole(
+                tokenStore = tokenStore,
+                requiredRole = UserRole.HOTEL_PARTNER,
+                onUnauthorized = onUnauthorized,
+            ) {
+                val editViewModel: EditRuleViewModel = viewModel(
+                    factory = EditRuleViewModel.Factory(
+                        propertiesRepository = propertiesRepository,
+                        seasonalPricingRepository = seasonalPricingRepository,
+                        propertyId = propertyId,
+                        ruleId = ruleId,
+                    )
+                )
+                EditRuleScreen(
+                    viewModel = editViewModel,
+                    onBackClick = { navController.popBackStack() },
+                    onSaved = { navController.popBackStack() },
+                )
+            }
         }
 
         composable(AuthRoute.AdminHome.route) {
