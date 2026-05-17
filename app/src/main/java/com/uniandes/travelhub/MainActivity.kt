@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
 import com.uniandes.travelhub.network.AuthTokenStore
+import com.uniandes.travelhub.network.DataStoreCheckInQrCacheStore
 import com.uniandes.travelhub.network.DataStorePropertyCacheStore
 import com.uniandes.travelhub.network.RetrofitFactory
 import com.uniandes.travelhub.network.location.AndroidCityGeocoder
@@ -70,6 +71,7 @@ class MainActivity : AppCompatActivity() {
         ReservationsRepository(
             reservationsApi = RetrofitFactory.reservationsApi,
             tokenStore = tokenStore,
+            checkInQrCacheStore = DataStoreCheckInQrCacheStore.getInstance(applicationContext),
         )
     }
 

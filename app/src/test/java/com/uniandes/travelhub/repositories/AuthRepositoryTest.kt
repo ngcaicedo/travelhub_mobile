@@ -102,7 +102,7 @@ class AuthRepositoryTest {
 
         assertEquals(UserRole.HOTEL_PARTNER, result.getOrNull())
         coVerify(exactly = 1) {
-            tokenStore.saveSession("jwt.payload.sig", UserRole.HOTEL_PARTNER)
+            tokenStore.saveSession("jwt.payload.sig", UserRole.HOTEL_PARTNER, "ada@example.com")
         }
     }
 
@@ -113,7 +113,7 @@ class AuthRepositoryTest {
         val result = repository.verifyOtp("ada@example.com", "000000")
 
         assertTrue(result.isFailure)
-        coVerify(exactly = 0) { tokenStore.saveSession(any(), any()) }
+        coVerify(exactly = 0) { tokenStore.saveSession(any(), any(), any()) }
     }
 
     // ----- register -----

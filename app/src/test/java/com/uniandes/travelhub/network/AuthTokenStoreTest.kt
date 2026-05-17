@@ -52,21 +52,23 @@ class AuthTokenStoreTest {
 
     @Test
     fun `saveSession persists token and role`() = runTest(dispatcher) {
-        store.saveSession("jwt.payload.sig", UserRole.HOTEL_PARTNER)
+        store.saveSession("jwt.payload.sig", UserRole.HOTEL_PARTNER, email = "ada@example.com")
 
         assertEquals("jwt.payload.sig", store.tokenFlow.first())
         assertEquals(UserRole.HOTEL_PARTNER, store.roleFlow.first())
+        assertEquals("ada@example.com", store.emailFlow.first())
     }
 
     @Test
     fun `clear removes token and role but keeps locale`() = runTest(dispatcher) {
-        store.saveSession("jwt", UserRole.TRAVELER)
+        store.saveSession("jwt", UserRole.TRAVELER, email = "ada@example.com")
         store.saveLocale("pt")
 
         store.clear()
 
         assertNull(store.tokenFlow.first())
         assertNull(store.roleFlow.first())
+        assertNull(store.emailFlow.first())
         assertEquals("pt", store.localeFlow.first())
     }
 
@@ -74,7 +76,7 @@ class AuthTokenStoreTest {
     fun `tokenFlow emits new value after saveSession`() = runTest(dispatcher) {
         store.tokenFlow.test {
             assertNull(awaitItem())
-            store.saveSession("new-token", UserRole.TRAVELER)
+            store.saveSession("new-token", UserRole.TRAVELER, email = "ada@example.com")
             assertEquals("new-token", awaitItem())
             cancelAndIgnoreRemainingEvents()
         }

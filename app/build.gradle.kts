@@ -170,6 +170,7 @@ dependencies {
 
     implementation(libs.coil.compose)
     implementation(libs.stripe.android)
+    implementation(libs.zxing.core)
 
     implementation(libs.maps.compose)
     implementation(libs.play.services.maps)

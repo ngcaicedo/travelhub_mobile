@@ -45,10 +45,12 @@ import com.uniandes.travelhub.ui.checkout.CheckoutScreen
 import com.uniandes.travelhub.ui.payment.PaymentConfirmationScreen
 import com.uniandes.travelhub.ui.payment.PaymentScreen
 import com.uniandes.travelhub.ui.properties.PropertyDetailScreen
+import com.uniandes.travelhub.ui.reservations.CheckInQrScreen
 import com.uniandes.travelhub.ui.reservations.ReservationDetailScreen
 import com.uniandes.travelhub.ui.reservations.ReservationsListScreen
 import com.uniandes.travelhub.ui.search.SearchScreen
 import com.uniandes.travelhub.viewmodels.CheckoutViewModel
+import com.uniandes.travelhub.viewmodels.CheckInQrViewModel
 import com.uniandes.travelhub.viewmodels.LoginViewModel
 import com.uniandes.travelhub.viewmodels.PaymentViewModel
 import com.uniandes.travelhub.viewmodels.PropertyDetailViewModel
@@ -344,6 +346,9 @@ fun AuthNavGraph(
                     onReservationClick = { reservation ->
                         navController.navigate(AuthRoute.ReservationDetail.build(reservation.id))
                     },
+                    onCheckInClick = { reservation ->
+                        navController.navigate(AuthRoute.CheckInQr.build(reservation.id))
+                    },
                     onBackClick = { navController.popBackStack() },
                     onSearchClick = {
                         navController.navigate(AuthRoute.Search.route) {
@@ -368,6 +373,23 @@ fun AuthNavGraph(
                     factory = ReservationDetailViewModel.Factory(id, reservationsRepository)
                 )
                 ReservationDetailScreen(
+                    viewModel = viewModel,
+                    onBackClick = { navController.popBackStack() },
+                    onOpenCheckInQr = { navController.navigate(AuthRoute.CheckInQr.build(id)) },
+                )
+            }
+        }
+
+        composable(
+            route = AuthRoute.CheckInQr.route,
+            arguments = listOf(navArgument(AuthRoute.CheckInQr.ARG_ID) { type = NavType.StringType }),
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString(AuthRoute.CheckInQr.ARG_ID).orEmpty()
+            RequireRole(tokenStore = tokenStore, requiredRole = UserRole.TRAVELER, onUnauthorized = onUnauthorized) {
+                val viewModel: CheckInQrViewModel = viewModel(
+                    factory = CheckInQrViewModel.Factory(id, reservationsRepository)
+                )
+                CheckInQrScreen(
                     viewModel = viewModel,
                     onBackClick = { navController.popBackStack() },
                 )

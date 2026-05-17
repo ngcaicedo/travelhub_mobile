@@ -273,6 +273,23 @@
     <string name="reservation_policy_free_flexible">Política flexível</string>
     <string name="reservation_policy_moderate">Política moderada</string>
     <string name="reservation_policy_strict">Política rígida</string>
+    <string name="checkin_qr_cta">Mostrar QR de check-in</string>
+    <string name="checkin_qr_title">Check-in Expresso</string>
+    <string name="checkin_qr_error">Não foi possível carregar o QR de check-in</string>
+    <string name="checkin_qr_invalidated">Sua reserva mudou e o QR anterior não é mais válido. Atualize a tela para gerar um novo.</string>
+    <string name="checkin_qr_property_fallback">Sua estadia ativa</string>
+    <string name="checkin_qr_reservation_id">ID: %1$s</string>
+    <string name="checkin_qr_image_content_description">Código QR de check-in</string>
+    <string name="checkin_qr_scan_hint">Mostre-o na recepção para agilizar sua chegada</string>
+    <string name="checkin_qr_offline_ready">Disponível offline. Você pode apresentá-lo mesmo sem conexão.</string>
+    <string name="checkin_qr_arrival_instructions">Instruções de chegada</string>
+    <string name="checkin_qr_step_lobby_title">Chegue ao lobby</string>
+    <string name="checkin_qr_step_lobby_body">Encontre o ponto de check-in digital ou dirija-se à recepção principal.</string>
+    <string name="checkin_qr_step_scan_title">Mostre seu QR</string>
+    <string name="checkin_qr_step_scan_body">A equipe do hotel pode escaneá-lo para validar sua reserva rapidamente.</string>
+    <string name="checkin_qr_step_verify_title">Conclua a validação</string>
+    <string name="checkin_qr_step_verify_body">Confirme seus dados e sua chegada para a estadia de %1$s.</string>
+    <string name="checkin_qr_stay_summary">Estadia: %1$s → %2$s</string>
 
     <!-- forbidden / role guard -->
     <string name="forbidden_title">Acesso negado</string>

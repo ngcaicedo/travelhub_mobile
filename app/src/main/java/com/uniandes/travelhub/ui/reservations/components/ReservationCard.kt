@@ -19,6 +19,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -39,6 +41,7 @@ import coil.compose.AsyncImage
 import com.uniandes.travelhub.R
 import com.uniandes.travelhub.models.reservations.ReservationStatus
 import com.uniandes.travelhub.models.reservations.ReservationWithDetailsResponse
+import com.uniandes.travelhub.models.reservations.isCheckInEligible
 import com.uniandes.travelhub.ui.theme.spacing
 import com.uniandes.travelhub.utils.sanitizeDisplayText
 
@@ -46,6 +49,7 @@ import com.uniandes.travelhub.utils.sanitizeDisplayText
 fun ReservationCard(
     reservation: ReservationWithDetailsResponse,
     onClick: () -> Unit,
+    onCheckInClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     val r = reservation.reservation
@@ -139,6 +143,9 @@ fun ReservationCard(
                         )
                     }
                 }
+                if (r.isCheckInEligible() && onCheckInClick != null) {
+                    CheckInQrButton(onClick = onCheckInClick)
+                }
             }
         }
     }
@@ -148,6 +155,7 @@ fun ReservationCard(
 fun NextTripHighlightCard(
     reservation: ReservationWithDetailsResponse,
     onClick: () -> Unit,
+    onCheckInClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     val r = reservation.reservation
@@ -241,8 +249,30 @@ fun NextTripHighlightCard(
                         )
                     }
                 }
+                if (r.isCheckInEligible() && onCheckInClick != null) {
+                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.sm))
+                    CheckInQrButton(onClick = onCheckInClick)
+                }
             }
         }
+    }
+}
+
+@Composable
+private fun CheckInQrButton(onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(14.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+            contentColor = MaterialTheme.colorScheme.primary,
+        ),
+    ) {
+        Text(
+            text = stringResource(R.string.checkin_qr_cta),
+            fontWeight = FontWeight.Bold,
+        )
     }
 }
 

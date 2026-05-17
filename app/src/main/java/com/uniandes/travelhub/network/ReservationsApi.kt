@@ -4,6 +4,7 @@ import com.uniandes.travelhub.models.reservations.CreateReservationRequest
 import com.uniandes.travelhub.models.reservations.ReservationCancellationConfirmRequest
 import com.uniandes.travelhub.models.reservations.ReservationCancellationPreviewResponse
 import com.uniandes.travelhub.models.reservations.ReservationConfirmResponse
+import com.uniandes.travelhub.models.reservations.CheckInQrResponse
 import com.uniandes.travelhub.models.reservations.ReservationModificationConfirmRequest
 import com.uniandes.travelhub.models.reservations.ReservationModificationPreviewRequest
 import com.uniandes.travelhub.models.reservations.ReservationModificationPreviewResponse
@@ -22,6 +23,9 @@ interface ReservationsApi {
 
     @GET("api/v1/reservations/{id}")
     suspend fun getById(@Path("id") reservationId: String): ReservationResponse
+
+    @GET("api/v1/reservations/{id}/checkin-qr")
+    suspend fun getCheckInQr(@Path("id") reservationId: String): CheckInQrResponse
 
     @GET("api/v1/reservations/users/{userId}")
     suspend fun listForUser(

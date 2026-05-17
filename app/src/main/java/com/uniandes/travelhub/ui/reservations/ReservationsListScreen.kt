@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import com.uniandes.travelhub.R
 import com.uniandes.travelhub.models.reservations.ReservationStatusGroup
 import com.uniandes.travelhub.models.reservations.ReservationWithDetailsResponse
@@ -43,6 +44,7 @@ import com.uniandes.travelhub.viewmodels.ReservationsListViewModel
 fun ReservationsListScreen(
     viewModel: ReservationsListViewModel,
     onReservationClick: (ReservationWithDetailsResponse) -> Unit,
+    onCheckInClick: (ReservationWithDetailsResponse) -> Unit,
     onBackClick: () -> Unit,
     onSearchClick: () -> Unit,
 ) {
@@ -54,6 +56,7 @@ fun ReservationsListScreen(
         selectedGroup = selectedGroup,
         onSelectGroup = viewModel::selectGroup,
         onReservationClick = onReservationClick,
+        onCheckInClick = onCheckInClick,
         onBackClick = onBackClick,
         onSearchClick = onSearchClick,
         onRetry = viewModel::load,
@@ -74,6 +77,7 @@ fun ReservationsListScreenContent(
     selectedGroup: ReservationStatusGroup?,
     onSelectGroup: (ReservationStatusGroup?) -> Unit,
     onReservationClick: (ReservationWithDetailsResponse) -> Unit,
+    onCheckInClick: (ReservationWithDetailsResponse) -> Unit,
     onBackClick: () -> Unit,
     onSearchClick: () -> Unit,
     onRetry: () -> Unit,
@@ -117,7 +121,7 @@ fun ReservationsListScreenContent(
                                 fontWeight = if (index == selectedIndex) FontWeight.Bold else FontWeight.Medium,
                                 maxLines = 1,
                                 softWrap = false,
-                                overflow = androidx.compose.ui.text.style.TextOverflow.Visible,
+                                overflow = TextOverflow.Visible,
                             )
                         },
                     )
@@ -128,6 +132,7 @@ fun ReservationsListScreenContent(
                 when (uiState) {
                     is ReservationsListUiState.Loading ->
                         CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+
                     is ReservationsListUiState.Error -> {
                         Column(
                             modifier = Modifier
@@ -146,6 +151,7 @@ fun ReservationsListScreenContent(
                             )
                         }
                     }
+
                     is ReservationsListUiState.Success -> {
                         if (uiState.reservations.isEmpty()) {
                             Column(
@@ -169,6 +175,7 @@ fun ReservationsListScreenContent(
                                 reservations = uiState.reservations,
                                 showHero = selectedGroup == ReservationStatusGroup.ACTIVE,
                                 onReservationClick = onReservationClick,
+                                onCheckInClick = onCheckInClick,
                             )
                         }
                     }
@@ -183,6 +190,7 @@ private fun ReservationsList(
     reservations: List<ReservationWithDetailsResponse>,
     showHero: Boolean,
     onReservationClick: (ReservationWithDetailsResponse) -> Unit,
+    onCheckInClick: (ReservationWithDetailsResponse) -> Unit,
 ) {
     val hero = if (showHero) reservations.firstOrNull() else null
     val rest = if (hero != null) reservations.drop(1) else reservations
@@ -200,6 +208,7 @@ private fun ReservationsList(
                 NextTripHighlightCard(
                     reservation = hero,
                     onClick = { onReservationClick(hero) },
+                    onCheckInClick = { onCheckInClick(hero) },
                 )
             }
             if (rest.isNotEmpty()) {
@@ -212,6 +221,7 @@ private fun ReservationsList(
             ReservationCard(
                 reservation = reservation,
                 onClick = { onReservationClick(reservation) },
+                onCheckInClick = { onCheckInClick(reservation) },
             )
         }
     }
