@@ -1,0 +1,401 @@
+﻿<resources>
+    <string name="app_name">TravelHub</string>
+
+    <!-- common -->
+    <string name="common_close">Close</string>
+    <string name="common_confirm">Confirm</string>
+    <string name="common_unexpected_error">An unexpected error occurred</string>
+    <string name="common_change_language">Change language</string>
+    <string name="common_coming_soon">Coming soon</string>
+
+    <!-- placeholder home -->
+    <string name="home_placeholder_title">Welcome!</string>
+    <string name="home_placeholder_subtitle">Signed in as %1$s</string>
+    <string name="home_placeholder_logout">Sign out</string>
+    <string name="home_partner_dashboard_title">Hotel partner dashboard</string>
+    <string name="home_admin_dashboard_title">Admin dashboard</string>
+
+    <!-- auth: hero -->
+    <string name="auth_brand_tagline">PREMIUM TRAVEL</string>
+
+    <!-- auth: login -->
+    <string name="auth_login_title">Welcome</string>
+    <string name="auth_login_subtitle">Your next adventure begins here</string>
+    <string name="auth_login_email">Email</string>
+    <string name="auth_login_email_placeholder">your@email.com</string>
+    <string name="auth_login_password">Password</string>
+    <string name="auth_login_password_placeholder">••••••••</string>
+    <string name="auth_login_show_password">Show password</string>
+    <string name="auth_login_hide_password">Hide password</string>
+    <string name="auth_login_forgot_password">Forgot your password?</string>
+    <string name="auth_login_submit">Sign in</string>
+    <string name="auth_login_no_account">Don’t have an account?</string>
+    <string name="auth_login_create_account">Sign up now</string>
+    <string name="auth_login_email_invalid">Invalid email address</string>
+    <string name="auth_login_password_required">Password is required</string>
+    <string name="auth_login_default_error">Unable to sign in</string>
+
+    <!-- auth: register -->
+    <string name="auth_register_title">Create your account</string>
+    <string name="auth_register_subtitle">Join TravelHub</string>
+    <string name="auth_register_tab_traveler">Traveler</string>
+    <string name="auth_register_tab_host">Host</string>
+    <string name="auth_register_full_name">Full name</string>
+    <string name="auth_register_full_name_placeholder">Your name</string>
+    <string name="auth_register_contact_name">Contact name</string>
+    <string name="auth_register_contact_name_placeholder">Your name</string>
+    <string name="auth_register_hotel_name">Hotel name</string>
+    <string name="auth_register_hotel_name_placeholder">Plaza Hotel</string>
+    <string name="auth_register_email">Email</string>
+    <string name="auth_register_email_placeholder">your@email.com</string>
+    <string name="auth_register_phone">Phone</string>
+    <string name="auth_register_phone_placeholder">+1 555 000 0000</string>
+    <string name="auth_register_country">Country of residence</string>
+    <string name="auth_register_country_placeholder">US</string>
+    <string name="auth_register_password">Password</string>
+    <string name="auth_register_password_placeholder">••••••••</string>
+    <string name="auth_register_terms">I accept the terms and conditions</string>
+    <string name="auth_register_submit">Create account</string>
+    <string name="auth_register_have_account">Already have an account?</string>
+    <string name="auth_register_sign_in">Sign in</string>
+    <string name="auth_register_success">Account created — check your email</string>
+    <string name="auth_register_full_name_required">Name is required</string>
+    <string name="auth_register_hotel_name_required">Hotel name is required</string>
+    <string name="auth_register_phone_invalid">Invalid phone number</string>
+    <string name="auth_register_country_invalid">Enter a valid 2-letter country code</string>
+    <string name="auth_register_password_weak">Password must be at least 8 characters and contain uppercase, number and symbol</string>
+    <string name="auth_register_terms_required">You must accept the terms and conditions</string>
+    <string name="auth_register_default_error">Unable to create the account</string>
+
+    <!-- auth: verify otp -->
+    <string name="auth_verify_otp_title">Verify your email</string>
+    <string name="auth_verify_otp_subtitle">Enter the 6-digit code sent to %1$s</string>
+    <string name="auth_verify_otp_code_label">Verification code</string>
+    <string name="auth_verify_otp_code_placeholder">123456</string>
+    <string name="auth_verify_otp_submit">Verify</string>
+    <string name="auth_verify_otp_back_to_login">Back to sign in</string>
+    <string name="auth_verify_otp_invalid">The code must be 6 digits</string>
+    <string name="auth_verify_otp_default_error">Unable to verify the code</string>
+
+    <!-- properties: list -->
+    <string name="property_list_title">Accommodations</string>
+    <string name="property_list_more_actions">More options</string>
+    <string name="property_list_empty">No accommodations found</string>
+    <string name="property_list_load_error">Unable to load properties</string>
+
+    <!-- properties: detail -->
+    <string name="property_detail_back">Back</string>
+    <string name="property_detail_no_images">No images available</string>
+    <string name="property_detail_reviews_count">%1$.1f · %2$d reviews</string>
+    <string name="property_detail_capacity">%1$d guests · %2$d bedroom · %3$.0f bathrooms</string>
+    <string name="property_detail_description_title">Description</string>
+    <string name="property_detail_amenities_title">Amenities</string>
+    <string name="property_detail_about_title">About this place</string>
+    <string name="property_detail_reviews_count_short">(%1$d reviews)</string>
+    <string name="property_detail_policy_title">Cancellation policy</string>
+    <string name="property_detail_images_title">Gallery</string>
+    <string name="property_detail_reviews_title">Reviews</string>
+    <string name="property_detail_no_reviews">No reviews available yet</string>
+    <string name="property_detail_verified_stay">Verified stay</string>
+    <string name="property_detail_price_per_night">night</string>
+    <string name="property_detail_reserve">Reserve</string>
+    <string name="property_detail_load_error">Unable to load property details</string>
+
+    <!-- properties: common -->
+    <string name="property_retry">Retry</string>
+
+    <!-- auth: password strength -->
+    <string name="auth_password_strength_weak">Weak</string>
+    <string name="auth_password_strength_medium">Medium</string>
+    <string name="auth_password_strength_strong">Strong</string>
+    <string name="auth_password_strength_very_strong">Very strong</string>
+
+    <string name="common_language_spanish">Español</string>
+    <string name="common_language_english">English</string>
+    <string name="common_language_portuguese">Português</string>
+
+    <!-- search -->
+    <string name="search_title">Search stays</string>
+    <string name="search_button">Search</string>
+    <string name="search_load_more">Load more results</string>
+    <string name="search_my_reservations">My reservations</string>
+    <string name="search_field_city">City</string>
+    <string name="search_field_check_in">Check-in</string>
+    <string name="search_field_check_out">Check-out</string>
+    <string name="search_field_guests">Guests</string>
+    <string name="search_field_min_price">Min price</string>
+    <string name="search_field_max_price">Max price</string>
+    <string name="search_field_order_by">Order by</string>
+    <string name="search_field_order_dir">Direction</string>
+    <string name="search_section_amenities">Amenities</string>
+    <string name="search_amenity_wifi">WiFi</string>
+    <string name="search_amenity_pool">Pool</string>
+    <string name="search_amenity_breakfast">Breakfast</string>
+    <string name="search_amenity_air_conditioning">Air conditioning</string>
+    <string name="search_amenity_pet_friendly">Pet friendly</string>
+    <string name="search_amenity_parking">Parking</string>
+    <string name="search_amenity_gym">Gym</string>
+    <string name="search_amenity_spa">Spa</string>
+    <string name="search_order_by_price">Price</string>
+    <string name="search_order_by_rating">Rating</string>
+    <string name="search_order_by_name">Name</string>
+    <string name="search_order_dir_asc">Ascending</string>
+    <string name="search_order_dir_desc">Descending</string>
+    <string name="search_order_none">No order</string>
+    <string name="search_empty_title">No properties match these filters</string>
+    <string name="search_error_generic">Search could not be completed</string>
+    <string name="search_error_city_required">Enter a city</string>
+    <string name="search_error_check_in_required">Pick a check-in date</string>
+    <string name="search_error_check_out_required">Pick a check-out date</string>
+    <string name="search_error_check_out_after_check_in">Check-out must be after check-in</string>
+    <string name="search_error_guests_min">At least one guest is required</string>
+
+    <!-- checkout -->
+    <string name="checkout_title">Confirm reservation</string>
+    <string name="checkout_subtitle">Review your dates and guests before paying</string>
+    <string name="checkout_submit">Reserve and pay</string>
+    <string name="checkout_error_generic">Reservation could not be created</string>
+    <string name="checkout_error_check_in_required">Pick a check-in date</string>
+    <string name="checkout_error_check_out_required">Pick a check-out date</string>
+    <string name="checkout_error_check_out_after_check_in">Check-out must be after check-in</string>
+    <string name="checkout_error_guests_min">At least one guest is required</string>
+    <string name="checkout_summary_title">Cost summary</string>
+    <string name="checkout_summary_accommodation">Stay (%1$s × %2$d nights × %3$d guests)</string>
+    <string name="checkout_summary_service_fee">Service fee</string>
+    <string name="checkout_summary_total">Total due</string>
+    <string name="checkout_continue">Continue</string>
+    <string name="checkout_nights_summary">%1$d nights</string>
+    <string name="payment_method_title">Payment method</string>
+    <string name="payment_method_card">Credit or debit card</string>
+    <string name="payment_method_card_subtitle">Visa, Mastercard, Amex</string>
+    <string name="payment_price_details_title">Price details</string>
+    <string name="payment_summary_total">Total (%1$s)</string>
+    <string name="payment_legal_disclaimer">By confirming you accept the House Rules, Terms of Service and the property\'s Cancellation Policy.</string>
+    <string name="payment_secure_ssl">Secure SSL-encrypted payment</string>
+    <string name="payment_confirm_and_pay">Confirm and pay %1$s</string>
+    <string name="payment_review_title">Confirm and pay</string>
+    <string name="payment_test_scenarios">Test scenarios</string>
+
+    <!-- payment -->
+    <string name="payment_title">Secure payment</string>
+    <string name="payment_subtitle_real">Choose a payment method</string>
+    <string name="payment_subtitle_fake">Test mode: pick a simulated scenario</string>
+    <string name="payment_loading_config">Preparing payment…</string>
+    <string name="payment_processing">Processing payment…</string>
+    <string name="payment_succeeded">Payment approved</string>
+    <string name="payment_pay_success">Pay (successful card)</string>
+    <string name="payment_pay_insufficient">Pay (insufficient funds)</string>
+    <string name="payment_pay_declined">Pay (declined card)</string>
+    <string name="payment_error_generic">Payment could not be processed</string>
+    <string name="payment_error_config">Payment configuration could not be loaded</string>
+    <string name="payment_error_declined">Payment was declined</string>
+    <string name="payment_error_confirmation">Confirmation could not be loaded</string>
+
+    <!-- payment confirmation -->
+    <string name="payment_confirmation_title">Confirmation</string>
+    <string name="payment_confirmation_success">Your reservation is confirmed!</string>
+    <string name="payment_confirmation_subtitle">We sent details to your email</string>
+    <string name="payment_confirmation_reservation_id">Reservation ID</string>
+    <string name="payment_confirmation_payment_id">Payment ID</string>
+    <string name="payment_confirmation_property">Property</string>
+    <string name="payment_confirmation_address">Address</string>
+    <string name="payment_confirmation_total">Total paid</string>
+    <string name="payment_confirmation_receipt">Receipt number</string>
+    <string name="payment_confirmation_see_reservations">See my reservations</string>
+    <string name="payment_confirmation_stay_details">Stay details</string>
+    <string name="payment_confirmation_booking_id">Booking ID</string>
+    <string name="payment_confirmation_dates_range">%1$s · %2$s</string>
+
+    <!-- reservations: list -->
+    <string name="reservations_list_title">My reservations</string>
+    <string name="reservations_list_empty">You don\'t have reservations yet</string>
+    <string name="reservations_list_search_cta">Search stays</string>
+    <string name="reservations_list_error">Reservations could not be loaded</string>
+    <string name="reservations_filter_active">Active</string>
+    <string name="reservations_filter_past">Past</string>
+    <string name="reservations_filter_cancelled">Cancelled</string>
+    <string name="reservations_filter_all">All</string>
+
+    <!-- reservation detail -->
+    <string name="reservation_detail_title">Reservation details</string>
+    <string name="reservation_detail_status">Status</string>
+    <string name="reservation_detail_breakdown">Breakdown</string>
+    <string name="reservation_detail_nights">Nights</string>
+    <string name="reservation_detail_nightly_rate">Nightly rate</string>
+    <string name="reservation_detail_accommodation">Accommodation</string>
+    <string name="reservation_detail_cleaning">Cleaning</string>
+    <string name="reservation_detail_service">Service</string>
+    <string name="reservation_detail_taxes">Taxes</string>
+    <string name="reservation_detail_error">Reservation could not be loaded</string>
+    <string name="reservation_detail_stay_section">Your stay</string>
+    <string name="reservation_detail_pricing_section">Cost summary</string>
+    <string name="reservation_detail_info_section">Reservation info</string>
+    <string name="reservation_card_dates">%1$s → %2$s</string>
+    <string name="reservation_card_view_details">View details</string>
+    <string name="reservations_section_next_trip">Next trip</string>
+    <string name="reservations_section_other">Other bookings</string>
+    <string name="reservation_card_guests_singular">%1$d guest</string>
+    <string name="reservation_card_guests_plural">%1$d guests</string>
+    <string name="reservation_status_pending_payment">Payment pending</string>
+    <string name="reservation_status_confirmed">Confirmed</string>
+    <string name="reservation_status_cancelled">Cancelled</string>
+    <string name="reservation_status_completed">Completed</string>
+    <string name="reservation_status_refund_pending">Refund pending</string>
+    <string name="reservation_status_refund_completed">Refunded</string>
+    <string name="reservation_status_refund_failed">Refund failed</string>
+    <string name="reservation_status_cancel_requested">Cancellation requested</string>
+    <string name="reservation_status_modification_pending_payment">Modification pending payment</string>
+    <string name="reservation_status_modification_confirmed">Modification confirmed</string>
+    <string name="reservation_status_additional_charge_failed">Additional charge failed</string>
+    <string name="reservation_actions_title">Manage reservation</string>
+    <string name="reservation_action_modify">Modify</string>
+    <string name="reservation_action_cancel">Cancel reservation</string>
+    <string name="reservation_action_preview">Preview changes</string>
+    <string name="reservation_action_modify_confirm">Confirm changes</string>
+    <string name="reservation_action_cancel_confirm">Confirm cancellation</string>
+    <string name="reservation_action_change_blocked">This change cannot be applied</string>
+    <string name="reservation_action_delta">Price delta</string>
+    <string name="reservation_action_refund_estimate">Estimated refund</string>
+    <string name="reservation_action_refund">Refund</string>
+    <string name="reservation_action_penalty">Penalty</string>
+    <string name="reservation_action_refund_type">Refund type</string>
+    <string name="reservation_action_policy">Policy applied</string>
+    <string name="reservation_action_extra_charge_required">Additional charge required</string>
+    <string name="reservation_action_modify_error">Reservation could not be modified</string>
+    <string name="reservation_action_cancel_error">Reservation could not be cancelled</string>
+    <string name="reservation_action_modify_done">Modification applied</string>
+    <string name="reservation_action_cancel_done">Reservation cancelled</string>
+    <string name="reservation_refund_type_full_refund">Full refund</string>
+    <string name="reservation_refund_type_partial_refund">Partial refund</string>
+    <string name="reservation_refund_type_non_refundable">Non-refundable</string>
+    <string name="reservation_refund_type_none">No refund</string>
+    <string name="reservation_refund_type_partial">Partial</string>
+    <string name="reservation_refund_type_full">Full</string>
+    <string name="reservation_policy_free_flexible">Flexible policy</string>
+    <string name="reservation_policy_moderate">Moderate policy</string>
+    <string name="reservation_policy_strict">Strict policy</string>
+    <string name="checkin_qr_cta">Show check-in QR</string>
+    <string name="checkin_qr_title">Express Check-in</string>
+    <string name="checkin_qr_error">We couldn’t load the check-in QR code</string>
+    <string name="checkin_qr_invalidated">Your reservation changed and the previous QR code is no longer valid. Refresh to generate a new one.</string>
+    <string name="checkin_qr_property_fallback">Your active stay</string>
+    <string name="checkin_qr_reservation_id">ID: %1$s</string>
+    <string name="checkin_qr_image_content_description">Check-in QR code</string>
+    <string name="checkin_qr_scan_hint">Show it at reception to speed up your arrival</string>
+    <string name="checkin_qr_offline_ready">Ready offline. You can present it even without connection.</string>
+    <string name="checkin_qr_arrival_instructions">Arrival instructions</string>
+    <string name="checkin_qr_step_lobby_title">Arrive at the lobby</string>
+    <string name="checkin_qr_step_lobby_body">Find the digital check-in point or go to the main front desk.</string>
+    <string name="checkin_qr_step_scan_title">Present your QR</string>
+    <string name="checkin_qr_step_scan_body">Hotel staff can scan it to validate your reservation quickly.</string>
+    <string name="checkin_qr_step_verify_title">Complete verification</string>
+    <string name="checkin_qr_step_verify_body">Confirm your details and arrival for the stay starting on %1$s.</string>
+    <string name="checkin_qr_stay_summary">Stay: %1$s → %2$s</string>
+
+    <!-- forbidden / role guard -->
+    <string name="forbidden_title">Access denied</string>
+    <string name="forbidden_subtitle">Your role does not have access to this section</string>
+
+    <string name="map_tab_list">List</string>
+    <string name="map_tab_map">Map</string>
+    <string name="map_permission_required_title">Enable your location</string>
+    <string name="map_permission_required_body">We need your location to show nearby hotels on the map.</string>
+    <string name="map_permission_cta">Allow location</string>
+    <string name="map_permission_denied_cta">Search by city</string>
+    <string name="map_search_in_this_area">Search this area</string>
+    <string name="map_loading_hotels">Loading hotels…</string>
+    <string name="map_locating_user">Getting your location…</string>
+    <string name="map_location_unavailable">Couldn\'t get your location. Pan the map and try again.</string>
+    <string name="map_no_results_in_area">No hotels in this area. Pan the map to explore other regions.</string>
+    <string name="map_marker_price_from">From %1$s %2$s</string>
+    <string name="map_marker_view_detail">View detail</string>
+    <string name="map_city_search_hint">Search city</string>
+    <string name="map_city_search_action">Go</string>
+    <string name="map_city_not_found">We couldn\'t find %1$s. Try a different name.</string>
+
+    <!-- HU020: notifications, profile, notification settings -->
+    <string name="notifications_topbar_alerts_cd">Alerts</string>
+    <string name="notifications_topbar_profile_cd">Profile</string>
+    <string name="notifications_back">Back</string>
+    <string name="notifications_title">Notifications</string>
+    <string name="notifications_settings_action">Preferences</string>
+    <string name="notifications_filter_all">All</string>
+    <string name="notifications_filter_unread">Unread</string>
+    <string name="notifications_empty">No notifications</string>
+    <string name="notifications_error">Error: %1$s</string>
+    <string name="notifications_relative_now">Just now</string>
+    <string name="notifications_relative_minutes">%1$d min ago</string>
+    <string name="notifications_relative_hours">%1$d h ago</string>
+    <string name="notifications_relative_days">%1$d d ago</string>
+
+    <string name="profile_title">My profile</string>
+    <string name="profile_back">Back</string>
+    <string name="profile_notifications_title">Notifications</string>
+    <string name="profile_notifications_subtitle">Booking changes and reminders</string>
+    <string name="profile_logout">Log out</string>
+
+    <string name="notification_settings_title">Notifications</string>
+    <string name="notification_settings_status_title">Booking changes</string>
+    <string name="notification_settings_status_subtitle">Confirmations, modifications, cancellations, check-in and check-out</string>
+    <string name="notification_settings_arrival_title">Arrival reminders</string>
+    <string name="notification_settings_arrival_subtitle">Reminder before your check-in</string>
+
+    <string name="notification_channel_status_name">Booking changes</string>
+    <string name="notification_channel_status_desc">Confirmations, modifications, cancellations and check-in/out.</string>
+    <string name="notification_channel_arrival_name">Arrival reminders</string>
+    <string name="notification_channel_arrival_desc">Reminders before your check-in.</string>
+    <string name="notification_fallback_title">TravelHub</string>
+
+    <!-- Partner: Seasonal Pricing Management (MPF-40) -->
+    <string name="partner_pricing_title">Pricing Management</string>
+    <string name="partner_pricing_nav_home">Home</string>
+    <string name="partner_pricing_nav_rules">Rules</string>
+    <string name="partner_pricing_section_property">PROPERTY OR ROOM</string>
+    <string name="partner_pricing_section_base_rate">ADJUST BASE RATE</string>
+    <string name="partner_pricing_section_new_discount">NEW DISCOUNT</string>
+    <string name="partner_pricing_section_preview">PREVIEW</string>
+    <string name="partner_pricing_field_property">Select a property</string>
+    <string name="partner_pricing_field_base_rate_label">Price per night (%1$s)</string>
+    <string name="partner_pricing_field_name">Rule name</string>
+    <string name="partner_pricing_field_name_hint">e.g. Black Friday</string>
+    <string name="partner_pricing_field_percent">Percentage</string>
+    <string name="partner_pricing_field_date_range">Date range</string>
+    <string name="partner_pricing_field_date_range_hint">Select dates</string>
+    <string name="partner_pricing_field_season_start">Start</string>
+    <string name="partner_pricing_field_season_end">End</string>
+    <string name="partner_pricing_action_create_rule">Create Rule</string>
+    <string name="partner_pricing_action_save">Save changes</string>
+    <string name="partner_pricing_action_cancel">Cancel</string>
+    <string name="partner_pricing_preview_final_rate">Calculated Final Rate</string>
+    <string name="partner_pricing_preview_savings_format">-%1$d%% SAVINGS</string>
+    <string name="partner_pricing_preview_no_discount">No discount</string>
+    <string name="partner_pricing_high_impact_title">Confirm significant change</string>
+    <string name="partner_pricing_high_impact_message">You are applying a %1$d%% discount — a high-impact change. Confirm?</string>
+    <string name="partner_pricing_high_impact_confirm">Confirm</string>
+    <string name="partner_pricing_integrity_normal">Normal</string>
+    <string name="partner_pricing_integrity_locked">Locked</string>
+    <string name="partner_pricing_integrity_compromised">Compromised</string>
+    <string name="partner_pricing_locked_warning">This rule is locked due to an integrity failure. Contact support to unlock it.</string>
+    <string name="partner_pricing_rules_title">Pricing rules</string>
+    <string name="partner_pricing_rules_range">%1$s — %2$s</string>
+    <string name="partner_pricing_rules_final_price">Final price: %1$s</string>
+    <string name="partner_pricing_rules_base_price">Base rate: %1$s</string>
+    <string name="partner_pricing_edit_title">Edit rule</string>
+    <string name="partner_pricing_empty_no_properties">You have no properties yet. Contact support to add one.</string>
+    <string name="partner_pricing_empty_no_rules">No rules yet. Use the home tab to create the first one.</string>
+    <string name="partner_pricing_error_no_admin">We couldn\'t identify your admin session. Please log in again.</string>
+    <string name="partner_pricing_error_load_properties">We couldn\'t load your properties.</string>
+    <string name="partner_pricing_error_load_rules">We couldn\'t load the pricing rules.</string>
+    <string name="partner_pricing_error_rule_not_found">We couldn\'t find the requested rule.</string>
+    <string name="partner_pricing_error_submit">We couldn\'t save the changes. Try again.</string>
+    <string name="partner_pricing_error_locked">This rule is locked and cannot be modified.</string>
+    <string name="partner_pricing_validation_invalid_percent">Percentage must be between 1 and 99.</string>
+    <string name="partner_pricing_validation_invalid_date_range">The date range is invalid.</string>
+    <string name="partner_pricing_validation_no_changes">No changes to save.</string>
+    <string name="partner_pricing_success_created">Rule created successfully.</string>
+    <string name="partner_pricing_success_updated">Changes saved successfully.</string>
+    <string name="search_seasonal_discount_badge">OFF</string>
+    <string name="search_seasonal_discount_tooltip">Special rate for your dates</string>
+</resources>
+
+

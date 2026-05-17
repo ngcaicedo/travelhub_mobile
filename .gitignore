@@ -13,3 +13,8 @@
 .externalNativeBuild
 .cxx
 local.properties
+/.idea
+
+# Firebase config (HU020) — descargar del Firebase Console, nunca commitear
+app/google-services.json
+google-services.json
