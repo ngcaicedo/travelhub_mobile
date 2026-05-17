@@ -79,6 +79,7 @@
 
     <!-- properties: list -->
     <string name="property_list_title">Alojamientos</string>
+    <string name="property_list_more_actions">Más opciones</string>
     <string name="property_list_empty">No se encontraron alojamientos</string>
     <string name="property_list_load_error">No fue posible cargar las propiedades</string>
 

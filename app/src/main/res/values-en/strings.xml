@@ -79,6 +79,7 @@
 
     <!-- properties: list -->
     <string name="property_list_title">Accommodations</string>
+    <string name="property_list_more_actions">More options</string>
     <string name="property_list_empty">No accommodations found</string>
     <string name="property_list_load_error">Unable to load properties</string>
 

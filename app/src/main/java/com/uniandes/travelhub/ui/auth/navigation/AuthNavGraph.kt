@@ -300,7 +300,7 @@ fun AuthNavGraph(
                     onNavigateToConfirmation = { confirmation ->
                         paymentConfirmationCache.value = confirmation
                         navController.navigate(AuthRoute.PaymentConfirmation.build(confirmation.paymentId)) {
-                            popUpTo(AuthRoute.Search.route) { inclusive = false }
+                            popUpTo(AuthRoute.TravelerHome.route) { inclusive = false }
                         }
                     },
                 )
@@ -317,7 +317,7 @@ fun AuthNavGraph(
                     // Cache lost (e.g. process death) — bounce to the reservations list.
                     LaunchedEffect(Unit) {
                         navController.navigate(AuthRoute.ReservationsList.route) {
-                            popUpTo(AuthRoute.Search.route) { inclusive = false }
+                            popUpTo(AuthRoute.TravelerHome.route) { inclusive = false }
                         }
                     }
                 } else {
@@ -326,7 +326,7 @@ fun AuthNavGraph(
                         propertyCoverUrl = bookingCoverUrlCache.value,
                         onSeeReservationsClick = {
                             navController.navigate(AuthRoute.ReservationsList.route) {
-                                popUpTo(AuthRoute.Search.route) { inclusive = false }
+                                popUpTo(AuthRoute.TravelerHome.route) { inclusive = false }
                             }
                         },
                     )
