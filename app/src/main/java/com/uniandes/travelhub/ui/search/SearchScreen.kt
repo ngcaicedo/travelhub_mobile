@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import com.uniandes.travelhub.R
 import com.uniandes.travelhub.models.search.SearchOrderBy
 import com.uniandes.travelhub.models.search.SearchOrderDir
@@ -71,8 +72,10 @@ fun SearchScreen(
                 title = {
                     Text(
                         text = stringResource(R.string.search_title),
-                        style = MaterialTheme.typography.headlineMedium,
+                        style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
                 },
                 navigationIcon = {
@@ -218,8 +221,10 @@ fun SearchScreenLegacyContent(
                 title = {
                     Text(
                         text = stringResource(R.string.search_title),
-                        style = MaterialTheme.typography.headlineMedium,
+                        style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
                 },
                 actions = {
